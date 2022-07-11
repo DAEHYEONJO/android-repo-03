@@ -9,7 +9,7 @@ ex) main_profile_iv
 - 'feat/기능이름' 으로 구현 후 dev에 머지
 
 ## 커밋메세지
-- 커밋 Tag와 함께, 알아보기 쉽게 작성</br>
+- 커밋 Tag와 함께, 최대한 알아보기 쉽게 작성</br>
 <img
     src="https://user-images.githubusercontent.com/82700895/178201745-ea256745-5305-4882-a52d-3f68e576eaaa.png" width="350" height="250"/>
 
