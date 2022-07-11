@@ -1,16 +1,17 @@
 package com.example.gitreposearch.ui
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.example.gitreposearch.BuildConfig
+import androidx.lifecycle.lifecycleScope
 import com.example.gitreposearch.R
 import com.example.gitreposearch.databinding.ActivityLoginBinding
+import com.example.gitreposearch.network.GithubApiImpl
 import com.example.gitreposearch.utils.Constants
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     
@@ -40,6 +41,7 @@ class LoginActivity : AppCompatActivity() {
         uri?.let { 
             val code = uri.getQueryParameter("code")
             code?.let {
+                testGetToken(it)
                 Log.e(TAG, "onResume: success $code", )
                 Log.e(TAG, "onResume: success ${uri.query}", )
                 Log.e(TAG, "onResume: success ${uri.userInfo}", )
@@ -49,6 +51,21 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this@LoginActivity, "로그인에 실패하였습니다.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    //Todo 삭제할 함수 -> Repository and ViewModel 로 이동
+    private fun testGetToken(code: String){
+        lifecycleScope.launch {
+            val response = GithubApiImpl.githubApi.getAccessToken(
+                clientId = resources.getString(R.string.client_id),
+                clientSecret = resources.getString(R.string.client_secret),
+                code = code
+            )
+            Log.e(TAG, "testGetToken: ${response.code()}", )
+            Log.e(TAG, "testGetToken: ${response.body()}", )
+            Log.e(TAG, "testGetToken: ${response.errorBody()}", )
+        }
+
     }
 
     private fun login(){
