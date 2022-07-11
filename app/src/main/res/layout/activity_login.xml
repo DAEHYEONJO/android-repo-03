@@ -4,6 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/app_base_background"
     tools:context=".ui.LoginActivity">
+
+    <TextView
+        android:id="@+id/login_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/login_title"
+        android:textColor="@color/white"
+        android:fontFamily="@font/outfit_semibold_600"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/app_base_space_24"
+        android:textSize="40sp"
+        android:layout_marginTop="@dimen/login_base_space_80"/>
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="@dimen/app_base_space_24"
+        android:layout_marginEnd="@dimen/app_base_space_24"
+        android:layout_marginBottom="@dimen/login_base_space_80"
+        android:text="@string/github_login"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:fontFamily="@font/kopubworld_dotum_pro_bold"
+        android:background="@drawable/button_border_radius_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
