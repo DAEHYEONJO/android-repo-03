@@ -2,4 +2,6 @@
     <string name="app_name">GitRepoSearch</string>
     <string name="login_title">What\'s In\nMy GitHub</string>
     <string name="github_login">GitHub 로그인</string>
+    <string name="client_secret">b1bc471951ffa3c6c4724b90843b8d5902b9cb42</string>
+    <string name="client_id">4a72d17f3567b2836b5f</string>
 </resources>
