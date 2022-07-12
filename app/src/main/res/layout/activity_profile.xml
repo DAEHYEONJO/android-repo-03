@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_base_background"
+    tools:context=".ui.activity.ProfileActivity">
+
+    <include
+        android:id="@+id/profile_app_bar"
+        layout="@layout/appbar_search_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/profile_img"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="@dimen/app_base_space_24"
+        android:layout_marginTop="6dp"
+        android:src="@color/white_40"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_app_bar" />
+
+    <TextView
+        android:id="@+id/profile_name_tv_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/profile_image_end_space_16"
+        android:layout_marginTop="@dimen/profile_text_top_space_8"
+        android:fontFamily="@font/kopubworld_dotum_pro_bold"
+        android:gravity="top"
+        android:includeFontPadding="false"
+        android:text="멋진 삼"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/profile_img"
+        app:layout_constraintTop_toBottomOf="@+id/profile_app_bar" />
+
+    <TextView
+        android:id="@+id/profile_name_tv_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sam"
+        android:textColor="@color/gray"
+        android:textSize="16sp"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toStartOf="@+id/profile_name_tv_1"
+        app:layout_constraintTop_toBottomOf="@+id/profile_name_tv_1" />
+
+    <TextView
+        android:id="@+id/profile_field_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/profile_text_top_space_8"
+        android:background="@drawable/profile_field_background"
+        android:fontFamily="@font/kopubworld_dotum_pro_medium"
+        android:gravity="center"
+        android:text="Android develop"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/profile_name_tv_2"
+        app:layout_constraintTop_toBottomOf="@+id/profile_name_tv_2" />
+
+    <View
+        android:id="@+id/profile_line"
+        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_field_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/profile_line_top_space_18"
+        android:background="@color/navy"
+        android:layout_height="1dp"/>
+
+    <ImageView
+        android:id="@+id/profile_location_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/profile_line"
+        app:layout_constraintStart_toStartOf="@+id/profile_img"
+        android:layout_marginTop="@dimen/profile_image_end_space_16"
+        android:src="@drawable/ic_profile_location"/>
+
+    <TextView
+        android:id="@+id/profile_location_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/profile_location_img"
+        app:layout_constraintTop_toTopOf="@+id/profile_location_img"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_location_img"
+        android:text="Seoul, Korea"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
+        android:layout_marginStart="@dimen/profile_text_top_space_8"
+         />
+
+    <ImageView
+        android:id="@+id/profile_link_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/profile_location_img"
+        app:layout_constraintStart_toStartOf="@+id/profile_location_img"
+        android:layout_marginTop="@dimen/profile_image_end_space_16"
+        android:src="@drawable/ic_profile_link"/>
+
+    <TextView
+        android:id="@+id/profile_link_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/profile_link_img"
+        app:layout_constraintTop_toTopOf="@+id/profile_link_img"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_link_img"
+        android:text="http://medium.com/@sam"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
+        android:layout_marginStart="@dimen/profile_text_top_space_8" />
+
+    <ImageView
+        android:id="@+id/profile_mail_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/profile_link_img"
+        app:layout_constraintStart_toStartOf="@+id/profile_link_img"
+        android:layout_marginTop="@dimen/profile_image_end_space_16"
+        android:src="@drawable/ic_profile_mail"/>
+
+    <TextView
+        android:id="@+id/profile_mail_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/profile_mail_img"
+        app:layout_constraintTop_toTopOf="@+id/profile_mail_img"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_mail_img"
+        android:text="sam@gmail.com"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
+        android:layout_marginStart="@dimen/profile_text_top_space_8" />
+
+    <ImageView
+        android:id="@+id/profile_user_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/profile_mail_img"
+        app:layout_constraintStart_toStartOf="@+id/profile_mail_img"
+        android:layout_marginTop="@dimen/profile_image_end_space_16"
+        android:src="@drawable/ic_profile_user"/>
+
+    <TextView
+        android:id="@+id/profile_followers_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/profile_user_img"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_user_img"
+        app:layout_constraintStart_toEndOf="@+id/profile_user_img"
+        android:layout_marginStart="@dimen/profile_text_top_space_8"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"
+        android:text="59" />
+
+    <TextView
+        android:id="@+id/profile_followers_hardcode_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/profile_user_img"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_user_img"
+        app:layout_constraintStart_toEndOf="@+id/profile_followers_tv"
+        android:layout_marginStart="@dimen/profile_text_start_space_4"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+        android:text="Followers" />
+
+    <TextView
+        android:id="@+id/profile_dot_hardcode_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/profile_user_img"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_user_img"
+        app:layout_constraintStart_toEndOf="@+id/profile_followers_hardcode_tv"
+        android:layout_marginStart="@dimen/profile_text_start_space_4"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+        android:text="@string/followers_between_following"/>
+
+    <TextView
+        android:id="@+id/profile_following_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/profile_user_img"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_user_img"
+        app:layout_constraintStart_toEndOf="@+id/profile_dot_hardcode_tv"
+        android:layout_marginStart="@dimen/profile_text_start_space_4"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"
+        android:text="6" />
+
+    <TextView
+        android:id="@+id/profile_following_hardcode_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/profile_user_img"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_user_img"
+        app:layout_constraintStart_toEndOf="@+id/profile_following_tv"
+        android:layout_marginStart="@dimen/profile_text_start_space_4"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+        android:text="Following" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintTop_toBottomOf="@+id/profile_user_img"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/app_base_space_24"
+        android:layout_marginStart="@dimen/app_base_space_24"
+        android:layout_marginEnd="@dimen/app_base_space_24"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/profile_rep_star_background_radius_14">
+
+        <ImageView
+            android:id="@+id/profile_repository_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/profile_image_end_space_16"
+            android:layout_marginStart="@dimen/profile_image_end_space_16"
+            android:src="@drawable/ic_profile_repository"/>
+
+        <TextView
+            android:id="@+id/profile_repository_hardcode_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/profile_repository_img"
+            app:layout_constraintBottom_toBottomOf="@+id/profile_repository_img"
+            app:layout_constraintStart_toEndOf="@+id/profile_repository_img"
+            android:text="@string/repositories"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+            android:layout_marginStart="@dimen/profile_image_end_space_16" />
+
+        <TextView
+            android:id="@+id/profile_repository_count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/profile_repository_img"
+            app:layout_constraintBottom_toBottomOf="@+id/profile_repository_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/profile_image_end_space_16"
+            android:text="41"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"/>
+
+
+        <ImageView
+            android:id="@+id/profile_starred_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/profile_repository_img"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/profile_image_end_space_16"
+            android:layout_marginTop="@dimen/profile_image_end_space_16"
+            android:layout_marginStart="@dimen/profile_image_end_space_16"
+            android:src="@drawable/ic_profile_starred"/>
+
+        <TextView
+            android:id="@+id/profile_starred_hardcode_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/profile_starred_img"
+            app:layout_constraintBottom_toBottomOf="@+id/profile_starred_img"
+            app:layout_constraintStart_toEndOf="@+id/profile_starred_img"
+            android:text="@string/starred"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+            android:layout_marginStart="@dimen/profile_image_end_space_16" />
+
+        <TextView
+            android:id="@+id/profile_starred_count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/profile_starred_img"
+            app:layout_constraintBottom_toBottomOf="@+id/profile_starred_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/profile_image_end_space_16"
+            android:text="57"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

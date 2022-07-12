@@ -2,4 +2,13 @@
 <resources>
     <dimen name="app_base_space_24">24dp</dimen>
     <dimen name="login_base_space_80">80dp</dimen>
+    <dimen name="profile_text_start_space_4">4dp</dimen>
+    <dimen name="profile_image_top_space_6">6dp</dimen>
+    <dimen name="profile_text_top_space_8">8dp</dimen>
+    <dimen name="profile_line_top_space_18">18dp</dimen>
+    <dimen name="profile_image_end_space_16">16dp</dimen>
+
+    <dimen name="text_font_8">8sp</dimen>
+    <dimen name="text_font_14">14sp</dimen>
+    <dimen name="text_font_16">16sp</dimen>
 </resources>
