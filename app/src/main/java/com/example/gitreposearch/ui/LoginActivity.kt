@@ -6,25 +6,43 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
-import com.example.gitreposearch.R
+import androidx.activity.viewModels
+import com.example.gitreposearch.BuildConfig
+import com.example.gitreposearch.GlobalApplication
+import com.example.gitreposearch.MainActivity
 import com.example.gitreposearch.databinding.ActivityLoginBinding
-import com.example.gitreposearch.network.GithubApiImpl
 import com.example.gitreposearch.utils.Constants
+import com.example.gitreposearch.viewmodel.CustomViewModelFactory
+import com.example.gitreposearch.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
-    
-    companion object{
+
+    companion object {
         const val TAG = "LoginActivity"
     }
 
     private val binding: ActivityLoginBinding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
+    private val loginViewModel: LoginViewModel by viewModels {
+        CustomViewModelFactory(GlobalApplication.githubRepository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         initLayout()
+        initObserver()
+    }
+
+    private fun initObserver() {
+        loginViewModel.token.observe(this@LoginActivity) {
+            Log.e(TAG, "initObserver: token: $it", )
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java).apply {
+                putExtra("token", it)
+            })
+            finish()
+        }
     }
 
     private fun initLayout() {
@@ -38,40 +56,21 @@ class LoginActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val uri = intent?.data
-        uri?.let { 
+        uri?.let {
             val code = uri.getQueryParameter("code")
             code?.let {
-                testGetToken(it)
-                Log.e(TAG, "onResume: success $code", )
-                Log.e(TAG, "onResume: success ${uri.query}", )
-                Log.e(TAG, "onResume: success ${uri.userInfo}", )
+                loginViewModel.getToken(it)
                 Toast.makeText(this@LoginActivity, "success! $code", Toast.LENGTH_SHORT).show()
-            }?:uri.getQueryParameter("error")?.let {
-                Log.e(TAG, "onResume: error ${it}", )
-                Toast.makeText(this@LoginActivity, "로그인에 실패하였습니다.", Toast.LENGTH_SHORT).show()
-            }
+            } ?: Toast.makeText(this@LoginActivity, "로그인 실패", Toast.LENGTH_LONG).show()
         }
     }
 
-    //Todo 삭제할 함수 -> Repository and ViewModel 로 이동
-    private fun testGetToken(code: String){
-        lifecycleScope.launch {
-            val response = GithubApiImpl.githubApi.getAccessToken(
-                clientId = resources.getString(R.string.client_id),
-                clientSecret = resources.getString(R.string.client_secret),
-                code = code
+    private fun login() {
+        val intent = Intent(
+            Intent.ACTION_VIEW, Uri.parse(
+                "${Constants.oauthLoginUrl}?client_id=${BuildConfig.CLIENT_ID}&scope=user+repo"
             )
-            Log.e(TAG, "testGetToken: ${response.code()}", )
-            Log.e(TAG, "testGetToken: ${response.body()}", )
-            Log.e(TAG, "testGetToken: ${response.errorBody()}", )
-        }
-
-    }
-
-    private fun login(){
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(
-            "${Constants.oauthLoginUrl}?client_id=${resources.getString(R.string.client_id)}&scope=user+repo"
-        ))
+        )
         startActivity(intent)
 
     }

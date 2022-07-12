@@ -13,5 +13,7 @@
     <color name="purple">#C297FF</color>
     <color name="gray">#74869B</color>
     <color name="black">#111723</color>
+    <color name="background_100">#122340</color>
+    <color name="background_0">#00122340</color>
     <color name="navy">#1B2840</color>
 </resources>
