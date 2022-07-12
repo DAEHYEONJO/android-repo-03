@@ -18,7 +18,7 @@
         app:title="What's in My Github"
         tools:ignore="MissingConstraints" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <ToggleButton
         android:id="@+id/main_issueTab_btn"
         android:layout_width="0dp"
         android:layout_height="32dp"
@@ -27,13 +27,14 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="72dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/frame_tabbutton"
+        android:background="@drawable/main_toggletab_selector"
         android:letterSpacing="0.06"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
-        android:text="Issue"
+        android:textOn="Issue"
+        android:textOff="Issue"
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/main_notificationTab_btn"
@@ -41,19 +42,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <ToggleButton
         android:id="@+id/main_notificationTab_btn"
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="72dp"
         android:layout_marginEnd="24dp"
-        android:background="@drawable/frame_notabbutton"
+        android:background="@drawable/main_toggletab_selector"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
-        android:text="Notifications"
+        android:textOn="Notifications"
+        android:textOff="Notifications"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
