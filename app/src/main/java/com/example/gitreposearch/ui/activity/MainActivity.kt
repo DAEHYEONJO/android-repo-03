@@ -55,9 +55,14 @@ class MainActivity : AppCompatActivity() {
         with(mainViewModel) {
             token.observe(this@MainActivity) { token ->
                 getUserInfo(token)
+                getUserIssue(token)
             }
             userInfo.observe(this@MainActivity) { userInfo ->
                 Glide.with(this@MainActivity).load(userInfo.avatarUrl).into(binding.mainAppbarProfileBtn);
+            }
+            userIssueList.observe(this@MainActivity) { userIssueList ->
+                Log.d("IssueList observe", "${userIssueList}")
+
             }
         }
     }
