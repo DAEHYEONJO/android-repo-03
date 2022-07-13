@@ -1,14 +1,17 @@
 package com.example.gitreposearch.ui.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.gitreposearch.R
+import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.databinding.ActivityMainBinding
 import com.example.gitreposearch.ui.fragments.IssueFragment
 import com.example.gitreposearch.ui.fragments.NotificationFragment
@@ -27,6 +30,9 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.topAppBar)
+
 
         initMainViewModel()
         initToggleTabButton()
@@ -49,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun initToggleTabObserver(){
-
         mainViewModel.currentTabState.observe(this, Observer{ newState ->
             when(newState){
                 "Issue" -> {
@@ -62,7 +67,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             setFrag(newState)
-
         })
     }
 
@@ -80,7 +84,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_appbar_menu, menu)
+        return true
+    }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.mainAppbar_search -> {
@@ -89,7 +97,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.mainAppbar_profile -> {
-            // Todo : ProfileActivity 로 화면전환
+            /*
+            startActivity(Intent(this, ProfileActivity::class.java).apply {
+                putExtra("token", intent.getSerializableExtra("token"))
+            })
+             */
             true
         }
         else -> {
