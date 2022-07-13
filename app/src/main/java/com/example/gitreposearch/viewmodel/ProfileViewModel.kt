@@ -13,18 +13,6 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel: ViewModel() {
 
-    private val _userInfo = MutableLiveData<UserInfo>()
-    val userInfo: LiveData<UserInfo> get() = _userInfo
+    val userInfo = MutableLiveData<UserInfo>()
 
-//    fun getUserInfo(token: Token){
-//        viewModelScope.launch(Dispatchers.IO){
-//            repository.getUserInfo(token).apply {
-//                if (this is GithubApiResponse.Success){
-//                    _userInfo.postValue(data!!)
-//                }else if (this is GithubApiResponse.Error){
-//                    throw Exception("github getUserInfo exception code: $exceptionCode")
-//                }
-//            }
-//        }
-//    }
 }

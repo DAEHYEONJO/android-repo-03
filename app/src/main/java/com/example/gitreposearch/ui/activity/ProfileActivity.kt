@@ -1,6 +1,5 @@
 package com.example.gitreposearch.ui.activity
 
-import android.content.Context
 import android.graphics.Paint
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +9,8 @@ import com.bumptech.glide.Glide
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
 import com.example.gitreposearch.data.Token
+import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.databinding.ActivityProfileBinding
-import com.example.gitreposearch.repository.GithubApiRepository
 import com.example.gitreposearch.viewmodel.CustomViewModelFactory
 import com.example.gitreposearch.viewmodel.ProfileViewModel
 
@@ -22,23 +21,20 @@ class ProfileActivity : AppCompatActivity() {
             layoutInflater
         )
     }
-    private val profileViewModel: ProfileViewModel by viewModels {
-        CustomViewModelFactory(GlobalApplication.githubApiRepository)
-    }
+    private val profileViewModel: ProfileViewModel by viewModels()
     private lateinit var token: Token
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initToken()
+        initUserInfo()
         initAppBar()
         initObserver()
     }
 
-    private fun initToken() {
-        token = intent.getSerializableExtra("token") as Token
-        profileViewModel.getUserInfo(token)
+    private fun initUserInfo() {
+        profileViewModel.userInfo.value = intent.getSerializableExtra("userInfo") as UserInfo
     }
 
     private fun initObserver() {

@@ -37,8 +37,20 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.topAppBar)
         getToken()
+        initObserver()
         initToggleTabButton()
         initToggleTabObserver()
+    }
+
+    private fun initObserver() {
+        with(mainViewModel){
+            token.observe(this@MainActivity) { token ->
+                getUserInfo(token)
+            }
+            userInfo.observe(this@MainActivity) { userInfo ->
+
+            }
+        }
     }
 
     private fun getToken(){
@@ -101,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 
         R.id.mainAppbar_profile -> {
             startActivity(Intent(this, ProfileActivity::class.java).apply {
-                putExtra("token", intent.getSerializableExtra("token"))
+                putExtra("userInfo", mainViewModel.userInfo.value)
             })
 
             true
