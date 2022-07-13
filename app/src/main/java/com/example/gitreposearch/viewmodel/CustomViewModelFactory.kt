@@ -9,7 +9,10 @@ class CustomViewModelFactory<X> (private val repository: X): ViewModelProvider.F
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when(repository){
             is GithubRepository ->  LoginViewModel(GlobalApplication.githubRepository) as T
+            is String -> MainViewModel(repository) as T
             else -> super.create(modelClass)
         }
     }
+
+
 }

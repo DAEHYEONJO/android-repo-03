@@ -2,17 +2,25 @@ package com.example.gitreposearch.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.gitreposearch.R
 import com.example.gitreposearch.databinding.ActivityMainBinding
 import com.example.gitreposearch.ui.fragments.IssueFragment
 import com.example.gitreposearch.ui.fragments.NotificationFragment
+import com.example.gitreposearch.utils.Constants
+import com.example.gitreposearch.viewmodel.CustomViewModelFactory
+import com.example.gitreposearch.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
+    private lateinit var mainViewModel: MainViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,37 +28,59 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initStartDisplay()
-        initToggleButton()
-
+        initMainViewModel()
+        initToggleTabButton()
+        initToggleTabObserver()
     }
 
-    private fun initStartDisplay() {
-        supportFragmentManager.commit{
-            replace<IssueFragment>(R.id.main_hostFrag)
-        }
+    private fun initMainViewModel() {
+        val mainViewModelFactory = CustomViewModelFactory("Issue")
+        mainViewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
     }
 
-    private fun initToggleButton() {
+    private fun initToggleTabButton(){
         with(binding){
             mainIssueTabBtn.setOnClickListener {
-                mainNotificationTabBtn.setBackgroundResource(R.drawable.frame_notabbutton)
-                mainIssueTabBtn.setBackgroundResource(R.drawable.frame_tabbutton)
-
-                supportFragmentManager.commit {
-                    replace<IssueFragment>(R.id.main_hostFrag)
-                }
+                mainViewModel.changeState("Issue")
             }
             mainNotificationTabBtn.setOnClickListener {
-                mainIssueTabBtn.setBackgroundResource(R.drawable.frame_notabbutton)
-                mainNotificationTabBtn.setBackgroundResource(R.drawable.frame_tabbutton)
-
-                supportFragmentManager.commit {
-                    replace<NotificationFragment>(R.id.main_hostFrag)
-                }
+                mainViewModel.changeState("Notifications")
             }
         }
     }
+    private fun initToggleTabObserver(){
+
+        mainViewModel.currentTabState.observe(this, Observer{ newState ->
+            when(newState){
+                "Issue" -> {
+                    binding.mainIssueTabBtn.isChecked = true
+                    binding.mainNotificationTabBtn.isChecked = false
+                }
+                "Notifications" -> {
+                    binding.mainIssueTabBtn.isChecked = false
+                    binding.mainNotificationTabBtn.isChecked = true
+                }
+            }
+            setFrag(newState)
+
+        })
+    }
+
+    private fun setFrag(state: String) {
+        with(supportFragmentManager) {
+            when(state) {
+                "Issue" -> {
+                    commit{replace<IssueFragment>(R.id.main_hostFrag)}
+
+                }
+                "Notifications" -> {
+                    commit{replace<NotificationFragment>(R.id.main_hostFrag)}
+                }
+
+            }
+        }
+    }
+    
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.mainAppbar_search -> {
@@ -66,26 +96,5 @@ class MainActivity : AppCompatActivity() {
             super.onOptionsItemSelected(item)
         }
     }
-
-    private fun initFilterSpinner() {
-        /*
-          ArrayAdapter.createFromResource(
-            this,
-              R.array.filter_option_array,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(R.layout.menu_filter_option)
-            // Apply the adapter to the spinner
-            binding.mainFilterSpinner.adapter = adapter
-            binding.mainFilterSpinner.setPopupBackgroundResource(R.drawable.frame_filter_popup)
-            binding.mainFilterSpinner.dropDownVerticalOffset = 160
-
-        }
-
-        binding.mainFilterSpinner.setPopupBackgroundResource(R.drawable.frame_filter_spinner)
-        binding.mainFilterSpinner.dropDownVerticalOffset = 160
-        binding.mainFilterSpinner.adapter = FilterSpinnerAdapter(this)
-         */
-    }
+    
 }
