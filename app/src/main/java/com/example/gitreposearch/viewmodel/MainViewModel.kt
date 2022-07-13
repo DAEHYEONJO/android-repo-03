@@ -43,7 +43,7 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         }
     }
 
-    fun getUserIssue(token : Token){
+    fun getUserIssueList(token : Token){
         viewModelScope.launch(Dispatchers.IO){
             repository.getUserIssueList(token).apply {
                 if(this is GithubApiResponse.Success){
