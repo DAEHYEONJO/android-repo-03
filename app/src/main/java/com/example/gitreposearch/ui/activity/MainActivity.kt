@@ -97,11 +97,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.mainAppbar_profile -> {
-            /*
             startActivity(Intent(this, ProfileActivity::class.java).apply {
                 putExtra("token", intent.getSerializableExtra("token"))
             })
-             */
+
             true
         }
         else -> {
