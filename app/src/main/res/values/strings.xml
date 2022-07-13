@@ -3,4 +3,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login_title">What\'s In\nMy GitHub</string>
     <string name="github_login">GitHub 로그인</string>
+    <string name="title">Title</string>
+    <string name="profile">Profile</string>
+    <string name="followers_between_following">•</string>
+    <string name="repositories">Repositories</string>
+    <string name="starred">Starred</string>
 </resources>
