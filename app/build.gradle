@@ -77,4 +77,9 @@ dependencies {
     // Fragment
     implementation "androidx.fragment:fragment-ktx:1.5.0"
 
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+    implementation 'jp.wasabeef:glide-transformations:4.3.0'
+
 }
