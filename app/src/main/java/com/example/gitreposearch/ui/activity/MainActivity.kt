@@ -1,11 +1,14 @@
 package com.example.gitreposearch.ui.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.gitreposearch.R
+import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.databinding.ActivityMainBinding
 import com.example.gitreposearch.ui.fragments.IssueFragment
 import com.example.gitreposearch.ui.fragments.NotificationFragment
@@ -13,6 +16,7 @@ import com.example.gitreposearch.ui.fragments.NotificationFragment
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
+    private lateinit var token: Token
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,9 +24,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        getToken()
         initStartDisplay()
         initToggleButton()
 
+    }
+
+    private fun getToken(){
+        token = intent.getSerializableExtra("token") as Token
     }
 
     private fun initStartDisplay() {

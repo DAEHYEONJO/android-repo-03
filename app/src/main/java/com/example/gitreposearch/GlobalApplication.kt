@@ -2,6 +2,7 @@ package com.example.gitreposearch
 
 import android.app.Application
 import android.content.Context
+import com.example.gitreposearch.repository.GithubApiRepository
 import com.example.gitreposearch.repository.GithubRepository
 
 class GlobalApplication: Application(){
@@ -17,6 +18,7 @@ class GlobalApplication: Application(){
         }
 
         lateinit var githubRepository: GithubRepository
+        lateinit var githubApiRepository: GithubApiRepository
     }
 
     override fun onCreate() {
@@ -26,6 +28,7 @@ class GlobalApplication: Application(){
 
     private fun initProperties() {
         githubRepository = GithubRepository()
+        githubApiRepository = GithubApiRepository()
     }
 
 }
