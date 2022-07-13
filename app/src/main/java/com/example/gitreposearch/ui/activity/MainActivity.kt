@@ -4,26 +4,23 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import com.bumptech.glide.Glide
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
 import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.databinding.ActivityMainBinding
 import com.example.gitreposearch.ui.fragments.IssueFragment
 import com.example.gitreposearch.ui.fragments.NotificationFragment
-import com.example.gitreposearch.utils.Constants
 import com.example.gitreposearch.viewmodel.CustomViewModelFactory
 import com.example.gitreposearch.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels {
         CustomViewModelFactory(GlobalApplication.githubApiRepository)
     }
@@ -35,31 +32,43 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.topAppBar)
+
         getToken()
+        initAppBarButton()
         initObserver()
         initToggleTabButton()
         initToggleTabObserver()
     }
 
+    private fun initAppBarButton() {
+        binding.mainAppbarProfileBtn.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java).apply {
+                putExtra("userInfo", mainViewModel.userInfo.value)
+            })
+        }
+        binding.mainAppbarSearchBtn.setOnClickListener {
+            Log.d("search btn", "clicked")
+        }
+    }
+
     private fun initObserver() {
-        with(mainViewModel){
+        with(mainViewModel) {
             token.observe(this@MainActivity) { token ->
                 getUserInfo(token)
             }
             userInfo.observe(this@MainActivity) { userInfo ->
-
+                Glide.with(this@MainActivity).load(userInfo.avatarUrl).into(binding.mainAppbarProfileBtn);
             }
         }
     }
 
-    private fun getToken(){
+    private fun getToken() {
         mainViewModel.token.value = intent.getSerializableExtra("token") as Token
     }
 
 
-    private fun initToggleTabButton(){
-        with(binding){
+    private fun initToggleTabButton() {
+        with(binding) {
             mainIssueTabBtn.setOnClickListener {
                 mainViewModel.changeState("Issue")
             }
@@ -69,9 +78,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initToggleTabObserver(){
-        mainViewModel.currentTabState.observe(this, Observer{ newState ->
-            when(newState){
+    private fun initToggleTabObserver() {
+        mainViewModel.currentTabState.observe(this, Observer { newState ->
+            when (newState) {
                 "Issue" -> {
                     binding.mainIssueTabBtn.isChecked = true
                     binding.mainNotificationTabBtn.isChecked = false
@@ -87,40 +96,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFrag(state: String) {
         with(supportFragmentManager) {
-            when(state) {
+            when (state) {
                 "Issue" -> {
-                    commit{replace<IssueFragment>(R.id.main_hostFrag)}
+                    commit { replace<IssueFragment>(R.id.main_hostFrag) }
 
                 }
                 "Notifications" -> {
-                    commit{replace<NotificationFragment>(R.id.main_hostFrag)}
+                    commit { replace<NotificationFragment>(R.id.main_hostFrag) }
                 }
 
             }
         }
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_appbar_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.mainAppbar_search -> {
-            // Todo : SearchActivity 로 화면전환
-            true
-        }
-
-        R.id.mainAppbar_profile -> {
-            startActivity(Intent(this, ProfileActivity::class.java).apply {
-                putExtra("userInfo", mainViewModel.userInfo.value)
-            })
-
-            true
-        }
-        else -> {
-            super.onOptionsItemSelected(item)
-        }
-    }
-    
 }
