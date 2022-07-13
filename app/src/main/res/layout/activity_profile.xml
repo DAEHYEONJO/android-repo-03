@@ -20,12 +20,11 @@
         android:layout_height="80dp"
         android:layout_marginStart="@dimen/app_base_space_24"
         android:layout_marginTop="6dp"
-        android:src="@color/white_40"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_app_bar" />
 
     <TextView
-        android:id="@+id/profile_name_tv_1"
+        android:id="@+id/profile_login_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/profile_image_end_space_16"
@@ -33,42 +32,42 @@
         android:fontFamily="@font/kopubworld_dotum_pro_bold"
         android:gravity="top"
         android:includeFontPadding="false"
-        android:text="멋진 삼"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/profile_img"
         app:layout_constraintTop_toBottomOf="@+id/profile_app_bar" />
 
     <TextView
-        android:id="@+id/profile_name_tv_2"
+        android:id="@+id/profile_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sam"
+        android:text=""
         android:textColor="@color/gray"
         android:textSize="16sp"
         android:includeFontPadding="false"
-        app:layout_constraintStart_toStartOf="@+id/profile_name_tv_1"
-        app:layout_constraintTop_toBottomOf="@+id/profile_name_tv_1" />
+        app:layout_constraintStart_toStartOf="@+id/profile_login_tv"
+        app:layout_constraintTop_toBottomOf="@+id/profile_login_tv" />
 
     <TextView
-        android:id="@+id/profile_field_tv"
+        android:id="@+id/profile_bio_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/profile_text_top_space_8"
         android:background="@drawable/profile_field_background"
         android:fontFamily="@font/kopubworld_dotum_pro_medium"
         android:gravity="center"
-        android:text="Android develop"
+        android:text=""
         android:textColor="@color/gray"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/profile_name_tv_2"
-        app:layout_constraintTop_toBottomOf="@+id/profile_name_tv_2" />
+        app:layout_constraintStart_toStartOf="@+id/profile_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/profile_name_tv" />
 
     <View
         android:id="@+id/profile_line"
         android:layout_width="match_parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_field_tv"
+        app:layout_constraintTop_toBottomOf="@+id/profile_bio_tv"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/profile_line_top_space_18"
         android:background="@color/navy"
@@ -90,7 +89,7 @@
         app:layout_constraintStart_toEndOf="@+id/profile_location_img"
         app:layout_constraintTop_toTopOf="@+id/profile_location_img"
         app:layout_constraintBottom_toBottomOf="@+id/profile_location_img"
-        android:text="Seoul, Korea"
+        android:text=""
         style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
         android:layout_marginStart="@dimen/profile_text_top_space_8"
          />
@@ -102,16 +101,16 @@
         app:layout_constraintTop_toBottomOf="@+id/profile_location_img"
         app:layout_constraintStart_toStartOf="@+id/profile_location_img"
         android:layout_marginTop="@dimen/profile_image_end_space_16"
-        android:src="@drawable/ic_profile_link"/>
+        android:src="@drawable/ic_profile_blog"/>
 
     <TextView
-        android:id="@+id/profile_link_tv"
+        android:id="@+id/profile_blog_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/profile_link_img"
         app:layout_constraintTop_toTopOf="@+id/profile_link_img"
         app:layout_constraintBottom_toBottomOf="@+id/profile_link_img"
-        android:text="http://medium.com/@sam"
+        android:text=""
         style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
         android:layout_marginStart="@dimen/profile_text_top_space_8" />
 
@@ -122,16 +121,16 @@
         app:layout_constraintTop_toBottomOf="@+id/profile_link_img"
         app:layout_constraintStart_toStartOf="@+id/profile_link_img"
         android:layout_marginTop="@dimen/profile_image_end_space_16"
-        android:src="@drawable/ic_profile_mail"/>
+        android:src="@drawable/ic_profile_email"/>
 
     <TextView
-        android:id="@+id/profile_mail_tv"
+        android:id="@+id/profile_email_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/profile_mail_img"
         app:layout_constraintTop_toTopOf="@+id/profile_mail_img"
         app:layout_constraintBottom_toBottomOf="@+id/profile_mail_img"
-        android:text="sam@gmail.com"
+        android:text=""
         style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
         android:layout_marginStart="@dimen/profile_text_top_space_8" />
 
@@ -153,7 +152,7 @@
         app:layout_constraintStart_toEndOf="@+id/profile_user_img"
         android:layout_marginStart="@dimen/profile_text_top_space_8"
         style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"
-        android:text="59" />
+        android:text="" />
 
     <TextView
         android:id="@+id/profile_followers_hardcode_tv"
@@ -164,7 +163,7 @@
         app:layout_constraintStart_toEndOf="@+id/profile_followers_tv"
         android:layout_marginStart="@dimen/profile_text_start_space_4"
         style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
-        android:text="Followers" />
+        android:text="@string/followers" />
 
     <TextView
         android:id="@+id/profile_dot_hardcode_tv"
@@ -186,7 +185,7 @@
         app:layout_constraintStart_toEndOf="@+id/profile_dot_hardcode_tv"
         android:layout_marginStart="@dimen/profile_text_start_space_4"
         style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"
-        android:text="6" />
+        android:text="" />
 
     <TextView
         android:id="@+id/profile_following_hardcode_tv"
@@ -197,7 +196,7 @@
         app:layout_constraintStart_toEndOf="@+id/profile_following_tv"
         android:layout_marginStart="@dimen/profile_text_start_space_4"
         style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
-        android:text="Following" />
+        android:text="@string/following" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         app:layout_constraintTop_toBottomOf="@+id/profile_user_img"
@@ -239,7 +238,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/profile_repository_img"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/profile_image_end_space_16"
-            android:text="41"
+            android:text=""
             style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"/>
 
 
@@ -274,7 +273,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/profile_starred_img"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/profile_image_end_space_16"
-            android:text="57"
+            android:text=""
             style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

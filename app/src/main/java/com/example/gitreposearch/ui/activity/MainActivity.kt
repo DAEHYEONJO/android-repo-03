@@ -1,14 +1,18 @@
 package com.example.gitreposearch.ui.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
+import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.databinding.ActivityMainBinding
 import com.example.gitreposearch.ui.fragments.IssueFragment
 import com.example.gitreposearch.ui.fragments.NotificationFragment
@@ -19,8 +23,10 @@ import com.example.gitreposearch.viewmodel.MainViewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
-    private lateinit var mainViewModel: MainViewModel
-
+    private val mainViewModel: MainViewModel by viewModels {
+        CustomViewModelFactory(GlobalApplication.githubApiRepository)
+    }
+    private lateinit var token: Token
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,15 +34,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initMainViewModel()
+        getToken()
         initToggleTabButton()
         initToggleTabObserver()
     }
 
-    private fun initMainViewModel() {
-        val mainViewModelFactory = CustomViewModelFactory("Issue")
-        mainViewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
+    private fun getToken(){
+        mainViewModel.token.value = intent.getSerializableExtra("token") as Token
     }
+
 
     private fun initToggleTabButton(){
         with(binding){
@@ -48,6 +54,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun initToggleTabObserver(){
 
         mainViewModel.currentTabState.observe(this, Observer{ newState ->

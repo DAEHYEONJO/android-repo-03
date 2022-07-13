@@ -8,4 +8,6 @@
     <string name="followers_between_following">•</string>
     <string name="repositories">Repositories</string>
     <string name="starred">Starred</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
 </resources>
