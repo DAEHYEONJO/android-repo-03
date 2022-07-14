@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
 import com.bumptech.glide.Glide
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
@@ -11,6 +12,7 @@ import androidx.fragment.app.replace
 import androidx.lifecycle.Observer
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
+import com.example.gitreposearch.adapter.IssueListRecyclerViewAdapter
 import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.databinding.ActivityMainBinding
 import com.example.gitreposearch.ui.fragments.IssueFragment
@@ -21,6 +23,7 @@ import com.example.gitreposearch.viewmodel.MainViewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
     private val mainViewModel: MainViewModel by viewModels {
         CustomViewModelFactory(GlobalApplication.githubApiRepository)
     }
@@ -32,13 +35,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         getToken()
         initAppBarButton()
         initObserver()
         initToggleTabButton()
         initToggleTabObserver()
     }
+
 
     private fun initAppBarButton() {
         with(binding) {
@@ -57,15 +60,15 @@ class MainActivity : AppCompatActivity() {
         with(mainViewModel) {
             token.observe(this@MainActivity) { token ->
                 getUserInfo(token)
-                getUserIssueList(token)
+                mainViewModel.getUserIssueList(token, mainViewModel.issueState.value.toString())
+                //getIssueList()
             }
             userInfo.observe(this@MainActivity) { userInfo ->
                 Glide.with(this@MainActivity).load(userInfo.avatarUrl)
                     .into(binding.mainAppbarProfileBtn);
             }
-            userIssueList.observe(this@MainActivity) { userIssueList ->
-                Log.d("IssueList observe", "${userIssueList}")
-
+            userIssueList.observe(this@MainActivity) {
+                Log.d("IssueList", mainViewModel.userIssueList.value.toString())
             }
         }
     }
@@ -73,6 +76,12 @@ class MainActivity : AppCompatActivity() {
     private fun getToken() {
         mainViewModel.token.value = intent.getSerializableExtra("token") as Token
     }
+
+    /*
+       private fun getIssueList() {
+           mainViewModel.getUserIssueList(token)
+       }
+     */
 
 
     private fun initToggleTabButton() {
@@ -87,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initToggleTabObserver() {
-        mainViewModel.currentTabState.observe(this, Observer { newState ->
+        mainViewModel.currentTabState.observe(this) { newState ->
             when (newState) {
                 "Issue" -> {
                     binding.mainIssueTabBtn.isChecked = true
@@ -99,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             setFrag(newState)
-        })
+        }
     }
 
     private fun setFrag(state: String) {
@@ -116,4 +125,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 }

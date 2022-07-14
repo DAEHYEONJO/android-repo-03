@@ -24,6 +24,9 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     private val _userIssueList = MutableLiveData<List<Issue>>()
     val userIssueList : LiveData<List<Issue>> get() = _userIssueList
 
+    private val _issueState = MutableLiveData<String>()
+    val issueState : LiveData<String> get() = _issueState
+
     val token = MutableLiveData<Token>()
 
 
@@ -43,9 +46,9 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         }
     }
 
-    fun getUserIssueList(token : Token){
+    fun getUserIssueList(token : Token, state : String){
         viewModelScope.launch(Dispatchers.IO){
-            repository.getUserIssueList(token).apply {
+            repository.getUserIssueList(token, state.lowercase()).apply {
                 if(this is GithubApiResponse.Success){
                     _userIssueList.postValue(this.data!!)
                 }
@@ -54,6 +57,10 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
                 }
             }
         }
+    }
+
+    fun setIssueState(state : String){
+        _issueState.value = state
     }
 
 }

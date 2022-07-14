@@ -31,6 +31,7 @@ interface GithubApi {
     @GET("issues")
     suspend fun getUserIssueList(
         @Header("Authorization") userToken : String,
+        @Query("state") state:String,
         @Query("filter") filter:String = "all"
     ): Response<List<Issue>>
 
