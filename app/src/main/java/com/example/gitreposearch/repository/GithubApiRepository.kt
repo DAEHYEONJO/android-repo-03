@@ -1,6 +1,7 @@
 package com.example.gitreposearch.repository
 
 import android.util.Log
+import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.network.GithubApiImpl
@@ -30,6 +31,18 @@ class GithubApiRepository {
             GithubApiResponse.Error(exceptionCode = responseUser.code())
         }
     }
+
+    suspend fun getUserIssueList(token: Token, state : String): GithubApiResponse<List<Issue>?> {
+        Log.e(TAG, "getUserIssueList: ${token.tokenType} ${token.accessToken}", )
+        val response = GithubApiImpl.githubApi.getUserIssueList("${token.tokenType} ${token.accessToken}", state)
+        Log.e(TAG, "getUserIssueList: ${response}", )
+        return if (response.isSuccessful){
+            GithubApiResponse.Success(data = response.body())
+        }else{
+            GithubApiResponse.Error(exceptionCode = response.code())
+        }
+    }
+
 
 
 }

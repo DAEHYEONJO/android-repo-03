@@ -8,15 +8,53 @@
     android:backgroundTintMode="src_over"
     tools:context=".ui.activity.MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/topAppBar"
-        style="@style/Widget.MaterialComponents.Toolbar.Primary"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/main_appBar_layout"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:background="#00000000"
-        app:menu="@menu/main_appbar_menu"
-        app:title="What's in My Github"
-        tools:ignore="MissingConstraints" />
+        android:background="#00FFFFFF"
+        app:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/main_toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/mainAppbar_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="26dp"
+                android:layout_marginBottom="26dp"
+                android:fontFamily="@font/outfit_semibold_600"
+                android:text="What's In My Github"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/mainAppbar_profile_btn"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="24dp"
+                android:background="#00000000" />
+
+            <ImageButton
+                android:id="@+id/mainAppbar_search_btn"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="24dp"
+                android:background="#00000000"
+                android:src="@drawable/appbar_search_ic" />
+        </androidx.appcompat.widget.Toolbar>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ToggleButton
         android:id="@+id/main_issueTab_btn"
@@ -33,9 +71,9 @@
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
-        android:textOn="Issue"
-        android:textOff="Issue"
         android:textColor="@color/white"
+        android:textOff="Issue"
+        android:textOn="Issue"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/main_notificationTab_btn"
         app:layout_constraintHorizontal_bias="0.5"
@@ -54,9 +92,9 @@
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
-        android:textOn="Notifications"
-        android:textOff="Notifications"
         android:textColor="@color/white"
+        android:textOff="Notifications"
+        android:textOn="Notifications"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/main_issueTab_btn"

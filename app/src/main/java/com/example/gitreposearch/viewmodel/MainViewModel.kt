@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gitreposearch.GlobalApplication
+import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.network.GithubApiImpl
@@ -26,11 +27,14 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     private val _userInfo = MutableLiveData<UserInfo>()
     val userInfo: LiveData<UserInfo> get() = _userInfo
 
+    private val _userIssueList = MutableLiveData<List<Issue>>()
+    val userIssueList : LiveData<List<Issue>> get() = _userIssueList
+
+    private val _issueState = MutableLiveData<String>()
+    val issueState : LiveData<String> get() = _issueState
+
     val token = MutableLiveData<Token>()
 
-    init {
-
-    }
 
     fun changeState(state: String) {
         _currentTabState.value = state
@@ -47,6 +51,23 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
                 }
             }
         }
+    }
+
+    fun getUserIssueList(token : Token, state : String){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.getUserIssueList(token, state.lowercase()).apply {
+                if(this is GithubApiResponse.Success){
+                    _userIssueList.postValue(this.data!!)
+                }
+                else{
+                    Log.d("Reponse ", "실패")
+                }
+            }
+        }
+    }
+
+    fun setIssueState(state : String){
+        _issueState.value = state
     }
 
 }
