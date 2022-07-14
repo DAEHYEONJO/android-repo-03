@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels {
         CustomViewModelFactory(GlobalApplication.githubApiRepository)
     }
-    private lateinit var token: Token
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         initAppBarButton()
         initObserver()
         initToggleTabButton()
-        initToggleTabObserver()
     }
 
 
@@ -56,19 +54,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun initObserver() {
         with(mainViewModel) {
             token.observe(this@MainActivity) { token ->
                 getUserInfo(token)
-                mainViewModel.getUserIssueList(token, mainViewModel.issueState.value.toString())
-                //getIssueList()
             }
             userInfo.observe(this@MainActivity) { userInfo ->
                 Glide.with(this@MainActivity).load(userInfo.avatarUrl)
+                    .circleCrop()
                     .into(binding.mainAppbarProfileBtn);
             }
-            userIssueList.observe(this@MainActivity) {
-                Log.d("IssueList", mainViewModel.userIssueList.value.toString())
+            currentTabState.observe(this@MainActivity) { newState ->
+                with(binding) {
+                    when (newState) {
+                        "Issue" -> {
+                            mainIssueTabBtn.isChecked = true
+                            mainNotificationTabBtn.isChecked = false
+                        }
+                        "Notifications" -> {
+                            mainIssueTabBtn.isChecked = false
+                            mainNotificationTabBtn.isChecked = true
+                        }
+                    }
+                    setFrag(newState)
+                }
             }
         }
     }
@@ -76,12 +86,6 @@ class MainActivity : AppCompatActivity() {
     private fun getToken() {
         mainViewModel.token.value = intent.getSerializableExtra("token") as Token
     }
-
-    /*
-       private fun getIssueList() {
-           mainViewModel.getUserIssueList(token)
-       }
-     */
 
 
     private fun initToggleTabButton() {
@@ -92,22 +96,6 @@ class MainActivity : AppCompatActivity() {
             mainNotificationTabBtn.setOnClickListener {
                 mainViewModel.changeState("Notifications")
             }
-        }
-    }
-
-    private fun initToggleTabObserver() {
-        mainViewModel.currentTabState.observe(this) { newState ->
-            when (newState) {
-                "Issue" -> {
-                    binding.mainIssueTabBtn.isChecked = true
-                    binding.mainNotificationTabBtn.isChecked = false
-                }
-                "Notifications" -> {
-                    binding.mainIssueTabBtn.isChecked = false
-                    binding.mainNotificationTabBtn.isChecked = true
-                }
-            }
-            setFrag(newState)
         }
     }
 
@@ -125,5 +113,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 
 }

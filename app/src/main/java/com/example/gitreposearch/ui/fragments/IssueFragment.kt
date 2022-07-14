@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitreposearch.R
 import com.example.gitreposearch.adapter.IssueListRecyclerViewAdapter
+import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.databinding.FragmentIssueBinding
 import com.example.gitreposearch.viewmodel.MainViewModel
 
@@ -19,7 +20,7 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private var binding : FragmentIssueBinding? = null
     private val mainViewModel : MainViewModel by activityViewModels()
-    private lateinit var adapter: IssueListRecyclerViewAdapter
+    private lateinit var issueRecyclerViewAdapter: IssueListRecyclerViewAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -51,24 +52,36 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun initIssueRecyclerView(){
-        adapter = IssueListRecyclerViewAdapter()
+        issueRecyclerViewAdapter = IssueListRecyclerViewAdapter()
         with(binding!!){
             issueRecyclerView.layoutManager = LinearLayoutManager(activity)
-            issueRecyclerView.adapter = adapter
+            issueRecyclerView.adapter = issueRecyclerViewAdapter
         }
 
     }
+    private fun getIssueList(token: Token?) {
+        if (token != null) {
+            mainViewModel.getUserIssueList(token)
+        }
+    }
 
-
+    override fun onResume() {
+        super.onResume()
+        getIssueList(mainViewModel.token.value)
+    }
 
     private fun initObserve(){
-        mainViewModel.userIssueList.observe(viewLifecycleOwner){ issueList ->
-            adapter.setData(issueList)
-        }
+        with(mainViewModel){
+            token.observe(viewLifecycleOwner){token
+                getIssueList(token.value)
+            }
 
-        mainViewModel.issueState.observe(viewLifecycleOwner){state ->
-            mainViewModel.token.value?.let { mainViewModel.getUserIssueList(it, state) }
-
+            userIssueList.observe(viewLifecycleOwner){ issueList ->
+                issueRecyclerViewAdapter.setData(issueList)
+            }
+            issueState.observe(viewLifecycleOwner){
+                token.value?.let { token -> getUserIssueList(token) }
+            }
         }
     }
 
