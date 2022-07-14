@@ -101,6 +101,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFrag(state: String) {
         with(supportFragmentManager) {
+            Log.e("IssueFragment", "setFrag: ${this.fragments.toList()}", )
             when (state) {
                 "Issue" -> {
                     commit { replace<IssueFragment>(R.id.main_hostFrag) }
