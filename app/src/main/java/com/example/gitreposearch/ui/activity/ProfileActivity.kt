@@ -22,7 +22,6 @@ class ProfileActivity : AppCompatActivity() {
         )
     }
     private val profileViewModel: ProfileViewModel by viewModels()
-    private lateinit var token: Token
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +59,7 @@ class ProfileActivity : AppCompatActivity() {
                 profileFollowingTv.text = userInfo.following.toString()
                 profileRepositoryCountTv.text =
                     (userInfo.publicRepos + userInfo.totalPrivateRepos).toString()
+                profileStarredCountTv.text = userInfo.starredCount.toString()
             }
         }
     }
@@ -70,6 +70,7 @@ class ProfileActivity : AppCompatActivity() {
         with(binding.profileAppBar) {
             setSupportActionBar(searchProfileToolBar)
             appBarTitleTv.text = resources.getString(R.string.profile)
+            appBarBackBtn.setOnClickListener { finish() }
         }
     }
 
