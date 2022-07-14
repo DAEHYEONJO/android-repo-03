@@ -7,4 +7,5 @@ data class Issue(
     @SerializedName("state") val state: String?,
     @SerializedName("title") val title: String?,
     @SerializedName("number") val number: String?,
+    @SerializedName("updated_at") val updated_at: String?
 )
