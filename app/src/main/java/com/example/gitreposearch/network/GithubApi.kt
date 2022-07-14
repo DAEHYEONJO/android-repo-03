@@ -1,9 +1,12 @@
 package com.example.gitreposearch.network
 
 import com.example.gitreposearch.BuildConfig
+import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.utils.Constants
+import com.google.gson.JsonElement
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -24,6 +27,12 @@ interface GithubApi {
         @Header("Authorization") tokenWithTokenType: String
     ): Response<UserInfo>
 
+    @Headers("Accept: application/vnd.github+json")
+    @GET("issues")
+    suspend fun getUserIssueList(
+        @Header("Authorization") userToken : String,
+        @Query("filter") filter:String = "all"
+    ): Response<List<Issue>>
 
 
 
