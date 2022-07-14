@@ -12,7 +12,7 @@
     <string name="followers">Followers</string>
 
     <!-- filter spinner list-->
-    <string-array name = "filter">
+    <string-array name="filter">
         <item>Open</item>
         <item>Closed</item>
         <item>All</item>

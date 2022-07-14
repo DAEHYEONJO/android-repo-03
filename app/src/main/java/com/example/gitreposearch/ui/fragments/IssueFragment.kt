@@ -16,6 +16,10 @@ import com.example.gitreposearch.databinding.FragmentIssueBinding
 import com.example.gitreposearch.viewmodel.MainViewModel
 
 class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
+    
+    companion object{
+        const val TAG = "IssueFragment"
+    }
 
     private var binding : FragmentIssueBinding? = null
     private val mainViewModel : MainViewModel by activityViewModels()
@@ -25,13 +29,13 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
         // Inflate the layout for this fragment
 
         binding = FragmentIssueBinding.inflate(inflater, container, false)
-
+        Log.e(TAG, "onCreateView: ", )
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.e(TAG, "onViewCreated: ", )
         initFilterSpinner()
         initIssueRecyclerView()
         initObserve()
@@ -63,10 +67,12 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun initObserve(){
         mainViewModel.userIssueList.observe(viewLifecycleOwner){ issueList ->
+            Log.e(TAG, "initObserve: userIssueList")
             adapter.setData(issueList)
         }
 
         mainViewModel.issueState.observe(viewLifecycleOwner){state ->
+            Log.e(TAG, "initObserve: issueState")
             mainViewModel.token.value?.let { mainViewModel.getUserIssueList(it, state) }
 
         }
@@ -74,7 +80,8 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
         val state = parent?.getItemAtPosition(pos).toString()
-        mainViewModel.setIssueState(state)
+        Log.e(TAG, "onItemSelected: $state", )
+        //mainViewModel.setIssueState(state)
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -82,6 +89,7 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.e(TAG, "onDestroyView: ", )
         binding = null
     }
 
