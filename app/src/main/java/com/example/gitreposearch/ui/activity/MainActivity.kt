@@ -41,13 +41,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initAppBarButton() {
-        binding.mainAppbarProfileBtn.setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java).apply {
-                putExtra("userInfo", mainViewModel.userInfo.value)
-            })
-        }
-        binding.mainAppbarSearchBtn.setOnClickListener {
-            Log.d("search btn", "clicked")
+        with(binding) {
+            mainAppbarProfileBtn.setOnClickListener {
+                startActivity(Intent(this@MainActivity, ProfileActivity::class.java).apply {
+                    putExtra("userInfo", mainViewModel.userInfo.value)
+                })
+            }
+            mainAppbarSearchBtn.setOnClickListener {
+                Log.d("search btn", "clicked")
+            }
         }
     }
 
@@ -58,7 +60,8 @@ class MainActivity : AppCompatActivity() {
                 getUserIssueList(token)
             }
             userInfo.observe(this@MainActivity) { userInfo ->
-                Glide.with(this@MainActivity).load(userInfo.avatarUrl).into(binding.mainAppbarProfileBtn);
+                Glide.with(this@MainActivity).load(userInfo.avatarUrl)
+                    .into(binding.mainAppbarProfileBtn);
             }
             userIssueList.observe(this@MainActivity) { userIssueList ->
                 Log.d("IssueList observe", "${userIssueList}")
