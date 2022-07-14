@@ -15,4 +15,6 @@ data class UserInfo(
     @SerializedName("following") val following: Int,
     @SerializedName("public_repos") val publicRepos: Int,
     @SerializedName("total_private_repos") val totalPrivateRepos: Int
-): Serializable
+): Serializable {
+    var starredCount = 0
+}

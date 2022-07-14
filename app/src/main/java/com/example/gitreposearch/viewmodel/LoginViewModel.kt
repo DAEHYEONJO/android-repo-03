@@ -13,7 +13,7 @@ class LoginViewModel(private val githubRepository: GithubRepository): ViewModel(
     val token: LiveData<Token> get() = _token
 
     fun getToken(code: String){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             githubRepository.getUserToken(code).apply {
                 if (this is GithubApiResponse.Success){
                     _token.postValue(data!!)

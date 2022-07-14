@@ -5,22 +5,29 @@ import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.network.GithubApiImpl
 import com.example.gitreposearch.network.GithubApiResponse
+import com.example.gitreposearch.viewmodel.MainViewModel
 
 class GithubApiRepository {
 
-    companion object{
+    companion object {
         const val TAG = "GithubApiRepository"
     }
 
-
     suspend fun getUserInfo(token: Token): GithubApiResponse<UserInfo?> {
-        Log.e(TAG, "getUserInfo: ${token.tokenType} ${token.accessToken}", )
-        val response = GithubApiImpl.githubApi.getUserInfo("${token.tokenType} ${token.accessToken}")
-        Log.e(TAG, "getUserInfo: ${response}", )
-        return if (response.isSuccessful){
-            GithubApiResponse.Success(data = response.body())
-        }else{
-            GithubApiResponse.Error(exceptionCode = response.code())
+        val responseUser =
+            GithubApiImpl.githubApi.getUserInfo("${token.tokenType} ${token.accessToken}")
+        return if (responseUser.isSuccessful) {
+            val responseUserBody = responseUser.body()
+            val loginName = responseUserBody?.login
+            val responseStarred = GithubApiImpl.githubApi.getStarred(
+                "${token.tokenType} ${token.accessToken}",
+                loginName!!
+            )
+            GithubApiResponse.Success(data = responseUserBody.apply {
+                starredCount = responseStarred.body()?.size ?: 0
+            })
+        } else {
+            GithubApiResponse.Error(exceptionCode = responseUser.code())
         }
     }
 

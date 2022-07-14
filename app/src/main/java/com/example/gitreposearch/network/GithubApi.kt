@@ -3,6 +3,7 @@ package com.example.gitreposearch.network
 import com.example.gitreposearch.BuildConfig
 import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
+import com.example.gitreposearch.data.starred.Starred
 import com.example.gitreposearch.utils.Constants
 import retrofit2.Response
 import retrofit2.http.*
@@ -24,6 +25,11 @@ interface GithubApi {
         @Header("Authorization") tokenWithTokenType: String
     ): Response<UserInfo>
 
+    @GET("/users/{user}/starred")
+    suspend fun getStarred(
+        @Header("Authorization") tokenWithTokenType: String,
+        @Path("user") user: String
+    ): Response<Starred>
 
 
 
