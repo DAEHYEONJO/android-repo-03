@@ -12,30 +12,27 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitreposearch.R
 import com.example.gitreposearch.adapter.IssueListRecyclerViewAdapter
+import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.databinding.FragmentIssueBinding
 import com.example.gitreposearch.viewmodel.MainViewModel
 
 class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
-    
-    companion object{
-        const val TAG = "IssueFragment"
-    }
 
     private var binding : FragmentIssueBinding? = null
     private val mainViewModel : MainViewModel by activityViewModels()
-    private lateinit var adapter: IssueListRecyclerViewAdapter
+    private lateinit var issueRecyclerViewAdapter: IssueListRecyclerViewAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
         binding = FragmentIssueBinding.inflate(inflater, container, false)
-        Log.e(TAG, "onCreateView: ", )
+
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.e(TAG, "onViewCreated: ", )
+
         initFilterSpinner()
         initIssueRecyclerView()
         initObserve()
@@ -55,33 +52,39 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun initIssueRecyclerView(){
-        adapter = IssueListRecyclerViewAdapter()
+        issueRecyclerViewAdapter = IssueListRecyclerViewAdapter()
         with(binding!!){
             issueRecyclerView.layoutManager = LinearLayoutManager(activity)
-            issueRecyclerView.adapter = adapter
+            issueRecyclerView.adapter = issueRecyclerViewAdapter
         }
 
     }
+    private fun getIssueList(token: Token?) {
+        if (token != null) {
+            mainViewModel.getUserIssueList(token)
+        }
+    }
 
-
+    override fun onResume() {
+        super.onResume()
+        getIssueList(mainViewModel.token.value)
+    }
 
     private fun initObserve(){
-        mainViewModel.userIssueList.observe(viewLifecycleOwner){ issueList ->
-            Log.e(TAG, "initObserve: userIssueList")
-            adapter.setData(issueList)
-        }
-
-        mainViewModel.issueState.observe(viewLifecycleOwner){state ->
-            Log.e(TAG, "initObserve: issueState")
-            mainViewModel.token.value?.let { mainViewModel.getUserIssueList(it, state) }
-
+        with(mainViewModel){
+            userIssueList.observe(viewLifecycleOwner){ issueList ->
+                Log.d("qwfqwf",issueList.toString())
+                issueRecyclerViewAdapter.setData(issueList)
+            }
+            issueState.observe(viewLifecycleOwner){
+                token.value?.let { token -> getUserIssueList(token) }
+            }
         }
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
         val state = parent?.getItemAtPosition(pos).toString()
-        Log.e(TAG, "onItemSelected: $state", )
-        //mainViewModel.setIssueState(state)
+        mainViewModel.setIssueState(state)
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -89,7 +92,6 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.e(TAG, "onDestroyView: ", )
         binding = null
     }
 

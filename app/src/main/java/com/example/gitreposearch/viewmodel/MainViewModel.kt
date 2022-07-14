@@ -53,11 +53,11 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         }
     }
 
-    fun getUserIssueList(token : Token, state : String){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.getUserIssueList(token, state.lowercase()).apply {
+    fun getUserIssueList(token : Token){
+        viewModelScope.launch{
+            repository.getUserIssueList(token, issueState.value.toString().lowercase()).apply {
                 if(this is GithubApiResponse.Success){
-                    _userIssueList.postValue(this.data!!)
+                    _userIssueList.value= data!!
                 }
                 else{
                     Log.d("Reponse ", "실패")
