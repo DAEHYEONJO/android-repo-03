@@ -49,8 +49,4 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         }
     }
 
-    fun getStarred(tokenWithTokenType: String, userName: String){
-
-    }
-
 }
