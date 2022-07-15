@@ -10,6 +10,9 @@
     <string name="starred">Starred</string>
     <string name="following">Following</string>
     <string name="followers">Followers</string>
+    <string name="search_github">Search Github</string>
+    <string name="search_empty_text_description_title">Find Your Stuff</string>
+    <string name="search_empty_text_description_body">Search all of GitHub for People,\nRepositories, Organizations, Issues,\nand Pull Requests</string>
 
     <!-- filter spinner list-->
     <string-array name="filter">
