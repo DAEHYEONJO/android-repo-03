@@ -21,7 +21,7 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         const val TAG = "MainViewModel"
     }
 
-    private var _currentTabState = MutableLiveData("Issue")
+    private var _currentTabState = MutableLiveData<String>("Issue")
     val currentTabState: LiveData<String> get() = _currentTabState
 
     private val _userInfo = MutableLiveData<UserInfo>()

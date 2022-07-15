@@ -33,9 +33,8 @@ class GithubApiRepository {
     }
 
     suspend fun getUserIssueList(token: Token, state : String): GithubApiResponse<List<Issue>?> {
-        Log.e(TAG, "getUserIssueList: ${token.tokenType} ${token.accessToken}", )
+        Log.d("jiwoo", "getUserIssueList: API REPO")
         val response = GithubApiImpl.githubApi.getUserIssueList("${token.tokenType} ${token.accessToken}", state)
-        Log.e(TAG, "getUserIssueList: ${response}", )
         return if (response.isSuccessful){
             GithubApiResponse.Success(data = response.body())
         }else{

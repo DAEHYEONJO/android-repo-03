@@ -3,10 +3,13 @@ package com.example.gitreposearch.ui.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils.replace
 import android.util.Log
 import android.widget.ArrayAdapter
 import com.bumptech.glide.Glide
 import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.Observer
@@ -30,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.d("jiwoo", "act onCreate: ")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -77,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                             mainNotificationTabBtn.isChecked = true
                         }
                     }
+
                     setFrag(newState)
                 }
             }
@@ -101,16 +105,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFrag(state: String) {
         with(supportFragmentManager) {
-            Log.e("IssueFragment", "setFrag: ${this.fragments.toList()}", )
+            val fragment = findFragmentByTag(state) // 현재 state 로 저장된 프래그먼트가 있는지 찾아봄
             when (state) {
                 "Issue" -> {
-                    commit { replace<IssueFragment>(R.id.main_hostFrag) }
-
+                    if(fragment == null){ // 최초로 생성되는 프래그먼트라면
+                        commit { replace<IssueFragment>(R.id.main_hostFrag, state) } // 최초생성
+                    }
+                    else {
+                        commit { replace(R.id.main_hostFrag, fragment) } // 기존에 있던 놈으로
+                    }
                 }
                 "Notifications" -> {
-                    commit { replace<NotificationFragment>(R.id.main_hostFrag) }
+                    val fragment = supportFragmentManager.findFragmentByTag(state)
+                    if(fragment == null){
+                        commit { replace<NotificationFragment>(R.id.main_hostFrag, state) }
+                    }
+                    else {
+                        commit { replace(R.id.main_hostFrag, fragment) }
+                    }
                 }
-
             }
         }
     }
