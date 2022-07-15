@@ -53,6 +53,9 @@ class MainActivity : AppCompatActivity() {
             }
             mainAppbarSearchBtn.setOnClickListener {
                 Log.d("search btn", "clicked")
+                startActivity(Intent(this@MainActivity, SearchActivity::class.java).apply {
+                    putExtra("userInfo", mainViewModel.token.value)
+                })
             }
         }
     }
