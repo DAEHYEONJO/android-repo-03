@@ -4,6 +4,9 @@ plugins {
     id 'kotlin-kapt'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdk 32
 
@@ -15,6 +18,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "CLIENT_ID", project.properties['GITHUB_CLIENT_ID']
+        buildConfigField "String", "CLIENT_SECRET", project.properties['GITHUB_CLIENT_SECRET']
     }
 
     buildTypes {
@@ -26,6 +31,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        freeCompilerArgs +=  "-Xjvm-default=all"
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -54,6 +62,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx"
     implementation "androidx.activity:activity-ktx:1.5.0"
 
     // room database
@@ -65,6 +74,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
 
+    // Fragment
+    implementation "androidx.fragment:fragment-ktx:1.5.0"
 
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+    implementation 'jp.wasabeef:glide-transformations:4.3.0'
 
 }

@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">GitRepoSearch</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_title">What\'s In\nMy GitHub</string>
+    <string name="github_login">GitHub 로그인</string>
+    <string name="title">Title</string>
+    <string name="profile">Profile</string>
+    <string name="followers_between_following">•</string>
+    <string name="repositories">Repositories</string>
+    <string name="starred">Starred</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+    <string name="search_github">Search Github</string>
+    <string name="search_empty_text_description_title">Find Your Stuff</string>
+    <string name="search_empty_text_description_body">Search all of GitHub for People,\nRepositories, Organizations, Issues,\nand Pull Requests</string>
+
+    <!-- filter spinner list-->
+    <string-array name="filter">
+        <item>Open</item>
+        <item>Closed</item>
+        <item>All</item>
+    </string-array>
 </resources>
