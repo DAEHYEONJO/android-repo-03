@@ -42,6 +42,12 @@ interface GithubApi {
         @Query("filter") filter:String = "all"
     ): Response<List<Issue>>
 
+    @Headers("Accept: application/vnd.github+json")
+    @GET("issues")
+    suspend fun getUserNotificationList(
+        @Header("Authorization") userToken : String,
+        @Query("all") all:Boolean
+    ): Response<List<Issue>>
 
 
 

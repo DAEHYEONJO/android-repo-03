@@ -82,12 +82,12 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 Log.d(TAG, "userIssueList Observe: ")
                 issueRecyclerViewAdapter.setData(issueList)
             }
-            /*
+
             issueState.observe(viewLifecycleOwner) {
                 Log.d(TAG, "issueState Observe: ")
                 token.value?.let { token -> getUserIssueList(token) }
             }
-             */
+
 
         }
     }

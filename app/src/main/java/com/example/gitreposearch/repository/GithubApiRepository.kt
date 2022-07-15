@@ -42,6 +42,15 @@ class GithubApiRepository {
         }
     }
 
+    suspend fun getUserNotificationList(token: Token, all : Boolean): GithubApiResponse<List<Issue>?> {
+        Log.d("jiwoo", "getUserNotificationList: API REPO")
+        val response = GithubApiImpl.githubApi.getUserNotificationList("${token.tokenType} ${token.accessToken}", all)
+        return if (response.isSuccessful){
+            GithubApiResponse.Success(data = response.body())
+        }else{
+            GithubApiResponse.Error(exceptionCode = response.code())
+        }
+    }
 
 
 }
