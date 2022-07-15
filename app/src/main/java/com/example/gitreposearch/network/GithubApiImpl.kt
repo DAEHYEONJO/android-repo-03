@@ -11,5 +11,6 @@ object GithubApiImpl {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val githubApi = retrofit.create(GithubApi::class.java)
+    val githubApi: GithubApi = retrofit.create(GithubApi::class.java)
+
 }

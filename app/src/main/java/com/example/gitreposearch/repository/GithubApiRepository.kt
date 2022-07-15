@@ -15,8 +15,7 @@ class GithubApiRepository {
     }
 
     suspend fun getUserInfo(token: Token): GithubApiResponse<UserInfo?> {
-        val responseUser =
-            GithubApiImpl.githubApi.getUserInfo("${token.tokenType} ${token.accessToken}")
+        val responseUser = GithubApiImpl.githubApi.getUserInfo("${token.tokenType} ${token.accessToken}")
         return if (responseUser.isSuccessful) {
             val responseUserBody = responseUser.body()
             val loginName = responseUserBody?.login

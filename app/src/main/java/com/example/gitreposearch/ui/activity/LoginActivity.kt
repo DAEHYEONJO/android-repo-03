@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initLayout() {
         binding.run {
-            loginBtn.setOnClickListener {
+            btnLogin.setOnClickListener {
                 login()
             }
         }

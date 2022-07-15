@@ -14,6 +14,7 @@ import com.example.gitreposearch.network.GithubApiResponse
 import com.example.gitreposearch.repository.GithubApiRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
 
@@ -45,7 +46,6 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
             repository.getUserInfo(token).apply {
                 if (this is GithubApiResponse.Success){
                     _userInfo.value = data!!
-
                 }else if (this is GithubApiResponse.Error){
                     throw Exception("github getUserInfo exception code: $exceptionCode")
                 }
@@ -54,6 +54,13 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     }
 
     fun getUserIssueList(token : Token){
+        viewModelScope.launch {
+
+            withContext(Dispatchers.IO){
+
+            }
+
+        }
         viewModelScope.launch{
             repository.getUserIssueList(token, issueState.value.toString().lowercase()).apply {
                 if(this is GithubApiResponse.Success){

@@ -14,6 +14,4 @@ class CustomViewModelFactory<X> (private val repository: X): ViewModelProvider.F
             else -> super.create(modelClass)
         }
     }
-
-
 }
