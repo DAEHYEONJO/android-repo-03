@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             userInfo.observe(this@MainActivity) { userInfo ->
                 Glide.with(this@MainActivity).load(userInfo.avatarUrl)
                     .circleCrop()
-                    .into(binding.mainAppbarProfileBtn);
+                    .into(binding.mainAppbarProfileBtn)
             }
             currentTabState.observe(this@MainActivity) { newState ->
                 with(binding) {

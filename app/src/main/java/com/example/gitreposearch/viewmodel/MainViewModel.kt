@@ -1,13 +1,12 @@
 package com.example.gitreposearch.viewmodel
 
-import android.app.Notification
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gitreposearch.data.Issue
-import com.example.gitreposearch.data.Notifications
+import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.network.GithubApiResponse
@@ -48,7 +47,6 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
             repository.getUserInfo(token).apply {
                 if (this is GithubApiResponse.Success) {
                     _userInfo.value = data!!
-
                 } else if (this is GithubApiResponse.Error) {
                     throw Exception("github getUserInfo exception code: $exceptionCode")
                 }
@@ -76,7 +74,7 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         viewModelScope.launch {
             repository.getUserNotificationList(token,all).apply {
                 if (this is GithubApiResponse.Success) {
-                    _userIssueList.value = data!!
+                    _userNotificationList.value = data!!
                 } else {
                     Log.d("Reponse ", "실패")
                 }

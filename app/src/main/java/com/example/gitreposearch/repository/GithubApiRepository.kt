@@ -1,12 +1,19 @@
 package com.example.gitreposearch.repository
 
+import android.app.Notification
+import android.text.TextUtils.substring
 import android.util.Log
 import com.example.gitreposearch.data.Issue
+import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
+import com.example.gitreposearch.data.notifications.Comment
+import com.example.gitreposearch.data.notifications.CommentsList
+import com.example.gitreposearch.data.notifications.Type
 import com.example.gitreposearch.network.GithubApiImpl
 import com.example.gitreposearch.network.GithubApiResponse
-import com.example.gitreposearch.viewmodel.MainViewModel
+import com.example.gitreposearch.utils.Constants
+import retrofit2.Response
 
 class GithubApiRepository {
 
@@ -32,25 +39,79 @@ class GithubApiRepository {
         }
     }
 
-    suspend fun getUserIssueList(token: Token, state : String): GithubApiResponse<List<Issue>?> {
+    suspend fun getUserIssueList(token: Token, state: String): GithubApiResponse<List<Issue>?> {
         Log.d("jiwoo", "getUserIssueList: API REPO")
-        val response = GithubApiImpl.githubApi.getUserIssueList("${token.tokenType} ${token.accessToken}", state)
-        return if (response.isSuccessful){
+        val response = GithubApiImpl.githubApi.getUserIssueList(
+            "${token.tokenType} ${token.accessToken}",
+            state
+        )
+        return if (response.isSuccessful) {
             GithubApiResponse.Success(data = response.body())
-        }else{
+        } else {
             GithubApiResponse.Error(exceptionCode = response.code())
         }
     }
 
-    suspend fun getUserNotificationList(token: Token, all : Boolean): GithubApiResponse<List<Issue>?> {
-        Log.d("jiwoo", "getUserNotificationList: API REPO")
-        val response = GithubApiImpl.githubApi.getUserNotificationList("${token.tokenType} ${token.accessToken}", all)
-        return if (response.isSuccessful){
+    suspend fun getUserNotificationList(
+        token: Token,
+        all: Boolean
+    ): GithubApiResponse<List<Notifications>?> {
+        val response = GithubApiImpl.githubApi.getUserNotificationList(
+            "${token.tokenType} ${token.accessToken}", all
+        )
+
+        return if (response.isSuccessful) {
+            val responseNotificationsBody = response.body() // notification List
+            responseNotificationsBody?.forEach { element -> // notification 개수만큼 반복
+                element.number = getNumber(element)
+
+                val responseCommentsList = getCommentList(element, token)
+                if (responseCommentsList != null && responseCommentsList.isSuccessful) {
+                    element.commentsCounts = responseCommentsList.body()!!.size.toString()
+                }
+            }
             GithubApiResponse.Success(data = response.body())
-        }else{
+        } else {
             GithubApiResponse.Error(exceptionCode = response.code())
         }
     }
 
+    private fun getNumber(element: Notifications): String {
+        return when(element.subject.type) {
+            "PullRequest" -> {
+                val type = Type.PullRequest.type
+                val path =
+                    Constants.githubBaseUrl + "repos/" + element.repository.full_name + "/" + type + "/"
+               element.subject.url.substring(path.length)
+            }
+            "Issue" -> {
+                val type = Type.Issue.type
+                val path =
+                    Constants.githubBaseUrl + "repos/" + element.repository.full_name + "/" + type + "/"
+                element.subject.url.substring(path.length)
+            }
+            else -> "0"
+        }
+    }
+
+    private suspend fun getCommentList(element : Notifications, token : Token) : Response<List<Comment>>? {
+        return when(element.subject.type) {
+            "PullRequest" -> {
+                    GithubApiImpl.githubApi.getPullRequestCommentsList(
+                        "${token.tokenType} ${token.accessToken}",
+                        element.repository.owner.login,
+                        element.repository.name,
+                        element.number
+                    )
+            }
+            "Issue" -> {
+                GithubApiImpl.githubApi.getIssueCommentsList(
+                    "${token.tokenType} ${token.accessToken}",
+                    element.repository.owner.login, element.repository.name, element.number
+                )
+            }
+            else -> null
+        }
+    }
 
 }
