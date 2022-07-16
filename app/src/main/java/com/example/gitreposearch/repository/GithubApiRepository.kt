@@ -61,11 +61,21 @@ class GithubApiRepository {
         )
 
         return if (response.isSuccessful) {
-            val responseNotificationsBody = response.body() // notification List
+            val responseNotificationsBody = response.body() // notification List body
+            
             responseNotificationsBody?.forEach { element -> // notification 개수만큼 반복
-                element.number = getNumber(element)
+                val url = element.subject.url.split("/")
+                val type = getElementType(url)
+                element.number = getNumber(url)
 
-                val responseCommentsList = getCommentList(element, token)
+                val responseCommentsList = GithubApiImpl.githubApi.getCommentsList(
+                    "${token.tokenType} ${token.accessToken}",
+                    element.repository.owner.login,
+                    element.repository.name,
+                    type,
+                    element.number
+                )
+
                 if (responseCommentsList != null && responseCommentsList.isSuccessful) {
                     element.commentsCounts = responseCommentsList.body()!!.size.toString()
                 }
@@ -76,42 +86,11 @@ class GithubApiRepository {
         }
     }
 
-    private fun getNumber(element: Notifications): String {
-        return when(element.subject.type) {
-            "PullRequest" -> {
-                val type = Type.PullRequest.type
-                val path =
-                    Constants.githubBaseUrl + "repos/" + element.repository.full_name + "/" + type + "/"
-               element.subject.url.substring(path.length)
-            }
-            "Issue" -> {
-                val type = Type.Issue.type
-                val path =
-                    Constants.githubBaseUrl + "repos/" + element.repository.full_name + "/" + type + "/"
-                element.subject.url.substring(path.length)
-            }
-            else -> "0"
-        }
+    private fun getElementType(url : List<String>) : String {
+        return url[url.size - 2]
     }
 
-    private suspend fun getCommentList(element : Notifications, token : Token) : Response<List<Comment>>? {
-        return when(element.subject.type) {
-            "PullRequest" -> {
-                    GithubApiImpl.githubApi.getPullRequestCommentsList(
-                        "${token.tokenType} ${token.accessToken}",
-                        element.repository.owner.login,
-                        element.repository.name,
-                        element.number
-                    )
-            }
-            "Issue" -> {
-                GithubApiImpl.githubApi.getIssueCommentsList(
-                    "${token.tokenType} ${token.accessToken}",
-                    element.repository.owner.login, element.repository.name, element.number
-                )
-            }
-            else -> null
-        }
+    private fun getNumber(url : List<String>): String {
+        return url.last()
     }
-
 }

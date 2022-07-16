@@ -52,21 +52,14 @@ interface GithubApi {
     ): Response<List<Notifications>>
 
     @Headers("Accept: application/vnd.github+json")
-    @GET("/repos/{owner}/{repo}/pulls/{pull_number}/comments")
-    suspend fun getPullRequestCommentsList(
+    @GET("/repos/{owner}/{repo}/{type}/{number}/comments")
+    suspend fun getCommentsList(
         @Header("Authorization") tokenWithTokenType : String,
         @Path("owner") owner:String,
         @Path("repo") repo:String,
-        @Path("pull_number") number: String,
+        @Path("type") type : String,
+        @Path("number") number: String,
     ): Response<List<Comment>>
 
-    @Headers("Accept: application/vnd.github+json")
-    @GET("/repos/{owner}/{repo}/issues/{issue_number}/comments")
-    suspend fun getIssueCommentsList(
-        @Header("Authorization") tokenWithTokenType : String,
-        @Path("owner") owner:String,
-        @Path("repo") repo:String,
-        @Path("issue_number") number:String,
-    ): Response<List<Comment>>
 
 }
