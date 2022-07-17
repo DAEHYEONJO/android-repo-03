@@ -1,15 +1,13 @@
-package com.example.gitreposearch.viewmodel
+package com.example.gitreposearch.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
-import com.example.gitreposearch.network.GithubApiImpl
 import com.example.gitreposearch.network.GithubApiResponse
 import com.example.gitreposearch.repository.GithubApiRepository
 import kotlinx.coroutines.Dispatchers

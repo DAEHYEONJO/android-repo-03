@@ -6,7 +6,6 @@ import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.network.GithubApiImpl
 import com.example.gitreposearch.network.GithubApiResponse
-import com.example.gitreposearch.viewmodel.MainViewModel
 
 class GithubApiRepository {
 

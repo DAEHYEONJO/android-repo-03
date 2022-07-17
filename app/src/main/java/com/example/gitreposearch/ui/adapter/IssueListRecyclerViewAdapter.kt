@@ -1,19 +1,13 @@
-package com.example.gitreposearch.adapter
+package com.example.gitreposearch.ui.adapter
 
-import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gitreposearch.R
 import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.databinding.IssueRecyclerviewItemBinding
 import com.example.gitreposearch.utils.Constants
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class IssueListRecyclerViewAdapter() : RecyclerView.Adapter<IssueListRecyclerViewAdapter.ViewHolder>() {

@@ -1,4 +1,4 @@
-package com.example.gitreposearch.data.starred
+package com.example.gitreposearch.data
 
 
 import com.google.gson.annotations.SerializedName

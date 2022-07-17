@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.gitreposearch.R
 import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.databinding.ActivityProfileBinding
-import com.example.gitreposearch.viewmodel.ProfileViewModel
+import com.example.gitreposearch.ui.viewmodel.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
 

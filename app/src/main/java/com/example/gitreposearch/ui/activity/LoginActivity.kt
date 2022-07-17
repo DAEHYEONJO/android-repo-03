@@ -11,9 +11,8 @@ import com.example.gitreposearch.BuildConfig
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.databinding.ActivityLoginBinding
 import com.example.gitreposearch.utils.Constants
-import com.example.gitreposearch.viewmodel.CustomViewModelFactory
-import com.example.gitreposearch.viewmodel.LoginViewModel
-import kotlinx.coroutines.launch
+import com.example.gitreposearch.utils.CustomViewModelFactory
+import com.example.gitreposearch.ui.viewmodel.LoginViewModel
 
 class LoginActivity : AppCompatActivity() {
 
@@ -35,10 +34,17 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        loginViewModel.token.observe(this@LoginActivity) {
-            Log.e(TAG, "initObserver: token: $it", )
+        loginViewModel.token.observe(this@LoginActivity) { token ->
+            Log.e(TAG, "initObserver: token: $token", )
+            val observedTypedToken = "${token.tokenType} ${token.accessToken}"
+            with(GlobalApplication.getInstance()){
+                val typedToken = getTypedAccessToken()
+                if (typedToken==null || observedTypedToken!=typedToken){
+                    putTypedAccessToken(observedTypedToken)
+                }
+            }
             startActivity(Intent(this@LoginActivity, MainActivity::class.java).apply {
-                putExtra("token", it)
+                putExtra("token", token)
             })
             finish()
         }
