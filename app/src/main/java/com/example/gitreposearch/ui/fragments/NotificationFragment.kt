@@ -1,6 +1,5 @@
 package com.example.gitreposearch.ui.fragments
 
-import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitreposearch.GlobalApplication
-import com.example.gitreposearch.adapter.NotificationRecyclerViewAdapter
+import com.example.gitreposearch.ui.adapter.NotificationRecyclerViewAdapter
 import com.example.gitreposearch.databinding.FragmentNotificationBinding
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
 
