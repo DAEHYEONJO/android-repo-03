@@ -3,7 +3,6 @@ package com.example.gitreposearch.ui.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils.replace
 import android.util.Log
 import com.bumptech.glide.Glide
 import androidx.activity.viewModels
@@ -15,8 +14,8 @@ import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.databinding.ActivityMainBinding
 import com.example.gitreposearch.ui.fragments.IssueFragment
 import com.example.gitreposearch.ui.fragments.NotificationFragment
-import com.example.gitreposearch.viewmodel.CustomViewModelFactory
-import com.example.gitreposearch.viewmodel.MainViewModel
+import com.example.gitreposearch.utils.CustomViewModelFactory
+import com.example.gitreposearch.ui.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,13 +32,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        getToken()
-        mainViewModel.getNotificationList(mainViewModel.token.value!!, true)
+        mainViewModel.getUserInfo(GlobalApplication.getInstance().getTypedAccessToken()!!)
+        mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken()!!)
         initAppBarButton()
         initObserver()
         initToggleTabButton()
-    }
 
+    }
 
     private fun initAppBarButton() {
         with(binding) {
@@ -50,6 +49,7 @@ class MainActivity : AppCompatActivity() {
             }
             btnMainSearch.setOnClickListener {
                 Log.d("search btn", "clicked")
+                startActivity(Intent(this@MainActivity, SearchActivity::class.java))
             }
         }
     }
@@ -57,9 +57,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initObserver() {
         with(mainViewModel) {
-            token.observe(this@MainActivity) { token ->
-                getUserInfo(token)
-            }
             userInfo.observe(this@MainActivity) { userInfo ->
                 Glide.with(this@MainActivity).load(userInfo.avatarUrl)
                     .circleCrop()
@@ -83,11 +80,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun getToken() {
-        mainViewModel.token.value = intent.getSerializableExtra("token") as Token
-    }
-
 
     private fun initToggleTabButton() {
         with(binding) {
@@ -113,7 +105,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 "Notifications" -> {
-                    val fragment = supportFragmentManager.findFragmentByTag(state)
                     if(fragment == null){
                         commit { replace<NotificationFragment>(R.id.layout_hostFrag, state) }
                     }

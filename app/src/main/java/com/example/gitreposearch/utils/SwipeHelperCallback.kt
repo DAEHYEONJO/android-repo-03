@@ -1,11 +1,23 @@
 package com.example.gitreposearch.utils
 
+import android.graphics.Canvas
 import android.icu.lang.UCharacter.IndicPositionalCategory.LEFT
 import android.util.Log
+import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.getTag
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
+import androidx.recyclerview.widget.ItemTouchHelper.Callback.makeMovementFlags
 import androidx.recyclerview.widget.RecyclerView
+import com.example.gitreposearch.GlobalApplication
+import com.example.gitreposearch.ui.adapter.NotificationRecyclerViewAdapter
+import com.example.gitreposearch.ui.viewmodel.MainViewModel
+import kotlin.math.abs
 
-class SwipeHelperCallback : ItemTouchHelper.Callback() {
+class SwipeHelperCallback(
+    private val mainViewModel: MainViewModel,
+    private val adapter: NotificationRecyclerViewAdapter
+) : ItemTouchHelper.Callback() {
+
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
@@ -20,6 +32,10 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
     ) = false
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        Log.d("swipw", "onSwiped: ${viewHolder.adapterPosition}")
+        val position = viewHolder.adapterPosition
+        Log.d("before", mainViewModel.userNotificationList.value!!.size.toString())
+        mainViewModel.changeNotificationAsRead(position, GlobalApplication.getInstance().getTypedAccessToken().toString())
+        adapter.removeData(position)
+        Log.d("after", mainViewModel.userNotificationList.value!!.size.toString())
     }
 }

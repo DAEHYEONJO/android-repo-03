@@ -1,6 +1,5 @@
 package com.example.gitreposearch.ui.fragments
 
-import android.R
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,10 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.gitreposearch.adapter.NotificationRecyclerViewAdapter
 import com.example.gitreposearch.databinding.FragmentNotificationBinding
 import com.example.gitreposearch.utils.SwipeHelperCallback
-import com.example.gitreposearch.viewmodel.MainViewModel
+import com.example.gitreposearch.GlobalApplication
+import com.example.gitreposearch.data.notifications.Notifications
+import com.example.gitreposearch.ui.adapter.NotificationRecyclerViewAdapter
+import com.example.gitreposearch.ui.viewmodel.MainViewModel
 
 
 class NotificationFragment : Fragment() {
@@ -41,12 +42,12 @@ class NotificationFragment : Fragment() {
         initNotificationRecyclerView()
         initRefreshListener()
         initSwipeListener()
-        //getUserNotificationList()
         initObserve()
     }
 
     private fun initSwipeListener() {
-        val swipeHelperCallback = SwipeHelperCallback()
+        val swipeHelperCallback = SwipeHelperCallback(mainViewModel, notificationRecyclerViewAdapter).apply{
+        }
         val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding?.rcvNotificationList)
     }
@@ -63,7 +64,8 @@ class NotificationFragment : Fragment() {
             tvLoading.isGone = false
         }
     }
-    private fun hideLoading(){
+
+    private fun hideLoading() {
         with(binding!!){
             progressBarLoading.isGone=true
             tvLoading.isGone = true
@@ -76,25 +78,20 @@ class NotificationFragment : Fragment() {
             rcvNotificationList.layoutManager = LinearLayoutManager(activity)
             rcvNotificationList.adapter = notificationRecyclerViewAdapter
         }
-
     }
 
     private fun getUserNotificationList() {
-        with(mainViewModel){
-            val token = token.value
-            if (token != null) {
-                getNotificationList(token, true)
-            }
-        }
+        mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken()!!)
     }
 
     private fun initObserve() {
         mainViewModel.userNotificationList.observe(viewLifecycleOwner) { notificationList ->
+            Log.d(TAG, "notofi observe: ")
             if(binding!!.layoutRefresh.isRefreshing){
                 binding!!.layoutRefresh.isRefreshing = false
             }
             hideLoading()
-            notificationRecyclerViewAdapter.setData(notificationList)
+            notificationRecyclerViewAdapter.setData(notificationList as MutableList<Notifications>)
         }
     }
 }

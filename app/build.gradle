@@ -83,4 +83,11 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
 
+    //paging
+    implementation "androidx.paging:paging-runtime:3.2.0-alpha01"
+    // alternatively - without Android dependencies for tests
+    testImplementation "androidx.paging:paging-common:3.2.0-alpha01"
+
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
 }

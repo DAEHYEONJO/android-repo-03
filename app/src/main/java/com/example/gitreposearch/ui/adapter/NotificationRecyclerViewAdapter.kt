@@ -1,17 +1,19 @@
-package com.example.gitreposearch.adapter
+package com.example.gitreposearch.ui.adapter
 
-import android.app.Activity
+import android.app.Notification
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.databinding.ItemNotificationListBinding
+import com.example.gitreposearch.utils.SwipeHelperCallback
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NotificationRecyclerViewAdapter()  : RecyclerView.Adapter<NotificationRecyclerViewAdapter.ViewHolder>() {
-    private var dataSet =listOf<Notifications>()
+class NotificationRecyclerViewAdapter()  : RecyclerView.Adapter<NotificationRecyclerViewAdapter.ViewHolder>(){
+    private var dataSet = mutableListOf<Notifications>()
 
     class ViewHolder(private val binding : ItemNotificationListBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -46,9 +48,15 @@ class NotificationRecyclerViewAdapter()  : RecyclerView.Adapter<NotificationRecy
             }
         }
     }
-    fun setData(data : List<Notifications>){
+
+    fun setData(data : MutableList<Notifications>){
         dataSet = data
         notifyDataSetChanged()
+    }
+
+    fun removeData(position: Int) {
+        dataSet.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -64,4 +72,6 @@ class NotificationRecyclerViewAdapter()  : RecyclerView.Adapter<NotificationRecy
     override fun getItemCount(): Int {
         return dataSet.size
     }
+
+
 }

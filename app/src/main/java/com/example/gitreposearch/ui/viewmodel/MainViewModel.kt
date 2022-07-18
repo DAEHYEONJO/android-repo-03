@@ -1,4 +1,4 @@
-package com.example.gitreposearch.viewmodel
+package com.example.gitreposearch.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -12,6 +12,8 @@ import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.network.GithubApiResponse
 import com.example.gitreposearch.repository.GithubApiRepository
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.FieldPosition
 
 class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
 
@@ -31,32 +33,27 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     private val _issueState = MutableLiveData<String>()
     val issueState: LiveData<String> get() = _issueState
 
-    private val _userNotificationList = MutableLiveData<List<Notifications>>()
-    val userNotificationList: LiveData<List<Notifications>> get() = _userNotificationList
-
-
-    val token = MutableLiveData<Token>()
-
+    private val _userNotificationList = MutableLiveData<MutableList<Notifications>>()
+    val userNotificationList: LiveData<MutableList<Notifications>> get() = _userNotificationList
 
     fun changeState(state: String) {
         _currentTabState.value = state
     }
 
-
-    fun getUserInfo(token: Token) {
+    fun getUserInfo(token: String) {
         viewModelScope.launch {
             repository.getUserInfo(token).apply {
                 if (this is GithubApiResponse.Success) {
                     _userInfo.value = data!!
-                } else if (this is GithubApiResponse.Error) {
+                }else if (this is GithubApiResponse.Error){
                     throw Exception("github getUserInfo exception code: $exceptionCode")
                 }
             }
         }
     }
 
-    fun getUserIssueList(token: Token) {
-        viewModelScope.launch {
+    fun getUserIssueList(token: String) {
+        viewModelScope.launch{
             repository.getUserIssueList(token, issueState.value.toString().lowercase()).apply {
                 if (this is GithubApiResponse.Success) {
                     _userIssueList.value = data!!
@@ -71,12 +68,12 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         _issueState.value = state
     }
 
-    fun getNotificationList(token : Token, all : Boolean) {
+    fun getNotificationList(token : String) {
         Log.d(TAG, "getNotificationList: called")
         viewModelScope.launch {
-            repository.getUserNotificationList(token,all).apply {
+            repository.getUserNotificationList(token,false).apply {
                 if (this is GithubApiResponse.Success) {
-                    _userNotificationList.value = data!!
+                    _userNotificationList.value = data!! as MutableList<Notifications>
                 } else if (this is GithubApiResponse.Error) {
                     throw Exception("github getUserNotifcationList exception code: $exceptionCode")
                 }
@@ -84,4 +81,17 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         }
     }
 
+    fun changeNotificationAsRead(position : Int, token : String){
+        //_userNotificationList.value!!.removeAt(position)
+        val threadID = userNotificationList.value!![position].threadID
+        viewModelScope.launch{
+            repository.changeNotificationAsRead(token, threadID).apply {
+                if(this is GithubApiResponse.Success){
+                    //Log.d(TAG, "changeNotificationAsRead: ${data!!} ")
+                }
+
+
+            }
+        }
+    }
 }
