@@ -58,7 +58,7 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
         ArrayAdapter.createFromResource(requireContext(), R.array.filter, android.R.layout.simple_spinner_item)
             .also { madapter ->
                 val curItemPos = resources.getStringArray(R.array.filter).indexOf(mainViewModel.issueState.value.toString())
-                with(binding!!.mainFilterSpinner) {
+                with(binding!!.spinnerIssueFilter) {
                     adapter = madapter
                     onItemSelectedListener = this@IssueFragment
                     setSelection(curItemPos)
@@ -70,8 +70,8 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private fun initIssueRecyclerView() {
         issueRecyclerViewAdapter = IssueListRecyclerViewAdapter()
         with(binding!!) {
-            issueRecyclerView.layoutManager = LinearLayoutManager(activity)
-            issueRecyclerView.adapter = issueRecyclerViewAdapter
+            rcvIssueList.layoutManager = LinearLayoutManager(activity)
+            rcvIssueList.adapter = issueRecyclerViewAdapter
         }
 
     }
