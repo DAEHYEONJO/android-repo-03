@@ -1,16 +1,1 @@
-# 저장소검색앱
-
-## 네이밍 규칙
-- Component : {사용되는 레이아웃}\_{이름}\_{뷰이름} </br>
-ex) main_profile_iv
-
-## Branch
-- dev 브랜치 생성
-- 'feat/기능이름' 으로 구현 후 dev에 머지
-
-## 커밋메세지
-- 커밋 Tag와 함께, 최대한 알아보기 쉽게 작성</br>
-<img
-    src="https://user-images.githubusercontent.com/82700895/178201745-ea256745-5305-4882-a52d-3f68e576eaaa.png" width="350" height="250"/>
-
 

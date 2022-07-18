@@ -1,6 +1,5 @@
-package com.example.gitreposearch.adapter
+package com.example.gitreposearch.ui.adapter
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

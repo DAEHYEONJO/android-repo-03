@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_app"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/iv_search_row_avatar"
+        android:layout_width="@dimen/base_app_space_24"
+        android:layout_height="@dimen/base_app_space_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="@dimen/iv_profile_end_space_16"
+        android:layout_marginStart="@dimen/base_app_space_24"
+        android:src="@color/gray"
+        />
+
+    <TextView
+        android:id="@+id/tv_search_row_login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/iv_search_row_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_search_row_avatar"
+        app:layout_constraintStart_toEndOf="@+id/iv_search_row_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/base_app_space_24"
+        android:layout_marginStart="@dimen/tv_profile_top_space_8"
+        android:text="@string/app_name"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_Gray_Medium.Style"
+        android:ellipsize="end"
+        android:ems="1"/>
+
+    <TextView
+        android:id="@+id/tv_search_row_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/tv_search_row_login"
+        app:layout_constraintEnd_toEndOf="@+id/tv_search_row_login"
+        app:layout_constraintTop_toBottomOf="@+id/tv_search_row_login"
+        android:text="@string/app_name"
+        android:ellipsize="end"
+        android:ems="1"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"
+        android:layout_marginTop="@dimen/tv_profile_top_space_8"/>
+
+    <TextView
+        android:id="@+id/tv_search_row_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/tv_search_row_name"
+        app:layout_constraintEnd_toEndOf="@+id/tv_search_row_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_search_row_name"
+        android:text="@string/app_name"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+        android:layout_marginTop="@dimen/tv_profile_space_4"/>
+
+    <ImageView
+        android:id="@+id/iv_search_row_stargazers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_search_row_stargazers"
+        app:layout_constraintTop_toBottomOf="@+id/tv_search_row_description"
+        app:layout_constraintStart_toStartOf="@+id/tv_search_row_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/tv_profile_top_space_8"
+        android:layout_marginBottom="@dimen/iv_profile_end_space_16"/>
+
+    <TextView
+        android:id="@+id/tv_search_row_stargazers_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/iv_search_row_stargazers"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_search_row_stargazers"
+        app:layout_constraintStart_toEndOf="@+id/iv_search_row_stargazers"
+        app:layout_constraintEnd_toStartOf="@+id/iv_search_row_language_color"
+        android:text="14.4K"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_Gray_Medium.Style"/>
+
+    <ImageView
+        android:id="@+id/iv_search_row_language_color"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        app:layout_constraintTop_toTopOf="@+id/iv_search_row_stargazers"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_search_row_stargazers"
+        app:layout_constraintStart_toEndOf="@+id/tv_search_row_stargazers_count"
+        android:background="@color/gray"
+        android:layout_marginStart="13dp" />
+
+    <TextView
+        android:id="@+id/tv_search_row_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/iv_search_row_stargazers"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_search_row_stargazers"
+        app:layout_constraintStart_toEndOf="@+id/iv_search_row_language_color"
+        android:text="14.4K"
+        android:layout_marginStart="@dimen/iv_search_row_space_5"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_Gray_Medium.Style"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

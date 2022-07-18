@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activity.LoginActivity"
-    android:background="@drawable/app_base_background">
+    android:background="@drawable/bg_app">
 
     <TextView
-        android:id="@+id/login_title_tv"
+        android:id="@+id/tv_login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -17,22 +17,22 @@
         android:textColor="@color/white"
         android:fontFamily="@font/outfit_semibold_600"
         android:textStyle="bold"
-        android:layout_marginStart="@dimen/app_base_space_24"
+        android:layout_marginStart="@dimen/base_app_space_24"
         android:textSize="40sp"
-        android:layout_marginTop="@dimen/login_base_space_80"/>
+        android:layout_marginTop="@dimen/base_login_space_80"/>
 
     <Button
-        android:id="@+id/login_btn"
+        android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginStart="@dimen/app_base_space_24"
-        android:layout_marginEnd="@dimen/app_base_space_24"
-        android:layout_marginBottom="@dimen/login_base_space_80"
+        android:layout_marginStart="@dimen/base_app_space_24"
+        android:layout_marginEnd="@dimen/base_app_space_24"
+        android:layout_marginBottom="@dimen/base_login_space_80"
         android:text="@string/github_login"
         android:textStyle="bold"
         android:textAllCaps="false"
         android:fontFamily="@font/kopubworld_dotum_pro_bold"
-        android:background="@drawable/button_border_radius_14"
+        android:background="@drawable/bg_btn_radius_14"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

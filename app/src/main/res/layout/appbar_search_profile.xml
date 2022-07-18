@@ -20,9 +20,9 @@
             android:layout_height="match_parent">
             <ImageView
                 android:id="@+id/app_bar_back_btn"
-                android:layout_marginStart="@dimen/app_base_space_24"
-                android:layout_marginBottom="@dimen/app_base_space_24"
-                android:layout_marginTop="@dimen/app_base_space_24"
+                android:layout_marginStart="@dimen/base_app_space_24"
+                android:layout_marginBottom="@dimen/base_app_space_24"
+                android:layout_marginTop="@dimen/base_app_space_24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_appbar_back"/>
@@ -34,7 +34,7 @@
                 android:fontFamily="@font/outfit_semibold_600"
                 android:textColor="@color/white"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/title"/>
+                android:text="@string/app_bar_title"/>
         </androidx.appcompat.widget.Toolbar>
 
 

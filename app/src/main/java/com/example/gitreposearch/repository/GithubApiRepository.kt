@@ -21,14 +21,13 @@ class GithubApiRepository {
         const val TAG = "GithubApiRepository"
     }
 
-    suspend fun getUserInfo(token: Token): GithubApiResponse<UserInfo?> {
-        val responseUser =
-            GithubApiImpl.githubApi.getUserInfo("${token.tokenType} ${token.accessToken}")
+    suspend fun getUserInfo(token: String): GithubApiResponse<UserInfo?> {
+        val responseUser = GithubApiImpl.githubApi.getUserInfo(token)
         return if (responseUser.isSuccessful) {
             val responseUserBody = responseUser.body()
             val loginName = responseUserBody?.login
             val responseStarred = GithubApiImpl.githubApi.getStarred(
-                "${token.tokenType} ${token.accessToken}",
+                token,
                 loginName!!
             )
             GithubApiResponse.Success(data = responseUserBody.apply {
@@ -39,10 +38,10 @@ class GithubApiRepository {
         }
     }
 
-    suspend fun getUserIssueList(token: Token, state: String): GithubApiResponse<List<Issue>?> {
+    suspend fun getUserIssueList(token: String, state: String): GithubApiResponse<List<Issue>?> {
         Log.d("jiwoo", "getUserIssueList: API REPO")
         val response = GithubApiImpl.githubApi.getUserIssueList(
-            "${token.tokenType} ${token.accessToken}",
+            token,
             state
         )
         return if (response.isSuccessful) {
@@ -53,11 +52,11 @@ class GithubApiRepository {
     }
 
     suspend fun getUserNotificationList(
-        token: Token,
+        token: String,
         all: Boolean
     ): GithubApiResponse<List<Notifications>?> {
         val response = GithubApiImpl.githubApi.getUserNotificationList(
-            "${token.tokenType} ${token.accessToken}", all
+            token, all
         )
 
         return if (response.isSuccessful) {
@@ -69,7 +68,7 @@ class GithubApiRepository {
                 element.number = getNumber(url)
 
                 val responseCommentsList = GithubApiImpl.githubApi.getCommentsList(
-                    "${token.tokenType} ${token.accessToken}",
+                    token,
                     element.repository.owner.login,
                     element.repository.name,
                     type,

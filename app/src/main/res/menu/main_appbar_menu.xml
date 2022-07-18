@@ -4,12 +4,12 @@
     <item
         android:id="@+id/mainAppbar_search"
         app:showAsAction="always"
-        android:icon="@drawable/appbar_search_ic"
+        android:icon="@drawable/ic_appbar_search"
         android:title="profile" />
     <item
         android:id="@+id/mainAppbar_profile"
         app:showAsAction="always"
-        android:icon="@drawable/appbar_profile_ic"
+        android:icon="@drawable/ic_appbar_profile"
         android:title="search" />
 
 </menu>
