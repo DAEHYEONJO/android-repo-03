@@ -44,36 +44,20 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     }
 
 
-    fun getUserInfo(token: Token) {
+    fun getUserInfo(token: String) {
         viewModelScope.launch {
             repository.getUserInfo(token).apply {
                 if (this is GithubApiResponse.Success) {
                     _userInfo.value = data!!
-<<<<<<< HEAD:app/src/main/java/com/example/gitreposearch/viewmodel/MainViewModel.kt
-                } else if (this is GithubApiResponse.Error) {
-=======
                 }else if (this is GithubApiResponse.Error){
->>>>>>> feat/search_activity:app/src/main/java/com/example/gitreposearch/ui/viewmodel/MainViewModel.kt
                     throw Exception("github getUserInfo exception code: $exceptionCode")
                 }
             }
         }
     }
 
-<<<<<<< HEAD:app/src/main/java/com/example/gitreposearch/viewmodel/MainViewModel.kt
-    fun getUserIssueList(token: Token) {
-        viewModelScope.launch {
-=======
-    fun getUserIssueList(token : Token){
-        viewModelScope.launch {
-
-            withContext(Dispatchers.IO){
-
-            }
-
-        }
+    fun getUserIssueList(token: String) {
         viewModelScope.launch{
->>>>>>> feat/search_activity:app/src/main/java/com/example/gitreposearch/ui/viewmodel/MainViewModel.kt
             repository.getUserIssueList(token, issueState.value.toString().lowercase()).apply {
                 if (this is GithubApiResponse.Success) {
                     _userIssueList.value = data!!
@@ -88,7 +72,7 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         _issueState.value = state
     }
 
-    fun getNotificationList(token : Token, all : Boolean) {
+    fun getNotificationList(token : String, all : Boolean) {
         Log.d(TAG, "getNotificationList: called")
         viewModelScope.launch {
             repository.getUserNotificationList(token,all).apply {

@@ -9,10 +9,10 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.adapter.NotificationRecyclerViewAdapter
 import com.example.gitreposearch.databinding.FragmentNotificationBinding
-import com.example.gitreposearch.viewmodel.MainViewModel
+import com.example.gitreposearch.ui.viewmodel.MainViewModel
 
 
 class NotificationFragment : Fragment() {
@@ -71,12 +71,7 @@ class NotificationFragment : Fragment() {
     }
 
     private fun getUserNotificationList() {
-        with(mainViewModel){
-            val token = token.value
-            if (token != null) {
-                getNotificationList(token, true)
-            }
-        }
+        mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken()!!, true)
     }
 
     private fun initObserve() {

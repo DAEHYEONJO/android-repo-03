@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import androidx.core.view.isGone
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
 import com.example.gitreposearch.ui.adapter.IssueListRecyclerViewAdapter
 import com.example.gitreposearch.databinding.FragmentIssueBinding
@@ -90,13 +91,7 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun getUserIssueList(){
-        with(mainViewModel){
-            val token = token.value
-            if(token != null){
-                Log.d(TAG, "getUserIssueList: ")
-                getUserIssueList(token)
-            }
-        }
+        mainViewModel.getUserIssueList(GlobalApplication.getInstance().getTypedAccessToken()!!)
     }
 
     private fun showLoading() {

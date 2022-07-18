@@ -43,9 +43,7 @@ class LoginActivity : AppCompatActivity() {
                     putTypedAccessToken(observedTypedToken)
                 }
             }
-            startActivity(Intent(this@LoginActivity, MainActivity::class.java).apply {
-                putExtra("token", token)
-            })
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
         }
     }

@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        getToken()
-        mainViewModel.getNotificationList(mainViewModel.token.value!!, true)
+        mainViewModel.getUserInfo(GlobalApplication.getInstance().getTypedAccessToken()!!)
+        mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken()!!, true)
         initAppBarButton()
         initObserver()
         initToggleTabButton()
@@ -50,9 +50,7 @@ class MainActivity : AppCompatActivity() {
             }
             mainAppbarSearchBtn.setOnClickListener {
                 Log.d("search btn", "clicked")
-                startActivity(Intent(this@MainActivity, SearchActivity::class.java).apply {
-                    putExtra("userInfo", mainViewModel.token.value)
-                })
+                startActivity(Intent(this@MainActivity, SearchActivity::class.java))
             }
         }
     }
@@ -60,9 +58,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initObserver() {
         with(mainViewModel) {
-            token.observe(this@MainActivity) { token ->
-                getUserInfo(token)
-            }
             userInfo.observe(this@MainActivity) { userInfo ->
                 Glide.with(this@MainActivity).load(userInfo.avatarUrl)
                     .circleCrop()
@@ -86,11 +81,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun getToken() {
-        mainViewModel.token.value = intent.getSerializableExtra("token") as Token
-    }
-
 
     private fun initToggleTabButton() {
         with(binding) {
