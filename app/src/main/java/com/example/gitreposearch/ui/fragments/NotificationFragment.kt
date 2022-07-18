@@ -9,10 +9,11 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.gitreposearch.adapter.NotificationRecyclerViewAdapter
 import com.example.gitreposearch.databinding.FragmentNotificationBinding
+import com.example.gitreposearch.utils.SwipeHelperCallback
 import com.example.gitreposearch.viewmodel.MainViewModel
 
 
@@ -39,8 +40,15 @@ class NotificationFragment : Fragment() {
         showLoading()
         initNotificationRecyclerView()
         initRefreshListener()
+        initSwipeListener()
         //getUserNotificationList()
         initObserve()
+    }
+
+    private fun initSwipeListener() {
+        val swipeHelperCallback = SwipeHelperCallback()
+        val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding?.rcvNotificationList)
     }
 
     private fun initRefreshListener() {
@@ -87,7 +95,6 @@ class NotificationFragment : Fragment() {
             }
             hideLoading()
             notificationRecyclerViewAdapter.setData(notificationList)
-
         }
     }
 }
