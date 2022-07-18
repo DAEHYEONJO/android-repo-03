@@ -42,6 +42,7 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         _currentTabState.value = state
     }
 
+
     fun getUserInfo(token: Token) {
         viewModelScope.launch {
             repository.getUserInfo(token).apply {
@@ -59,8 +60,8 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
             repository.getUserIssueList(token, issueState.value.toString().lowercase()).apply {
                 if (this is GithubApiResponse.Success) {
                     _userIssueList.value = data!!
-                } else {
-                    Log.d("Reponse ", "실패")
+                } else if (this is GithubApiResponse.Error) {
+                    throw Exception("github getUserIssueList exception code: $exceptionCode")
                 }
             }
         }
@@ -71,12 +72,13 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     }
 
     fun getNotificationList(token : Token, all : Boolean) {
+        Log.d(TAG, "getNotificationList: called")
         viewModelScope.launch {
             repository.getUserNotificationList(token,all).apply {
                 if (this is GithubApiResponse.Success) {
                     _userNotificationList.value = data!!
-                } else {
-                    Log.d("Reponse ", "실패")
+                } else if (this is GithubApiResponse.Error) {
+                    throw Exception("github getUserNotifcationList exception code: $exceptionCode")
                 }
             }
         }

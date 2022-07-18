@@ -27,17 +27,19 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+
+
     private val mainViewModel: MainViewModel by viewModels {
         CustomViewModelFactory(GlobalApplication.githubApiRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("jiwoo", "act onCreate: ")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         getToken()
+        mainViewModel.getNotificationList(mainViewModel.token.value!!, true)
         initAppBarButton()
         initObserver()
         initToggleTabButton()

@@ -38,7 +38,7 @@ class NotificationFragment : Fragment() {
         showLoading()
         initNotificationRecyclerView()
         initRefreshListener()
-        getUserNotificationList()
+        //getUserNotificationList()
         initObserve()
     }
 

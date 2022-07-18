@@ -18,7 +18,7 @@ import com.example.gitreposearch.databinding.FragmentIssueBinding
 import com.example.gitreposearch.viewmodel.MainViewModel
 
 class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
-    val TAG = "jiwoo"
+    val TAG = "IssueFragment"
     private var binding: FragmentIssueBinding? = null
     private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var issueRecyclerViewAdapter: IssueListRecyclerViewAdapter
@@ -55,19 +55,14 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun initFilterSpinner() {
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.filter,
-            android.R.layout.simple_spinner_item
-        )
+        ArrayAdapter.createFromResource(requireContext(), R.array.filter, android.R.layout.simple_spinner_item)
             .also { madapter ->
-                val curItemPos = resources.getStringArray(R.array.filter)
-                    .indexOf(mainViewModel.issueState.value.toString())
+                val curItemPos = resources.getStringArray(R.array.filter).indexOf(mainViewModel.issueState.value.toString())
                 with(binding!!.mainFilterSpinner) {
                     adapter = madapter
                     onItemSelectedListener = this@IssueFragment
-                    Log.d(TAG, "initFilterSpinner: itemSelected ")
                     setSelection(curItemPos)
+                    Log.d(TAG, "initFilterSpinner: itemSelected : ${mainViewModel.issueState.value.toString()}")
                 }
             }
     }
@@ -83,12 +78,9 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun initObserve() {
         with(mainViewModel) {
-            issueState.observe(viewLifecycleOwner) {
-                showLoading()
-                getUserIssueList()
-            }
             userIssueList.observe(viewLifecycleOwner) { issueList ->
                 hideLoading()
+                Log.d(TAG, "user issue list changed")
                 if(binding!!.layoutRefresh.isRefreshing){
                     binding!!.layoutRefresh.isRefreshing = false
                 }
@@ -101,6 +93,7 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
         with(mainViewModel){
             val token = token.value
             if(token != null){
+                Log.d(TAG, "getUserIssueList: ")
                 getUserIssueList(token)
             }
         }
@@ -123,13 +116,12 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
         val state = parent?.getItemAtPosition(pos).toString()
-        with(mainViewModel) {
-            if (issueState.value != state) {
-                setIssueState(state)
-                token.value?.let { token -> mainViewModel.getUserIssueList(token) }
-            }
+        val prevState = mainViewModel.issueState.value
+        if(prevState != state){ // Open 상태에서 또 Open 눌렀을 때, 호출하지않도록 if문 처리
+            mainViewModel.setIssueState(state)
+            showLoading()
+            getUserIssueList()
         }
-        Log.d(TAG, "itemSelected ")
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
