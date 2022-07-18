@@ -6,13 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
-import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
-import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.databinding.ActivityProfileBinding
-import com.example.gitreposearch.viewmodel.CustomViewModelFactory
-import com.example.gitreposearch.viewmodel.ProfileViewModel
+import com.example.gitreposearch.ui.viewmodel.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -42,24 +39,24 @@ class ProfileActivity : AppCompatActivity() {
                 Glide.with(this@ProfileActivity)
                     .load(Uri.parse(userInfo.avatarUrl))
                     .circleCrop()
-                    .into(profileImg)
-                profileLoginTv.text = userInfo.login ?: "Empty"
-                profileNameTv.text = userInfo.name ?: "Empty"
-                profileBioTv.text = userInfo.bio ?: "Empty"
-                profileLocationTv.text = userInfo.location ?: "Empty"
-                with(profileBlogTv) {
+                    .into(ivProfile)
+                tvProfileLogin.text = userInfo.login ?: "Empty"
+                tvProfileName.text = userInfo.name ?: "Empty"
+                tvProfileBio.text = userInfo.bio ?: "Empty"
+                tvProfileLocation.text = userInfo.location ?: "Empty"
+                with(tvProfileBlog) {
                     text = userInfo.blog ?: "Empty"
                     paintFlags = Paint.UNDERLINE_TEXT_FLAG
                 }
-                with(profileEmailTv) {
+                with(tvProfileEmail) {
                     text = userInfo.email ?: "Empty"
                     paintFlags = Paint.UNDERLINE_TEXT_FLAG
                 }
-                profileFollowersTv.text = userInfo.followers.toString()
-                profileFollowingTv.text = userInfo.following.toString()
-                profileRepositoryCountTv.text =
+                tvProfileFollowers.text = userInfo.followers.toString()
+                tvProfileFollowing.text = userInfo.following.toString()
+                tvProfileRepositoryCount.text =
                     (userInfo.publicRepos + userInfo.totalPrivateRepos).toString()
-                profileStarredCountTv.text = userInfo.starredCount.toString()
+                tvProfileStarredCount.text = userInfo.starredCount.toString()
             }
         }
     }
@@ -67,9 +64,9 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initAppBar() {
         this.title = ""
-        with(binding.profileAppBar) {
-            setSupportActionBar(searchProfileToolBar)
-            appBarTitleTv.text = resources.getString(R.string.profile)
+        with(binding.appBarProfile) {
+            //setSupportActionBar(searchProfileToolBar)
+            appBarTitleTv.text = resources.getString(R.string.app_bar_profile)
             appBarBackBtn.setOnClickListener { finish() }
         }
     }

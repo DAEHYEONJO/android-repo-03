@@ -15,7 +15,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <!-- Appearacne Kopub -->
+    <!-- Appearacne Kopub White-->
     <style name="Widget.TextView.KopubWorldDotumPro14_White_Light.TextAppearance" parent="">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/text_font_14</item>
@@ -34,6 +34,13 @@
         <item name="android:fontFamily">@font/kopubworld_dotum_pro_bold</item>
     </style>
 
+    <!-- Appearacne Kopub Gray-->
+    <style name="Widget.TextView.KopubWorldDotumPro14_Gray_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">@dimen/text_font_14</item>
+        <item name="android:fontFamily">@font/kopubworld_dotum_pro_medium</item>
+    </style>
+
     <!-- Appearacne Outfit -->
     <style name="Widget.TextView.OutfitRegular14_Gray_Regular.TextAppearance" parent="">
         <item name="android:textColor">@color/white</item>
@@ -49,7 +56,7 @@
 
 
 
-    <!-- Style Kopub -->
+    <!-- Style Kopub White -->
     <style name="Widget.TextView.KopubWorldDotumPro14_White_Light.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KopubWorldDotumPro14_White_Light.TextAppearance
@@ -67,6 +74,14 @@
     <style name="Widget.TextView.KopubWorldDotumPro14_White_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KopubWorldDotumPro14_White_Bold.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- Style Kopub Gray -->
+    <style name="Widget.TextView.KopubWorldDotumPro14_Gray_Medium.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro14_Gray_Medium.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>

@@ -1,4 +1,4 @@
-package com.example.gitreposearch.viewmodel
+package com.example.gitreposearch.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -12,6 +12,7 @@ import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.network.GithubApiResponse
 import com.example.gitreposearch.repository.GithubApiRepository
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
 
@@ -48,15 +49,31 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
             repository.getUserInfo(token).apply {
                 if (this is GithubApiResponse.Success) {
                     _userInfo.value = data!!
+<<<<<<< HEAD:app/src/main/java/com/example/gitreposearch/viewmodel/MainViewModel.kt
                 } else if (this is GithubApiResponse.Error) {
+=======
+                }else if (this is GithubApiResponse.Error){
+>>>>>>> feat/search_activity:app/src/main/java/com/example/gitreposearch/ui/viewmodel/MainViewModel.kt
                     throw Exception("github getUserInfo exception code: $exceptionCode")
                 }
             }
         }
     }
 
+<<<<<<< HEAD:app/src/main/java/com/example/gitreposearch/viewmodel/MainViewModel.kt
     fun getUserIssueList(token: Token) {
         viewModelScope.launch {
+=======
+    fun getUserIssueList(token : Token){
+        viewModelScope.launch {
+
+            withContext(Dispatchers.IO){
+
+            }
+
+        }
+        viewModelScope.launch{
+>>>>>>> feat/search_activity:app/src/main/java/com/example/gitreposearch/ui/viewmodel/MainViewModel.kt
             repository.getUserIssueList(token, issueState.value.toString().lowercase()).apply {
                 if (this is GithubApiResponse.Success) {
                     _userIssueList.value = data!!

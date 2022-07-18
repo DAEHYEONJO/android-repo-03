@@ -13,9 +13,9 @@ import androidx.core.view.isGone
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitreposearch.R
-import com.example.gitreposearch.adapter.IssueListRecyclerViewAdapter
+import com.example.gitreposearch.ui.adapter.IssueListRecyclerViewAdapter
 import com.example.gitreposearch.databinding.FragmentIssueBinding
-import com.example.gitreposearch.viewmodel.MainViewModel
+import com.example.gitreposearch.ui.viewmodel.MainViewModel
 
 class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
     val TAG = "IssueFragment"
