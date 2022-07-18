@@ -5,14 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitreposearch.data.notifications.Notifications
-import com.example.gitreposearch.databinding.ItemNotificationRecyclerviewBinding
+import com.example.gitreposearch.databinding.ItemNotificationListBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
 class NotificationRecyclerViewAdapter()  : RecyclerView.Adapter<NotificationRecyclerViewAdapter.ViewHolder>() {
     private var dataSet =listOf<Notifications>()
 
-    class ViewHolder(private val binding : ItemNotificationRecyclerviewBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding : ItemNotificationListBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item : Notifications){
             with(binding){
@@ -52,7 +52,7 @@ class NotificationRecyclerViewAdapter()  : RecyclerView.Adapter<NotificationRecy
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemNotificationRecyclerviewBinding.inflate(inflater, parent, false)
+        val binding = ItemNotificationListBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 
