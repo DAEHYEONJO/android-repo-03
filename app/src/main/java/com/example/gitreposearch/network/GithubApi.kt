@@ -1,13 +1,15 @@
 package com.example.gitreposearch.network
 
+import android.util.Log
 import com.example.gitreposearch.BuildConfig
 import com.example.gitreposearch.data.Issue
+import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
+import com.example.gitreposearch.data.notifications.Comment
+import com.example.gitreposearch.data.notifications.CommentsList
 import com.example.gitreposearch.data.starred.Starred
 import com.example.gitreposearch.utils.Constants
-import com.google.gson.JsonElement
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -33,16 +35,31 @@ interface GithubApi {
         @Header("Authorization") tokenWithTokenType: String,
         @Path("user") user: String
     ): Response<Starred>
-    
+
     @Headers("Accept: application/vnd.github+json")
     @GET("issues")
     suspend fun getUserIssueList(
-        @Header("Authorization") userToken : String,
+        @Header("Authorization") tokenWithTokenType : String,
         @Query("state") state:String,
         @Query("filter") filter:String = "all"
     ): Response<List<Issue>>
 
+    @Headers("Accept: application/vnd.github+json")
+    @GET("notifications")
+    suspend fun getUserNotificationList(
+        @Header("Authorization") tokenWithTokenType : String,
+        @Query("all") all:Boolean
+    ): Response<List<Notifications>>
 
+    @Headers("Accept: application/vnd.github+json")
+    @GET("/repos/{owner}/{repo}/{type}/{number}/comments")
+    suspend fun getCommentsList(
+        @Header("Authorization") tokenWithTokenType : String,
+        @Path("owner") owner:String,
+        @Path("repo") repo:String,
+        @Path("type") type : String,
+        @Path("number") number: String,
+    ): Response<List<Comment>>
 
 
 }
