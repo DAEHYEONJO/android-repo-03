@@ -14,7 +14,7 @@
     <string name="et_hint_search_github">Search Github</string>
     <string name="search_empty_text_description_title">Find Your Stuff</string>
     <string name="search_empty_text_description_body">Search all of GitHub for People,\nRepositories, Organizations, Issues,\nand Pull Requests</string>
-
+    <string name="progress_bar_loading">Loading..</string>
 
     <!-- filter spinner list-->
     <string-array name="filter">

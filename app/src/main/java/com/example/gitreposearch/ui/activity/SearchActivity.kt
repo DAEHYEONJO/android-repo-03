@@ -1,18 +1,23 @@
 package com.example.gitreposearch.ui.activity
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.util.toRange
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.bumptech.glide.load.engine.Engine
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
 import com.example.gitreposearch.ui.adapter.SearchRecyclerViewAdapter
@@ -40,12 +45,20 @@ class SearchActivity : AppCompatActivity() {
         )
     }
     private val searchRecyclerViewAdapter: SearchRecyclerViewAdapter by lazy {
-        SearchRecyclerViewAdapter()
+        SearchRecyclerViewAdapter().apply {
+            addLoadStateListener { loadState ->
+                binding.progressBar.layoutProgressBarRoot.isVisible = loadState.source.refresh is LoadState.Loading
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        binding.etSearchRepository.requestFocus()
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etSearchRepository, 0)
 
         initRecyclerView()
         initResources()
@@ -54,14 +67,24 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
+    private fun initObserver() {
+        searchViewModel.repoList.observe(this@SearchActivity) {
+            lifecycleScope.launch {
+                Log.e(TAG, "searchViewModel.repoList.observe() called")
+                binding.rvSearchRepository.visibility = View.VISIBLE
+                searchRecyclerViewAdapter.submitData(it)
+            }
+        }
+    }
+
     private fun initRecyclerView() {
-        with(binding){
+        with(binding) {
             rvSearchRepository.run {
-                layoutManager = LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
+                layoutManager =
+                    LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
                 adapter = searchRecyclerViewAdapter
             }
         }
-
     }
 
     private fun initResources() {
@@ -85,24 +108,36 @@ class SearchActivity : AppCompatActivity() {
                 }
                 v.performClick()
             }
-            
-            doAfterTextChanged {
-                Log.e(TAG, "initEditText: ${it.toString()}", )
 
-                binding.layoutSearchEmptyListDescription.visibility = View.GONE
-                binding.rvSearchRepository.visibility = View.VISIBLE
-                lifecycleScope.launch {
-                    searchViewModel.getRepoPaging(it.toString()).collect{
-                        searchRecyclerViewAdapter.submitData(it)
+            doAfterTextChanged {
+                Log.e(TAG, "initEditText: ${it.toString()}")
+                binding.rvSearchRepository.visibility = View.GONE
+                Log.e(TAG, "initEditText: ${it.toString()} ${searchViewModel.preQuery.value}")
+                if (it.toString() != searchViewModel.preQuery.value) {
+                    lifecycleScope.launch {
+                        searchViewModel.getRepoPaging(it.toString())
                     }
                 }
+
+                initObserver()
+
+                if (it!!.isEmpty()) {
+                    setCompoundDrawables(left = searchBtnDrawable)
+                    binding.layoutSearchEmptyListDescription.visibility = View.VISIBLE
+                    binding.rvSearchRepository.visibility = View.GONE
+                } else {
+                    setCompoundDrawables(right = deleteBtnDrawable)
+                    binding.layoutSearchEmptyListDescription.visibility = View.GONE
+                    //binding.rvSearchRepository.visibility = View.VISIBLE
+                }
+
             }
-            
+
             if (!hasFocus()) {
                 Log.e(TAG, "initEditText: noFocus")
                 // api 21 이상인 경우 AppCompatResources.getDrawable
                 // api 21 미만인 경우 resources.getDrawable
-                setCompoundDrawables(left = searchBtnDrawable)
+                setCompoundDrawables(left = searchBtnDrawable, right = null)
                 binding.layoutSearchEmptyListDescription.visibility = View.VISIBLE
                 binding.rvSearchRepository.visibility = View.GONE
             }
@@ -110,16 +145,15 @@ class SearchActivity : AppCompatActivity() {
                 if (!focus) {
                     Log.e(TAG, "initEditText: setOnFocusChangeListener noFocus")
                     setCompoundDrawables(left = searchBtnDrawable)
-                    if(text.isEmpty()){
+                    if (text.isEmpty()) {
                         binding.layoutSearchEmptyListDescription.visibility = View.VISIBLE
                         binding.rvSearchRepository.visibility = View.GONE
                     }
 
-                }
-                if (focus) {
+                } else {
                     Log.e(TAG, "initEditText: setOnFocusChangeListener focused")
                     binding.layoutSearchEmptyListDescription.visibility = View.GONE
-                    binding.rvSearchRepository.visibility = View.VISIBLE
+                    //binding.rvSearchRepository.visibility = View.VISIBLE
                     setCompoundDrawables(right = deleteBtnDrawable)
                 }
             }
