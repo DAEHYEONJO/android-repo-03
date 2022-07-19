@@ -17,10 +17,6 @@ import java.text.FieldPosition
 
 class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
 
-    companion object {
-        const val TAG = "MainViewModel"
-    }
-
     private var _currentTabState = MutableLiveData<String>("Issue")
     val currentTabState: LiveData<String> get() = _currentTabState
 
@@ -69,7 +65,6 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     }
 
     fun getNotificationList(token : String) {
-        Log.d(TAG, "getNotificationList: called")
         viewModelScope.launch {
             repository.getUserNotificationList(token,false).apply {
                 if (this is GithubApiResponse.Success) {
@@ -82,12 +77,11 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     }
 
     fun changeNotificationAsRead(position : Int, token : String){
-        //_userNotificationList.value!!.removeAt(position)
         val threadID = userNotificationList.value!![position].threadID
         viewModelScope.launch{
             repository.changeNotificationAsRead(token, threadID).apply {
                 if(this is GithubApiResponse.Success){
-                    //Log.d(TAG, "changeNotificationAsRead: ${data!!} ")
+                    // TODO 응답별 처리
                 }
 
 

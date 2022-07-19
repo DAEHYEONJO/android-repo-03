@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.core.view.isGone
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +15,7 @@ import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
 import com.example.gitreposearch.ui.adapter.IssueListRecyclerViewAdapter
 import com.example.gitreposearch.databinding.FragmentIssueBinding
+import com.example.gitreposearch.ui.adapter.SpinnerCustomAdapter
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
 
 class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
@@ -56,17 +56,17 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun initFilterSpinner() {
-        ArrayAdapter.createFromResource(requireContext(), R.array.filter, android.R.layout.simple_spinner_item)
-            .also { madapter ->
-                val curItemPos = resources.getStringArray(R.array.filter).indexOf(mainViewModel.issueState.value.toString())
-                with(binding!!.spinnerIssueFilter) {
-                    adapter = madapter
-                    onItemSelectedListener = this@IssueFragment
-                    setSelection(curItemPos)
-                    Log.d(TAG, "initFilterSpinner: itemSelected : ${mainViewModel.issueState.value.toString()}")
-                }
-            }
+        val spinnerAdapter = SpinnerCustomAdapter(requireContext(), mainViewModel)
+        with(binding!!.spinnerIssueFilter){
+            val curItemPos = resources.getStringArray(R.array.filter).indexOf(mainViewModel.issueState.value.toString())
+            adapter = spinnerAdapter
+            setSelection(curItemPos)
+            onItemSelectedListener = this@IssueFragment
+            dropDownVerticalOffset = 120
+        }
     }
+
+
 
     private fun initIssueRecyclerView() {
         issueRecyclerViewAdapter = IssueListRecyclerViewAdapter()
@@ -82,7 +82,7 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
             userIssueList.observe(viewLifecycleOwner) { issueList ->
                 hideLoading()
                 Log.d(TAG, "user issue list changed")
-                if(binding!!.layoutRefresh.isRefreshing){
+                if (binding!!.layoutRefresh.isRefreshing) {
                     binding!!.layoutRefresh.isRefreshing = false
                 }
                 issueRecyclerViewAdapter.setData(issueList)
@@ -90,7 +90,7 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
-    private fun getUserIssueList(){
+    private fun getUserIssueList() {
         mainViewModel.getUserIssueList(GlobalApplication.getInstance().getTypedAccessToken()!!)
     }
 
@@ -108,11 +108,11 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
-
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+        Log.d(TAG, "onItemSelected: ")
         val state = parent?.getItemAtPosition(pos).toString()
         val prevState = mainViewModel.issueState.value
-        if(prevState != state){ // Open 상태에서 또 Open 눌렀을 때, 호출하지않도록 if문 처리
+        if (prevState != state) { // Open 상태에서 또 Open 눌렀을 때, 호출하지않도록 if문 처리
             mainViewModel.setIssueState(state)
             showLoading()
             getUserIssueList()
@@ -120,8 +120,10 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
-    }
 
+
+    }
+    
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d(TAG, "onDestroyView: ")
