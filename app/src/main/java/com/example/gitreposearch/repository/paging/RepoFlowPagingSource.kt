@@ -1,15 +1,23 @@
 package com.example.gitreposearch.repository.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.data.Repo
 import com.example.gitreposearch.network.GithubApi
 import com.example.gitreposearch.utils.ConvertUtils
+import retrofit2.HttpException
+import retrofit2.http.HTTP
 
 class RepoFlowPagingSource(
     private val githubApi: GithubApi
 ) : PagingSource<Int, Repo.Item>() {
+
+    companion object {
+        const val TAG = "RepoFlowPagingSource"
+        const val RESPONSE_OK = 200
+    }
 
     var query: String = ""
     private val colorStringSet = mutableSetOf<String>()
@@ -26,6 +34,14 @@ class RepoFlowPagingSource(
             query = query,
             page = currentPage
         )
+
+        if (repoResponse.body()?.totalCount==0) return LoadResult.Error(Throwable("Empty Result"))
+        else if (repoResponse.code() != RESPONSE_OK) {
+            Log.e(TAG, "load: EEEEEEEEEEEEERRRRRRRRR", )
+            val errorMsg = ConvertUtils.getErrorResponseMsg(repoResponse.errorBody()!!)
+            return LoadResult.Error(Throwable(errorMsg))
+        }
+
         val responseBody = repoResponse.body()?.items?.asSequence()
             ?.onEach {
                 it.stargazersCountString = ConvertUtils.getStarredString(it.stargazersCount)
@@ -47,16 +63,13 @@ class RepoFlowPagingSource(
             }?.toList()
 
         val preKey = if (currentPage == 1) null else currentPage - 1
-        val nextKey = if (repoResponse.isSuccessful) currentPage + 1 else null
-        return try {
-            LoadResult.Page(
-                data = responseBody!!,
-                prevKey = preKey,
-                nextKey = nextKey
-            )
-        } catch (e: Exception) {
-            LoadResult.Error(e)
-        }
+        val nextKey = if (repoResponse.code() == RESPONSE_OK) currentPage + 1 else null
+
+        return LoadResult.Page(
+            data = responseBody!!,
+            prevKey = preKey,
+            nextKey = nextKey
+        )
     }
 
 }

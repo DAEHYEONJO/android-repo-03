@@ -1,5 +1,6 @@
 package com.example.gitreposearch.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -14,17 +15,35 @@ class SearchViewModel(
     private val repoFlowRepository: RepoFlowPagingRepository
 ) : ViewModel() {
 
+    companion object{
+        const val TAG = "SearchViewModel"
+    }
+
     private val _preQuery = MutableLiveData<String>()
     val preQuery: LiveData<String> get() = _preQuery
 
-    lateinit var repoList: LiveData<PagingData<Repo.Item>>
+    var repoList = MutableLiveData<PagingData<Repo.Item>>()
 
-    fun getRepoPaging(query: String) {
+    fun getRepoPaging(query: String): Flow<PagingData<Repo.Item>> {
+        Log.e(TAG, "getRepoPaging: $query", )
         _preQuery.value = query
-        repoList = repoFlowRepository
+        val ret = repoFlowRepository
             .getRepoPaging(query = query)
-            .cachedIn(viewModelScope).asLiveData()
+            .cachedIn(viewModelScope) 
+        return ret
     }
+
+//    fun getRepoPaging(query: String): Flow<PagingData<Repo.Item>> {
+//        _preQuery.value = query
+//        return repoFlowRepository
+//            .getRepoPaging(query = query)
+//            .cachedIn(viewModelScope).
+//            stateIn(
+//                viewModelScope,
+//                SharingStarted.WhileSubscribed(5000),
+//                Repo.Item()
+//            )
+//    }
 
 
 }

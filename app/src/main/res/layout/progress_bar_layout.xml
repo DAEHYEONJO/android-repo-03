@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#0DFFFFFF"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ProgressBar
@@ -22,6 +23,7 @@
         android:layout_height="wrap_content"
         android:text="@string/progress_bar_loading"
         style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@id/progress_bar_layout_loading"
         app:layout_constraintStart_toStartOf="@id/progress_bar_layout_loading"
         app:layout_constraintTop_toBottomOf="@id/progress_bar_layout_loading" />

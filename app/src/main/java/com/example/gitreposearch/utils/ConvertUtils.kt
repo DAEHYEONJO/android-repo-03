@@ -1,5 +1,10 @@
 package com.example.gitreposearch.utils
 
+import com.example.gitreposearch.data.RepoError
+import com.example.gitreposearch.network.GithubApiImpl
+import com.google.gson.Gson
+import okhttp3.ResponseBody
+import retrofit2.Converter
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.floor
@@ -13,6 +18,10 @@ object ConvertUtils {
     fun getRandomColorCode(): String{
         val randomInt = random.nextInt(0xffffff+1)
         return String.format("#%06x", randomInt)
+    }
+
+    fun getErrorResponseMsg(errorBody: ResponseBody): String{
+        return Gson().fromJson(errorBody.charStream(), RepoError::class.java).message
     }
 
     fun getStarredString(starredCount: Int): String{
