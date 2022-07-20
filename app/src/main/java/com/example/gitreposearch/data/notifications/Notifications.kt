@@ -5,7 +5,9 @@ data class Notifications(
     val subject : Subject,
     val repository: Repository,
     val updated_at: String,
+    val url : String
 ) {
     var commentsCounts : String=""
     var number : String = ""
+    var threadID : String = ""
 }

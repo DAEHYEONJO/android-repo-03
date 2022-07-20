@@ -33,13 +33,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         mainViewModel.getUserInfo(GlobalApplication.getInstance().getTypedAccessToken()!!)
-        mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken()!!, true)
+        mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken()!!)
         initAppBarButton()
         initObserver()
         initToggleTabButton()
 
     }
-
 
     private fun initAppBarButton() {
         with(binding) {
@@ -106,7 +105,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 "Notifications" -> {
-                    val fragment = supportFragmentManager.findFragmentByTag(state)
                     if(fragment == null){
                         commit { replace<NotificationFragment>(R.id.layout_hostFrag, state) }
                     }
