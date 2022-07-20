@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.data.Token
@@ -16,11 +17,14 @@ import com.example.gitreposearch.data.notifications.Subject
 import com.example.gitreposearch.network.GithubApiResponse
 import com.example.gitreposearch.repository.GithubApiRepository
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.text.FieldPosition
 import kotlin.system.measureTimeMillis
 
 class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
+
+    private val token = GlobalApplication.getInstance().getTypedAccessToken()
 
     private var _currentTabState = MutableLiveData<String>("Issue")
     val currentTabState: LiveData<String> get() = _currentTabState
@@ -39,13 +43,18 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
 
     val userNotificationFlow = MutableStateFlow<Notifications>(
         value = Notifications(
-            subject = Subject("","",""),
+            subject = Subject("", "", ""),
             repository = Repository(
-                owner = Owner("",""),
-                "",""
+                owner = Owner("", ""),
+                "", ""
             ), updated_at = "", url = ""
         )
     )
+
+    init {
+        getUserInfo(token!!)
+        getNotificationList(token)
+    }
 
     fun changeState(state: String) {
         _currentTabState.value = state
@@ -84,7 +93,6 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
             repository.getUserNotificationList(token, false).apply {
                 if (this is GithubApiResponse.Success) {
                     getNotifiCommentList(token, data!!)
-                    //_userNotificationList.value = data!! as MutableList<Notifications>
                 } else if (this is GithubApiResponse.Error) {
                     throw Exception("github getUserNotifcationList exception code: $exceptionCode")
                 }
@@ -92,12 +100,11 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         }
     }
 
-    private suspend fun getNotifiCommentList(token: String, notificationList: List<Notifications>) {
-        notificationList.forEachIndexed { i, notification ->
-            viewModelScope.launch {
+    fun getNotifiCommentList(token: String, notificationList: List<Notifications>) {
+        viewModelScope.launch {
+            notificationList.forEach{ notification ->
                 repository.getNotifiCommentCount(token, notification).apply {
                     if (this is GithubApiResponse.Success) {
-                        Log.d("jiwoo", "getNotifiCommentList: $i")
                         notification.commentsCounts = data!!.size.toString()
                         userNotificationFlow.emit(notification)
                     } else if (this is GithubApiResponse.Error) {
@@ -109,11 +116,9 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
 
     }
 
-
-    fun changeNotificationAsRead(position: Int, token: String) {
-        val threadID = userNotificationList.value!![position].threadID
+    fun changeNotificationAsRead( threadID: String) {
         viewModelScope.launch {
-            repository.changeNotificationAsRead(token, threadID).apply {
+            repository.changeNotificationAsRead(token!!, threadID).apply {
                 if (this is GithubApiResponse.Success) {
                     // TODO 응답별 처리
                 }

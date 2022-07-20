@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
 import androidx.recyclerview.widget.ItemTouchHelper.Callback.makeMovementFlags
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gitreposearch.GlobalApplication
-import com.example.gitreposearch.ui.adapter.NotificationRecyclerViewAdapter
+import com.example.gitreposearch.ui.adapter.NotificationAdapter
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
 import kotlin.math.abs
 
 class SwipeHelperCallback(
     private val mainViewModel: MainViewModel,
-    private val adapter: NotificationRecyclerViewAdapter
+    private val adapter: NotificationAdapter
 ) : ItemTouchHelper.Callback() {
 
     override fun getMovementFlags(
@@ -33,7 +33,8 @@ class SwipeHelperCallback(
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        mainViewModel.changeNotificationAsRead(position, GlobalApplication.getInstance().getTypedAccessToken().toString())
+        val item = adapter.currentList[position]
+        mainViewModel.changeNotificationAsRead(item.threadID)
         adapter.removeData(position)
     }
 }

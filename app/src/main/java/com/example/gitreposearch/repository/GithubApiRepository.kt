@@ -1,20 +1,12 @@
 package com.example.gitreposearch.repository
 
-import android.app.Notification
-import android.text.TextUtils.substring
 import android.util.Log
 import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.data.notifications.Notifications
-import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.data.notifications.Comment
-import com.example.gitreposearch.data.notifications.CommentsList
-import com.example.gitreposearch.data.notifications.Type
 import com.example.gitreposearch.network.GithubApiImpl
 import com.example.gitreposearch.network.GithubApiResponse
-import com.example.gitreposearch.utils.Constants
-import retrofit2.Response
-import kotlin.system.measureTimeMillis
 
 class GithubApiRepository {
 

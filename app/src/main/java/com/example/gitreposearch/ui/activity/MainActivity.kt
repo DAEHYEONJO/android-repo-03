@@ -20,9 +20,6 @@ import com.example.gitreposearch.ui.viewmodel.MainViewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-
-
     private val mainViewModel: MainViewModel by viewModels {
         CustomViewModelFactory(GlobalApplication.githubApiRepository)
     }
@@ -32,12 +29,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainViewModel.getUserInfo(GlobalApplication.getInstance().getTypedAccessToken()!!)
-        mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken()!!)
         initAppBarButton()
         initObserver()
         initToggleTabButton()
-
     }
 
     private fun initAppBarButton() {

@@ -11,15 +11,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.gitreposearch.databinding.FragmentNotificationBinding
-import com.example.gitreposearch.utils.SwipeHelperCallback
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.data.notifications.Notifications
-import com.example.gitreposearch.ui.adapter.NotificationRecyclerViewAdapter
+import com.example.gitreposearch.databinding.FragmentNotificationBinding
+import com.example.gitreposearch.ui.adapter.NotificationAdapter
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
+import com.example.gitreposearch.utils.SwipeHelperCallback
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -31,8 +29,7 @@ class NotificationFragment : Fragment() {
     private var _binding: FragmentNotificationBinding? = null
     private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
-    private lateinit var notificationRecyclerViewAdapter: NotificationRecyclerViewAdapter
-
+    private lateinit var notificationAdapter: NotificationAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,69 +46,59 @@ class NotificationFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        //showLoading()
         initNotificationRecyclerView()
         initRefreshListener()
         initSwipeListener()
-        initObserve()
+        initFlow()
     }
 
+    private fun initFlow() { // NotificationFragment 생성되면 호출됨
+        lifecycleScope.launch{
+            mainViewModel.userNotificationFlow.collect{ // flow 데이터 받아오기
+                val newList = notificationAdapter.currentList.toMutableList() // List<Notifications> 타입으로 mutable 로 Casting
+                newList.add(it) // flow로 받아온 데이터를 기존에 있던 리스트에 추가
+                notificationAdapter.submitList(newList) // 데이터 보냄
+
+                if (binding.layoutRefresh.isRefreshing) { // 새로고침 로딩표시 없애주는 조건문
+                   binding.layoutRefresh.isRefreshing = false
+                }
+            }
+        }
+    }
     private fun initSwipeListener() {
         val swipeHelperCallback =
-            SwipeHelperCallback(mainViewModel, notificationRecyclerViewAdapter).apply {
+            SwipeHelperCallback(mainViewModel, notificationAdapter).apply {
             }
         val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.rcvNotificationList)
     }
 
     private fun initRefreshListener() {
-        binding.layoutRefresh.setOnRefreshListener {
-            getUserNotificationList()
-        }
-    }
+        binding.layoutRefresh.setOnRefreshListener { // 새로고침 이벤트 리스너
+            binding.layoutRefresh.isRefreshing = true // 새로고침 로딩 보여주기
 
-    private fun showLoading() {
-        with(binding) {
-            progressBarLoading.isGone = false
-            tvLoading.isGone = false
-        }
-    }
+            mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken().toString()) // NotificationList 받아오는 함수 실행
+            //val newList = mutableListOf<Notifications>() // 아예 새로운 데이터로 교체해줘야하기때문에 새로 생성
+            val newList = notificationAdapter.currentList.toMutableList() // List<Notifications> 타입으로 mutable 로 Casting
+            newList.clear()
+            lifecycleScope.launch{
+                mainViewModel.userNotificationFlow.collect{ // flow 데이터 받아오기
+                    newList.add(it) //  받아온 데이터 newList에 추가
+                    notificationAdapter.submitList(newList) // 그냥 중복해서 계속 보냄...
 
-    private fun hideLoading() {
-        with(binding) {
-            progressBarLoading.isGone = true
-            tvLoading.isGone = true
+                    if (binding.layoutRefresh.isRefreshing) {
+                        binding.layoutRefresh.isRefreshing = false
+                    }
+                }
+            }
         }
     }
 
     private fun initNotificationRecyclerView() {
-        notificationRecyclerViewAdapter = NotificationRecyclerViewAdapter()
+        notificationAdapter = NotificationAdapter()
         with(binding) {
             rcvNotificationList.layoutManager = LinearLayoutManager(activity)
-            rcvNotificationList.adapter = notificationRecyclerViewAdapter
+            rcvNotificationList.adapter = notificationAdapter
         }
     }
-
-    private fun getUserNotificationList() {
-        mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken()!!)
-    }
-
-    private fun initObserve() {
-        lifecycleScope.launch {
-            mainViewModel.userNotificationFlow.collectLatest {
-                Log.e(TAG, "initObserve: $it", )
-                notificationRecyclerViewAdapter.addData(it)
-            }
-
-        }
-
-        mainViewModel.userNotificationList.observe(viewLifecycleOwner) { notificationList ->
-            if (binding.layoutRefresh.isRefreshing) {
-                binding.layoutRefresh.isRefreshing = false
-            }
-            hideLoading()
-            notificationRecyclerViewAdapter.setData(notificationList as MutableList<Notifications>)
-        }
-    }
-
 }
