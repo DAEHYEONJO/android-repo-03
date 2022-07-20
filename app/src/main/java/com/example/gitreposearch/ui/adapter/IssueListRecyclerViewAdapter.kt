@@ -22,7 +22,6 @@ class IssueListRecyclerViewAdapter() : RecyclerView.Adapter<IssueListRecyclerVie
                 executePendingBindings() // 강제 결합시키기
                 setRepositoryUrl(item.repository_url.toString())
                 setUpdatedTime(item.updated_at.toString())
-
             }
         }
 

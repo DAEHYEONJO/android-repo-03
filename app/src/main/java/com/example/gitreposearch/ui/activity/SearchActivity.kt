@@ -61,9 +61,14 @@ class SearchActivity : AppCompatActivity() {
                     ?:loadState.source.append as? LoadState.Error
                     ?:loadState.source.prepend as? LoadState.Error
                 errorState?.let {
+                    if (it.error.message == "End of List"){
+                        searchViewModel.endOfListFlag.value = true
+                    }
                     Toast.makeText(this@SearchActivity, "${it.error.message}", Toast.LENGTH_LONG).show()
                 }
-                
+                Log.e(TAG, "addLoadStateListener refresh: ${loadState.source.refresh}", )
+                Log.e(TAG, "addLoadStateListener append: ${loadState.source.append}", )
+                Log.e(TAG, "addLoadStateListener prepend: ${loadState.source.prepend}", )
             }
         }
     }
@@ -72,10 +77,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.etSearchRepository.requestFocus()
-
-        imm.showSoftInput(binding.etSearchRepository, 0)
-
+        showKeyBoard()
         initRecyclerView()
         initResources()
         initAppBar()
@@ -94,6 +96,13 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun showKeyBoard(){
+        with(binding.etSearchRepository){
+            requestFocus()
+            imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
     private fun initRecyclerView() {
         with(binding) {
             rvSearchRepository.run {
@@ -103,6 +112,7 @@ class SearchActivity : AppCompatActivity() {
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                         super.onScrolled(recyclerView, dx, dy)
+                        if (searchViewModel.endOfListFlag.value==true) return
                         val lastVisibleItemPosition = ((recyclerView.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
                         val itemTotalCount = recyclerView.adapter!!.itemCount - 1
                         if (lastVisibleItemPosition == itemTotalCount){
@@ -129,6 +139,9 @@ class SearchActivity : AppCompatActivity() {
             setOnTouchListener { v, motionEvent ->
                 if (motionEvent.action == MotionEvent.ACTION_UP) {
                     compoundDrawables[2]?.let { drawable ->
+                        binding.rvSearchRepository.visibility = View.GONE
+                        binding.etSearchRepository.visibility = View.VISIBLE
+                        imm.hideSoftInputFromWindow(this.windowToken, 0)
                         val rangeX =
                             (right - drawable.bounds.width() - paddingEnd..right - paddingEnd).toRange()
                         if (motionEvent.rawX.toInt() in rangeX) {
@@ -141,6 +154,7 @@ class SearchActivity : AppCompatActivity() {
 
             setOnKeyListener { _, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER && text.isNotEmpty()) {
+                    searchViewModel.endOfListFlag.value = false
                     binding.layoutSearchEmptyListDescription.visibility = View.GONE
                     imm.hideSoftInputFromWindow(this.windowToken, 0)
                     lifecycleScope.launch {
@@ -182,7 +196,7 @@ class SearchActivity : AppCompatActivity() {
 
                 } else {
                     Log.e(TAG, "initEditText: setOnFocusChangeListener focused")
-                    binding.layoutSearchEmptyListDescription.visibility = View.GONE
+                    //binding.layoutSearchEmptyListDescription.visibility = View.GONE
                     //binding.rvSearchRepository.visibility = View.VISIBLE
                     setCompoundDrawables(left = null, right = deleteBtnDrawable)
                     Log.e(TAG, " setOnFocusChangeListener { view, focus ->\n" +

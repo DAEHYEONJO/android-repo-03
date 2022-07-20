@@ -28,7 +28,7 @@ class RepoFlowPagingRepository(
 //        )
         return PagingConfig(
             pageSize = 30,
-            enablePlaceholders = true
+            enablePlaceholders = false
         )
     }
 }

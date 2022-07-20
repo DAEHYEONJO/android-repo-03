@@ -16,7 +16,6 @@ class RepoFlowPagingSource(
 
     companion object {
         const val TAG = "RepoFlowPagingSource"
-        const val RESPONSE_OK = 200
     }
 
     var query: String = ""
@@ -35,8 +34,11 @@ class RepoFlowPagingSource(
             page = currentPage
         )
 
-        if (repoResponse.body()?.totalCount==0) return LoadResult.Error(Throwable("Empty Result"))
-        else if (repoResponse.code() != RESPONSE_OK) {
+        if (repoResponse.body()?.items!!.isEmpty() ){
+            return if (currentPage==1) LoadResult.Error(Throwable("Empty Result"))
+            else LoadResult.Error(Throwable("End of List"))
+        }
+        else if (!repoResponse.isSuccessful) {
             Log.e(TAG, "load: EEEEEEEEEEEEERRRRRRRRR", )
             val errorMsg = ConvertUtils.getErrorResponseMsg(repoResponse.errorBody()!!)
             return LoadResult.Error(Throwable(errorMsg))
@@ -63,7 +65,7 @@ class RepoFlowPagingSource(
             }?.toList()
 
         val preKey = if (currentPage == 1) null else currentPage - 1
-        val nextKey = if (repoResponse.code() == RESPONSE_OK) currentPage + 1 else null
+        val nextKey = if (repoResponse.code()==200) currentPage + 1 else null
 
         return LoadResult.Page(
             data = responseBody!!,
