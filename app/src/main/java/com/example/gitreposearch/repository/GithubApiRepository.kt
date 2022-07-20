@@ -17,10 +17,6 @@ import retrofit2.Response
 
 class GithubApiRepository {
 
-    companion object {
-        const val TAG = "GithubApiRepository"
-    }
-
     suspend fun getUserInfo(token: String): GithubApiResponse<UserInfo?> {
         val responseUser = GithubApiImpl.githubApi.getUserInfo(token)
         return if (responseUser.isSuccessful) {
@@ -39,7 +35,6 @@ class GithubApiRepository {
     }
 
     suspend fun getUserIssueList(token: String, state: String): GithubApiResponse<List<Issue>?> {
-        Log.d("jiwoo", "getUserIssueList: API REPO")
         val response = GithubApiImpl.githubApi.getUserIssueList(
             token,
             state
@@ -88,8 +83,10 @@ class GithubApiRepository {
 
     suspend fun changeNotificationAsRead(token : String, threadID : String): GithubApiResponse<String?> {
         val response = GithubApiImpl.githubApi.changeNotificationAsRead(token, threadID)
-        return if(response.isSuccessful){
+        return if(response.isSuccessful) {
+            Log.d("Text", "changeNotificationAsRead: ${response.code()}")
             GithubApiResponse.Success(data = response.body())
+
         }
         else {
             GithubApiResponse.Error(exceptionCode = response.code())

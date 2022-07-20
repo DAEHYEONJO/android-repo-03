@@ -19,7 +19,9 @@ import com.example.gitreposearch.ui.viewmodel.MainViewModel
 
 
 class NotificationFragment : Fragment() {
+
     val TAG = "NotificationFragment"
+    
     private var _binding: FragmentNotificationBinding? = null
     private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -38,7 +40,6 @@ class NotificationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: ")
         showLoading()
         initNotificationRecyclerView()
         initRefreshListener()
@@ -87,6 +88,9 @@ class NotificationFragment : Fragment() {
 
     private fun initObserve() {
         mainViewModel.userNotificationList.observe(viewLifecycleOwner) { notificationList ->
+            if(binding.layoutRefresh.isRefreshing){
+                binding.layoutRefresh.isRefreshing = false
+
             Log.d(TAG, "notofi observe: ")
             if(binding.layoutRefresh.isRefreshing){
                 binding.layoutRefresh.isRefreshing = false

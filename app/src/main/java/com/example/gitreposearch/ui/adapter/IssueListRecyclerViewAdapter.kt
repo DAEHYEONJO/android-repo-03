@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gitreposearch.R
 import com.example.gitreposearch.data.Issue
-import com.example.gitreposearch.databinding.ItemIssueListBinding
+import com.example.gitreposearch.databinding.RvIssueRowBinding
 import com.example.gitreposearch.utils.Constants
 import java.text.SimpleDateFormat
 import java.util.*
@@ -13,7 +13,7 @@ import java.util.*
 class IssueListRecyclerViewAdapter() : RecyclerView.Adapter<IssueListRecyclerViewAdapter.ViewHolder>() {
     private var dataSet =listOf<Issue>()
 
-    class ViewHolder(private val binding : ItemIssueListBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding : RvIssueRowBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item : Issue){
             with(binding){
@@ -67,7 +67,7 @@ class IssueListRecyclerViewAdapter() : RecyclerView.Adapter<IssueListRecyclerVie
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemIssueListBinding.inflate(inflater, parent, false)
+        val binding = RvIssueRowBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 

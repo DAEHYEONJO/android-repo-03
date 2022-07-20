@@ -33,9 +33,7 @@ class SwipeHelperCallback(
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        Log.d("before", mainViewModel.userNotificationList.value!!.size.toString())
         mainViewModel.changeNotificationAsRead(position, GlobalApplication.getInstance().getTypedAccessToken().toString())
         adapter.removeData(position)
-        Log.d("after", mainViewModel.userNotificationList.value!!.size.toString())
     }
 }

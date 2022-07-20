@@ -1,21 +1,18 @@
 package com.example.gitreposearch.ui.adapter
 
-import android.app.Notification
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gitreposearch.data.notifications.Notifications
-import com.example.gitreposearch.databinding.ItemNotificationListBinding
-import com.example.gitreposearch.utils.SwipeHelperCallback
+import com.example.gitreposearch.databinding.RvNotificationRowBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
 class NotificationRecyclerViewAdapter(private var dataSet: MutableList<Notifications> = mutableListOf())
     : RecyclerView.Adapter<NotificationRecyclerViewAdapter.ViewHolder>(){
 
-    class ViewHolder(private val binding : ItemNotificationListBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding : RvNotificationRowBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item : Notifications){
             with(binding){
@@ -61,7 +58,7 @@ class NotificationRecyclerViewAdapter(private var dataSet: MutableList<Notificat
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemNotificationListBinding.inflate(inflater, parent, false)
+        val binding = RvNotificationRowBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 
