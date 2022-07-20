@@ -49,13 +49,18 @@ class SearchActivity : AppCompatActivity() {
             GlobalApplication.repoFlowRepository
         )
     }
+
     private val imm: InputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
+
     private val searchRecyclerViewAdapter: SearchRecyclerViewAdapter by lazy {
         SearchRecyclerViewAdapter().apply {
             addLoadStateListener { loadState ->
-                binding.progressBar.layoutProgressBarRoot.isVisible =
-                    loadState.source.refresh is LoadState.Loading
-                binding.progressBar.layoutProgressBarRoot.bringToFront()
+                setProgressBarVisible(loadState.source.refresh is LoadState.Loading)
+                binding.rvSearchRepository.isVisible = loadState.source.refresh is LoadState.NotLoading
+//                if (loadState.source.refresh is LoadState.NotLoading){
+//                    Log.e(TAG, "리싸이클러뷰 보이기: ", )
+//                    binding.rvSearchRepository.visibility = View.VISIBLE
+//                }
 
                 val errorState = loadState.source.refresh as? LoadState.Error
                     ?:loadState.source.append as? LoadState.Error
@@ -77,37 +82,25 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        showKeyBoard()
-        initRecyclerView()
-        initResources()
         initAppBar()
-        initEditText()
+        showKeyBoard()
+        initResources()
         initObserver()
+        initRecyclerView()
+        initEditText()
     }
 
     private fun initObserver() {
         searchViewModel.repoList.observe(this@SearchActivity) { data ->
             lifecycleScope.launch{
-                Log.e(TAG, " searchViewModel.repoList.observe(this@SearchActivity): ${data}", )
-                binding.rvSearchRepository.visibility = View.VISIBLE
                 searchRecyclerViewAdapter.submitData(data)
-                Log.e(TAG, " searchViewModel.repoList.observe(this@SearchActivity): ${binding.rvSearchRepository.visibility}", )
             }
-        }
-    }
-
-    private fun showKeyBoard(){
-        with(binding.etSearchRepository){
-            requestFocus()
-            imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 
     private fun initRecyclerView() {
         with(binding) {
             rvSearchRepository.run {
-                layoutManager =
-                    LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
                 adapter = searchRecyclerViewAdapter
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -116,9 +109,10 @@ class SearchActivity : AppCompatActivity() {
                         val lastVisibleItemPosition = ((recyclerView.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
                         val itemTotalCount = recyclerView.adapter!!.itemCount - 1
                         if (lastVisibleItemPosition == itemTotalCount){
-                            Log.e(TAG, "onScrolled: Last!!!!", )
-                            binding.progressBar.layoutProgressBarRoot.isVisible = true
-                            binding.progressBar.layoutProgressBarRoot.bringToFront()
+                            with(progressBar.layoutProgressBarRoot){
+                                isVisible = true
+                                bringToFront()
+                            }
                         }
 
                     }
@@ -128,10 +122,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initResources() {
-        searchBtnDrawable =
-            AppCompatResources.getDrawable(this@SearchActivity, R.drawable.ic_search_btn)!!
-        deleteBtnDrawable =
-            AppCompatResources.getDrawable(this@SearchActivity, R.drawable.ic_search_delete)!!
+        searchBtnDrawable = AppCompatResources.getDrawable(this@SearchActivity, R.drawable.ic_search_btn)!!
+        deleteBtnDrawable = AppCompatResources.getDrawable(this@SearchActivity, R.drawable.ic_search_delete)!!
     }
 
     private fun initEditText() {
@@ -139,12 +131,14 @@ class SearchActivity : AppCompatActivity() {
             setOnTouchListener { v, motionEvent ->
                 if (motionEvent.action == MotionEvent.ACTION_UP) {
                     compoundDrawables[2]?.let { drawable ->
-                        binding.rvSearchRepository.visibility = View.GONE
-                        binding.etSearchRepository.visibility = View.VISIBLE
-                        imm.hideSoftInputFromWindow(this.windowToken, 0)
-                        val rangeX =
-                            (right - drawable.bounds.width() - paddingEnd..right - paddingEnd).toRange()
-                        if (motionEvent.rawX.toInt() in rangeX) {
+                        
+                        val rangeX = (right - drawable.bounds.width() - paddingEnd..right - paddingEnd).toRange()
+                        if (motionEvent.rawX.toInt() in rangeX && text.isNotEmpty()) {
+                            Log.e(TAG, "setOnTouchListener: click X Btn", )
+                            //imm.hideSoftInputFromWindow(this.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
+
+                            binding.rvSearchRepository.visibility = View.GONE
+                            binding.layoutSearchEmptyListDescription.visibility = View.VISIBLE
                             setText("")
                         }
                     }
@@ -152,11 +146,15 @@ class SearchActivity : AppCompatActivity() {
                 v.performClick()
             }
 
-            setOnKeyListener { _, keyCode, event ->
+            setOnKeyListener { view, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER && text.isNotEmpty()) {
+                    Log.e(TAG, "setOnKeyListener: 엔터 누르기", )
                     searchViewModel.endOfListFlag.value = false
                     binding.layoutSearchEmptyListDescription.visibility = View.GONE
-                    imm.hideSoftInputFromWindow(this.windowToken, 0)
+                    binding.rvSearchRepository.visibility = View.GONE
+                    //searchViewModel.hasFocusOnKeyboard.value = false
+                    closeKeyBoard()
+                    //imm.hideSoftInputFromWindow(this.windowToken, 0)
                     lifecycleScope.launch {
                         searchViewModel.getRepoPaging(text.toString()).collectLatest {
                             Log.e(TAG, "initEditText: Collect ${it}", )
@@ -170,7 +168,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             if (!hasFocus()) {
-                Log.e(TAG, "initEditText: noFocus")
+                Log.e(TAG, "!hasFocus(): 초기 포커스 없음", )
                 // api 21 이상인 경우 AppCompatResources.getDrawable
                 // api 21 미만인 경우 resources.getDrawable
                 setCompoundDrawables(left = searchBtnDrawable, right = null)
@@ -178,31 +176,36 @@ class SearchActivity : AppCompatActivity() {
                 binding.rvSearchRepository.visibility = View.GONE
                 Log.e(TAG, " if (!hasFocus()) {: ${binding.rvSearchRepository.visibility}", )
             }else{
-                Log.e(TAG, "initEditText: setOnFocusChangeListener focused")
-                binding.layoutSearchEmptyListDescription.visibility = View.GONE
+                Log.e(TAG, "hasFocus(): 초기 포커스 있음", )
+                //binding.layoutSearchEmptyListDescription.visibility = View.GONE
                 //binding.rvSearchRepository.visibility = View.VISIBLE
                 setCompoundDrawables(left = null, right = deleteBtnDrawable)
             }
             setOnFocusChangeListener { view, focus ->
                 if (!focus) {
-                    Log.e(TAG, "initEditText: setOnFocusChangeListener noFocus")
+                    Log.e(TAG, "setOnFocusChangeListener: 포커스 없는걸로 바뀜", )
                     setCompoundDrawables(left = searchBtnDrawable)
                     if (text.isEmpty()) {
                         binding.layoutSearchEmptyListDescription.visibility = View.VISIBLE
                         binding.rvSearchRepository.visibility = View.GONE
                         Log.e(TAG, " setOnFocusChangeListener { view, focus ->\n" +
-                                "                if (!focus) {: ${binding.rvSearchRepository.visibility}", )
+                                "                (text.isEmpty()) {: ${binding.rvSearchRepository.visibility}", )
                     }
 
                 } else {
-                    Log.e(TAG, "initEditText: setOnFocusChangeListener focused")
-                    //binding.layoutSearchEmptyListDescription.visibility = View.GONE
-                    //binding.rvSearchRepository.visibility = View.VISIBLE
+                    Log.e(TAG, "setOnFocusChangeListener: 포커스 있는걸로 바뀜", )
+                    //binding.layoutSearchEmptyListDescription.visibility = View.VISIBLE
+                    //binding.rvSearchRepository.visibility = View.GONE
                     setCompoundDrawables(left = null, right = deleteBtnDrawable)
-                    Log.e(TAG, " setOnFocusChangeListener { view, focus ->\n" +
-                            "                else {: ${binding.rvSearchRepository.visibility}", )
                 }
             }
+        }
+    }
+
+    private fun setProgressBarVisible(isVisible: Boolean){
+        with(binding.progressBar.layoutProgressBarRoot){
+            this.isVisible = isVisible
+            bringToFront()
         }
     }
 
@@ -217,12 +220,28 @@ class SearchActivity : AppCompatActivity() {
         )
     }
 
+    private fun showKeyBoard(){
+        with(binding.etSearchRepository){
+            imm.showSoftInput(this, InputMethodManager.SHOW_FORCED)
+            requestFocus()
+        }
+    }
+
+    private fun closeKeyBoard(){
+        Log.e(TAG, "closeKeyBoard: ${this.currentFocus?.hasFocus()}", )
+        this.currentFocus?.let {
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+        }
+    }
+
     private fun initAppBar() {
         this.title = ""
         with(binding.appBarSearch) {
             setSupportActionBar(searchProfileToolBar)
             appBarTitleTv.text = resources.getString(R.string.app_bar_search)
-            appBarBackBtn.setOnClickListener { finish() }
+            appBarBackBtn.setOnClickListener {
+                finish()
+            }
         }
     }
 }

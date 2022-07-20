@@ -23,6 +23,7 @@ class SearchViewModel(
     val preQuery: LiveData<String> get() = _preQuery
 
     val endOfListFlag = MutableLiveData<Boolean>(false)
+    val hasFocusOnKeyboard = MutableLiveData<Boolean>(true)
 
     var repoList = MutableLiveData<PagingData<Repo.Item>>()
 

@@ -80,7 +80,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="invisible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/iv_profile_end_space_16"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
