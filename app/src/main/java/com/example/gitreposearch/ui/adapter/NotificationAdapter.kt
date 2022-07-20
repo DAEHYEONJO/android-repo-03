@@ -59,11 +59,12 @@ class NotificationAdapter :
             }
         }
     }
-    fun addData(item : Notifications){
-        val tempList = currentList
-        tempList.add(item)
+    fun removeAll(){
+        val tempList = currentList.toMutableList()
+        tempList.clear()
         submitList(tempList)
     }
+
     fun removeData(position: Int) {
         val tempList = currentList.toMutableList()
         if (position < currentList.size) {

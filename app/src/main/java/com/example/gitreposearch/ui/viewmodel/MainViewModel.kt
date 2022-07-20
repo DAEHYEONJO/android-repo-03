@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide.init
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.data.notifications.Notifications
@@ -19,6 +20,7 @@ import com.example.gitreposearch.repository.GithubApiRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.text.FieldPosition
 import kotlin.system.measureTimeMillis
 
@@ -38,10 +40,7 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     private val _issueState = MutableLiveData<String>()
     val issueState: LiveData<String> get() = _issueState
 
-    private val _userNotificationList = MutableLiveData<MutableList<Notifications>>()
-    val userNotificationList: LiveData<MutableList<Notifications>> get() = _userNotificationList
-
-    val userNotificationFlow = MutableStateFlow<Notifications>(
+    private val _userNotificationFlow = MutableStateFlow<Notifications>(
         value = Notifications(
             subject = Subject("", "", ""),
             repository = Repository(
@@ -50,6 +49,10 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
             ), updated_at = "", url = ""
         )
     )
+    val userNotificationFlow : StateFlow<Notifications> = _userNotificationFlow
+
+    private val initState = "init"
+
 
     init {
         getUserInfo(token!!)
@@ -106,7 +109,7 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
                 repository.getNotifiCommentCount(token, notification).apply {
                     if (this is GithubApiResponse.Success) {
                         notification.commentsCounts = data!!.size.toString()
-                        userNotificationFlow.emit(notification)
+                        _userNotificationFlow.emit(notification)
                     } else if (this is GithubApiResponse.Error) {
                         throw Exception("github getUserNotifcationList exception code: $exceptionCode")
                     }

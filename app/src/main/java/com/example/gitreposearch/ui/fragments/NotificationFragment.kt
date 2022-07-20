@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitreposearch.GlobalApplication
@@ -18,6 +20,7 @@ import com.example.gitreposearch.ui.adapter.NotificationAdapter
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
 import com.example.gitreposearch.utils.SwipeHelperCallback
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -49,22 +52,26 @@ class NotificationFragment : Fragment() {
         initNotificationRecyclerView()
         initRefreshListener()
         initSwipeListener()
-        initFlow()
+        startFlow()
     }
 
-    private fun initFlow() { // NotificationFragment 생성되면 호출됨
+    private fun startFlow() {
         lifecycleScope.launch{
-            mainViewModel.userNotificationFlow.collect{ // flow 데이터 받아오기
-                val newList = notificationAdapter.currentList.toMutableList() // List<Notifications> 타입으로 mutable 로 Casting
-                newList.add(it) // flow로 받아온 데이터를 기존에 있던 리스트에 추가
-                notificationAdapter.submitList(newList) // 데이터 보냄
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mainViewModel.userNotificationFlow.collect{ // flow 데이터 받아오기
+                    val newList = notificationAdapter.currentList.toMutableList() // List<Notifications> 타입으로 mutable 로 Casting
+                    newList.add(it) // flow로 받아온 데이터를 기존에 있던 리스트에 추가
+                    notificationAdapter.submitList(newList ) // 데이터   보냄
+                    Log.d(TAG, "initFlow: ${notificationAdapter.currentList.size}")
 
-                if (binding.layoutRefresh.isRefreshing) { // 새로고침 로딩표시 없애주는 조건문
-                   binding.layoutRefresh.isRefreshing = false
+                    if (binding.layoutRefresh.isRefreshing) { // 새로고침 로딩표시 없애주는 조건문
+                        binding.layoutRefresh.isRefreshing = false
+                    }
                 }
             }
         }
     }
+
     private fun initSwipeListener() {
         val swipeHelperCallback =
             SwipeHelperCallback(mainViewModel, notificationAdapter).apply {
@@ -76,21 +83,9 @@ class NotificationFragment : Fragment() {
     private fun initRefreshListener() {
         binding.layoutRefresh.setOnRefreshListener { // 새로고침 이벤트 리스너
             binding.layoutRefresh.isRefreshing = true // 새로고침 로딩 보여주기
-
             mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken().toString()) // NotificationList 받아오는 함수 실행
-            //val newList = mutableListOf<Notifications>() // 아예 새로운 데이터로 교체해줘야하기때문에 새로 생성
-            val newList = notificationAdapter.currentList.toMutableList() // List<Notifications> 타입으로 mutable 로 Casting
-            newList.clear()
-            lifecycleScope.launch{
-                mainViewModel.userNotificationFlow.collect{ // flow 데이터 받아오기
-                    newList.add(it) //  받아온 데이터 newList에 추가
-                    notificationAdapter.submitList(newList) // 그냥 중복해서 계속 보냄...
+            notificationAdapter.removeAll()
 
-                    if (binding.layoutRefresh.isRefreshing) {
-                        binding.layoutRefresh.isRefreshing = false
-                    }
-                }
-            }
         }
     }
 
