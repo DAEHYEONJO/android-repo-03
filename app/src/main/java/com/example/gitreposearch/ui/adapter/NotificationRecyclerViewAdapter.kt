@@ -9,8 +9,8 @@ import com.example.gitreposearch.databinding.RvNotificationRowBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NotificationRecyclerViewAdapter()  : RecyclerView.Adapter<NotificationRecyclerViewAdapter.ViewHolder>(){
-    private var dataSet = mutableListOf<Notifications>()
+class NotificationRecyclerViewAdapter(private var dataSet: MutableList<Notifications> = mutableListOf())
+    : RecyclerView.Adapter<NotificationRecyclerViewAdapter.ViewHolder>(){
 
     class ViewHolder(private val binding : RvNotificationRowBinding) : RecyclerView.ViewHolder(binding.root) {
 
