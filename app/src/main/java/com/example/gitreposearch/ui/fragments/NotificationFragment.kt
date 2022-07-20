@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitreposearch.databinding.FragmentNotificationBinding
@@ -16,10 +17,19 @@ import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.ui.adapter.NotificationRecyclerViewAdapter
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class NotificationFragment : Fragment() {
-    private var binding: FragmentNotificationBinding? = null
+
+    val TAG = "NotificationFragment"
+
+    private var _binding: FragmentNotificationBinding? = null
+    private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var notificationRecyclerViewAdapter: NotificationRecyclerViewAdapter
 
@@ -30,15 +40,16 @@ class NotificationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentNotificationBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = FragmentNotificationBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.lifecycleOwner = viewLifecycleOwner
-        showLoading()
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        //showLoading()
         initNotificationRecyclerView()
         initRefreshListener()
         initSwipeListener()
@@ -46,35 +57,36 @@ class NotificationFragment : Fragment() {
     }
 
     private fun initSwipeListener() {
-        val swipeHelperCallback = SwipeHelperCallback(mainViewModel, notificationRecyclerViewAdapter).apply{
-        }
+        val swipeHelperCallback =
+            SwipeHelperCallback(mainViewModel, notificationRecyclerViewAdapter).apply {
+            }
         val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
-        itemTouchHelper.attachToRecyclerView(binding?.rcvNotificationList)
+        itemTouchHelper.attachToRecyclerView(binding.rcvNotificationList)
     }
 
     private fun initRefreshListener() {
-        binding!!.layoutRefresh.setOnRefreshListener {
+        binding.layoutRefresh.setOnRefreshListener {
             getUserNotificationList()
         }
     }
 
     private fun showLoading() {
-        with(binding!!){
+        with(binding) {
             progressBarLoading.isGone = false
             tvLoading.isGone = false
         }
     }
 
     private fun hideLoading() {
-        with(binding!!){
-            progressBarLoading.isGone=true
+        with(binding) {
+            progressBarLoading.isGone = true
             tvLoading.isGone = true
         }
     }
 
     private fun initNotificationRecyclerView() {
         notificationRecyclerViewAdapter = NotificationRecyclerViewAdapter()
-        with(binding!!) {
+        with(binding) {
             rcvNotificationList.layoutManager = LinearLayoutManager(activity)
             rcvNotificationList.adapter = notificationRecyclerViewAdapter
         }
@@ -85,12 +97,21 @@ class NotificationFragment : Fragment() {
     }
 
     private fun initObserve() {
+        lifecycleScope.launch {
+            mainViewModel.userNotificationFlow.collectLatest {
+                Log.e(TAG, "initObserve: $it", )
+                notificationRecyclerViewAdapter.addData(it)
+            }
+
+        }
+
         mainViewModel.userNotificationList.observe(viewLifecycleOwner) { notificationList ->
-            if(binding!!.layoutRefresh.isRefreshing){
-                binding!!.layoutRefresh.isRefreshing = false
+            if (binding.layoutRefresh.isRefreshing) {
+                binding.layoutRefresh.isRefreshing = false
             }
             hideLoading()
             notificationRecyclerViewAdapter.setData(notificationList as MutableList<Notifications>)
         }
     }
+
 }

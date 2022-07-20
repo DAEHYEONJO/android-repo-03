@@ -57,15 +57,15 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun initFilterSpinner() {
         val spinnerAdapter = SpinnerCustomAdapter(requireContext(), mainViewModel)
-        with(binding!!.spinnerIssueFilter){
-            val curItemPos = resources.getStringArray(R.array.filter).indexOf(mainViewModel.issueState.value.toString())
+        with(binding!!.spinnerIssueFilter) {
+            val curItemPos = resources.getStringArray(R.array.filter)
+                .indexOf(mainViewModel.issueState.value.toString())
             adapter = spinnerAdapter
             setSelection(curItemPos)
             onItemSelectedListener = this@IssueFragment
             dropDownVerticalOffset = 120
         }
     }
-
 
 
     private fun initIssueRecyclerView() {
@@ -123,7 +123,7 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
 
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d(TAG, "onDestroyView: ")

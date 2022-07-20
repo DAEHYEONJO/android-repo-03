@@ -36,10 +36,8 @@ class GithubApiRepository {
     }
 
     suspend fun getUserIssueList(token: String, state: String): GithubApiResponse<List<Issue>?> {
-        val response = GithubApiImpl.githubApi.getUserIssueList(
-            token,
-            state
-        )
+        val response = GithubApiImpl.githubApi.getUserIssueList(token, state)
+
         return if (response.isSuccessful) {
             GithubApiResponse.Success(data = response.body())
         } else {
@@ -62,7 +60,7 @@ class GithubApiRepository {
 
     suspend fun getNotifiCommentCount(token: String, notification: Notifications) : GithubApiResponse<List<Comment>?>{
         val url = notification.subject.url.split("/")
-        val type = getElementType(url)
+        val type = getNotificationType(url)
         notification.number = getNumber(url)
         notification.threadID = notification.url.split("/").last()
 
@@ -95,7 +93,8 @@ class GithubApiRepository {
         }
     }
 
-    private fun getElementType(url: List<String>): String {
+
+    private fun getNotificationType(url : List<String>) : String {
         return url[url.size - 2]
     }
 
