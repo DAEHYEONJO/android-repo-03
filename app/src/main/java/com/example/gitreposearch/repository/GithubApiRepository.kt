@@ -62,22 +62,22 @@ class GithubApiRepository {
         return if (response.isSuccessful) {
             val responseNotificationsBody = response.body() // notification List body
             
-            responseNotificationsBody?.forEach { element -> // notification 개수만큼 반복
-                val url = element.subject.url.split("/")
-                val type = getElementType(url)
-                element.number = getNumber(url)
-                element.threadID = element.url.split("/").last()
+            responseNotificationsBody?.forEach { notification -> // notification 개수만큼 반복
+                val url = notification.subject.url.split("/")
+                val type = getNotificationType(url)
+                notification.number = getNumber(url)
+                notification.threadID = notification.url.split("/").last()
 
                 val responseCommentsList = GithubApiImpl.githubApi.getCommentsList(
                     token,
-                    element.repository.owner.login,
-                    element.repository.name,
+                    notification.repository.owner.login,
+                    notification.repository.name,
                     type,
-                    element.number
+                    notification.number
                 )
 
                 if (responseCommentsList != null && responseCommentsList.isSuccessful) {
-                    element.commentsCounts = responseCommentsList.body()!!.size.toString()
+                    notification.commentsCounts = responseCommentsList.body()!!.size.toString()
                 }
             }
             GithubApiResponse.Success(data = response.body())
@@ -96,7 +96,7 @@ class GithubApiRepository {
         }
     }
 
-    private fun getElementType(url : List<String>) : String {
+    private fun getNotificationType(url : List<String>) : String {
         return url[url.size - 2]
     }
 

@@ -12,8 +12,8 @@ import com.example.gitreposearch.utils.SwipeHelperCallback
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NotificationRecyclerViewAdapter()  : RecyclerView.Adapter<NotificationRecyclerViewAdapter.ViewHolder>(){
-    private var dataSet = mutableListOf<Notifications>()
+class NotificationRecyclerViewAdapter(private var dataSet: MutableList<Notifications> = mutableListOf())
+    : RecyclerView.Adapter<NotificationRecyclerViewAdapter.ViewHolder>(){
 
     class ViewHolder(private val binding : ItemNotificationListBinding) : RecyclerView.ViewHolder(binding.root) {
 

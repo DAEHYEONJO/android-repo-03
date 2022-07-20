@@ -20,7 +20,8 @@ import com.example.gitreposearch.ui.viewmodel.MainViewModel
 
 class NotificationFragment : Fragment() {
     val TAG = "NotificationFragment"
-    private var binding: FragmentNotificationBinding? = null
+    private var _binding: FragmentNotificationBinding? = null
+    private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var notificationRecyclerViewAdapter: NotificationRecyclerViewAdapter
 
@@ -31,8 +32,8 @@ class NotificationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentNotificationBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = FragmentNotificationBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,24 +50,24 @@ class NotificationFragment : Fragment() {
         val swipeHelperCallback = SwipeHelperCallback(mainViewModel, notificationRecyclerViewAdapter).apply{
         }
         val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
-        itemTouchHelper.attachToRecyclerView(binding?.rcvNotificationList)
+        itemTouchHelper.attachToRecyclerView(binding.rcvNotificationList)
     }
 
     private fun initRefreshListener() {
-        binding!!.layoutRefresh.setOnRefreshListener {
+        binding.layoutRefresh.setOnRefreshListener {
             getUserNotificationList()
         }
     }
 
     private fun showLoading() {
-        with(binding!!){
+        with(binding){
             progressBarLoading.isGone = false
             tvLoading.isGone = false
         }
     }
 
     private fun hideLoading() {
-        with(binding!!){
+        with(binding){
             progressBarLoading.isGone=true
             tvLoading.isGone = true
         }
@@ -74,7 +75,7 @@ class NotificationFragment : Fragment() {
 
     private fun initNotificationRecyclerView() {
         notificationRecyclerViewAdapter = NotificationRecyclerViewAdapter()
-        with(binding!!) {
+        with(binding) {
             rcvNotificationList.layoutManager = LinearLayoutManager(activity)
             rcvNotificationList.adapter = notificationRecyclerViewAdapter
         }
@@ -87,8 +88,8 @@ class NotificationFragment : Fragment() {
     private fun initObserve() {
         mainViewModel.userNotificationList.observe(viewLifecycleOwner) { notificationList ->
             Log.d(TAG, "notofi observe: ")
-            if(binding!!.layoutRefresh.isRefreshing){
-                binding!!.layoutRefresh.isRefreshing = false
+            if(binding.layoutRefresh.isRefreshing){
+                binding.layoutRefresh.isRefreshing = false
             }
             hideLoading()
             notificationRecyclerViewAdapter.setData(notificationList as MutableList<Notifications>)
