@@ -1,5 +1,6 @@
 package com.example.gitreposearch.ui.viewmodel
 
+import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,6 +15,7 @@ import com.example.gitreposearch.repository.GithubApiRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.FieldPosition
+import kotlin.system.measureTimeMillis
 
 class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
 
@@ -66,15 +68,34 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
 
     fun getNotificationList(token : String) {
         viewModelScope.launch {
+            Log.e("dsffds", "getNotifiCommentList1: ${Thread.currentThread().name}", )
             repository.getUserNotificationList(token,false).apply {
                 if (this is GithubApiResponse.Success) {
                     _userNotificationList.value = data!! as MutableList<Notifications>
+                    getNotifiCommentList(token)
                 } else if (this is GithubApiResponse.Error) {
                     throw Exception("github getUserNotifcationList exception code: $exceptionCode")
                 }
             }
         }
     }
+
+    fun getNotifiCommentList(token : String){
+        _userNotificationList.value?.forEachIndexed { i, notification ->
+            viewModelScope.launch {
+                Log.e("dsffds", "getNotifiCommentList2: ${Thread.currentThread().name}\n", )
+                repository.getNotifiCommentCount(token, notification).apply {
+                    if(this is GithubApiResponse.Success){
+                        notification.commentsCounts = data!!.size.toString()
+                    }
+                    else if (this is GithubApiResponse.Error) {
+                        throw Exception("github getUserNotifcationList exception code: $exceptionCode")
+                    }
+                }
+            }
+        }
+    }
+
 
     fun changeNotificationAsRead(position : Int, token : String){
         val threadID = userNotificationList.value!![position].threadID

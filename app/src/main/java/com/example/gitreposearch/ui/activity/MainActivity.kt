@@ -78,6 +78,9 @@ class MainActivity : AppCompatActivity() {
                     setFrag(newState)
                 }
             }
+//            userNotificationList.observe(this@MainActivity){
+//                getNotifiCommentList(GlobalApplication.getInstance().getTypedAccessToken().toString())
+//            }
         }
     }
 
