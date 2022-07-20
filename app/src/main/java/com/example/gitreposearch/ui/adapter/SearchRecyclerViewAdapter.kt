@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -32,16 +33,8 @@ class SearchRecyclerViewAdapter :
     class ViewHolder(private val binding: RvSearchRowBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Repo.Item) {
             with(binding) {
-                Glide.with(root)
-                    .load(item.owner.avatarUrl)
-                    .circleCrop()
-                    .into(ivSearchRowAvatar)
-                ivSearchRowLanguageColor.setBackgroundColor(Color.parseColor(item.colorString))
-                tvSearchRowLogin.text = item.owner.login
-                tvSearchRowName.text = item.name
-                tvSearchRowDescription.text = item.description
-                tvSearchRowStargazersCount.text = item.stargazersCountString
-                tvSearchRowLanguage.text = item.language
+                this.item = item
+                executePendingBindings()
             }
         }
     }
@@ -53,7 +46,7 @@ class SearchRecyclerViewAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RvSearchRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = RvSearchRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return ViewHolder(binding)
     }
 

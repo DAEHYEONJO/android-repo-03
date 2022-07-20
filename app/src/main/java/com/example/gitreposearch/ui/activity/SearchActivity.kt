@@ -18,6 +18,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -42,8 +43,12 @@ class SearchActivity : AppCompatActivity() {
             layoutInflater
         )
     }
-    private lateinit var searchBtnDrawable: Drawable
-    private lateinit var deleteBtnDrawable: Drawable
+    private val searchBtnDrawable: Drawable by lazy {
+        AppCompatResources.getDrawable(this@SearchActivity, R.drawable.ic_search_btn)!!
+    }
+    private val deleteBtnDrawable: Drawable by lazy {
+        AppCompatResources.getDrawable(this@SearchActivity, R.drawable.ic_search_delete)!!
+    }
     private val searchViewModel: SearchViewModel by viewModels {
         CustomViewModelFactory(
             GlobalApplication.repoFlowRepository
@@ -54,26 +59,21 @@ class SearchActivity : AppCompatActivity() {
 
     private val searchRecyclerViewAdapter: SearchRecyclerViewAdapter by lazy {
         SearchRecyclerViewAdapter().apply {
-            addLoadStateListener { loadState ->
-                setProgressBarVisible(loadState.source.refresh is LoadState.Loading)
-                binding.rvSearchRepository.isVisible = loadState.source.refresh is LoadState.NotLoading
-//                if (loadState.source.refresh is LoadState.NotLoading){
-//                    Log.e(TAG, "리싸이클러뷰 보이기: ", )
-//                    binding.rvSearchRepository.visibility = View.VISIBLE
-//                }
+            lifecycleScope.launch{
+                loadStateFlow.collectLatest { loadState ->
+                    setProgressBarVisible(loadState.source.refresh is LoadState.Loading)
+                    binding.rvSearchRepository.isVisible = loadState.source.refresh is LoadState.NotLoading
 
-                val errorState = loadState.source.refresh as? LoadState.Error
-                    ?:loadState.source.append as? LoadState.Error
-                    ?:loadState.source.prepend as? LoadState.Error
-                errorState?.let {
-                    if (it.error.message == "End of List"){
-                        searchViewModel.endOfListFlag.value = true
+                    val errorState = loadState.source.refresh as? LoadState.Error
+                        ?:loadState.source.append as? LoadState.Error
+                        ?:loadState.source.prepend as? LoadState.Error
+                    errorState?.let {
+                        if (it.error.message == "End of List"){
+                            searchViewModel.endOfListFlag.value = true
+                        }
+                        Toast.makeText(this@SearchActivity, "${it.error.message}", Toast.LENGTH_LONG).show()
                     }
-                    Toast.makeText(this@SearchActivity, "${it.error.message}", Toast.LENGTH_LONG).show()
                 }
-                Log.e(TAG, "addLoadStateListener refresh: ${loadState.source.refresh}", )
-                Log.e(TAG, "addLoadStateListener append: ${loadState.source.append}", )
-                Log.e(TAG, "addLoadStateListener prepend: ${loadState.source.prepend}", )
             }
         }
     }
@@ -84,7 +84,6 @@ class SearchActivity : AppCompatActivity() {
 
         initAppBar()
         showKeyBoard()
-        initResources()
         initObserver()
         initRecyclerView()
         initEditText()
@@ -108,22 +107,13 @@ class SearchActivity : AppCompatActivity() {
                         if (searchViewModel.endOfListFlag.value==true) return
                         val lastVisibleItemPosition = ((recyclerView.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
                         val itemTotalCount = recyclerView.adapter!!.itemCount - 1
-                        if (lastVisibleItemPosition == itemTotalCount){
-                            with(progressBar.layoutProgressBarRoot){
-                                isVisible = true
-                                bringToFront()
-                            }
+                        if (itemTotalCount!=-1 && lastVisibleItemPosition!=-1 && lastVisibleItemPosition == itemTotalCount){
+                            setProgressBarVisible(true)
                         }
-
                     }
                 })
             }
         }
-    }
-
-    private fun initResources() {
-        searchBtnDrawable = AppCompatResources.getDrawable(this@SearchActivity, R.drawable.ic_search_btn)!!
-        deleteBtnDrawable = AppCompatResources.getDrawable(this@SearchActivity, R.drawable.ic_search_delete)!!
     }
 
     private fun initEditText() {
@@ -131,14 +121,12 @@ class SearchActivity : AppCompatActivity() {
             setOnTouchListener { v, motionEvent ->
                 if (motionEvent.action == MotionEvent.ACTION_UP) {
                     compoundDrawables[2]?.let { drawable ->
-                        
                         val rangeX = (right - drawable.bounds.width() - paddingEnd..right - paddingEnd).toRange()
                         if (motionEvent.rawX.toInt() in rangeX && text.isNotEmpty()) {
-                            Log.e(TAG, "setOnTouchListener: click X Btn", )
-                            //imm.hideSoftInputFromWindow(this.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
-
-                            binding.rvSearchRepository.visibility = View.GONE
-                            binding.layoutSearchEmptyListDescription.visibility = View.VISIBLE
+                            setViewVisibility(View.GONE, View.VISIBLE)
+                            lifecycleScope.launch{
+                                searchRecyclerViewAdapter.submitData(PagingData.empty())
+                            }
                             setText("")
                         }
                     }
@@ -146,18 +134,12 @@ class SearchActivity : AppCompatActivity() {
                 v.performClick()
             }
 
-            setOnKeyListener { view, keyCode, event ->
+            setOnKeyListener { _, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER && text.isNotEmpty()) {
-                    Log.e(TAG, "setOnKeyListener: 엔터 누르기", )
-                    searchViewModel.endOfListFlag.value = false
-                    binding.layoutSearchEmptyListDescription.visibility = View.GONE
-                    binding.rvSearchRepository.visibility = View.GONE
-                    //searchViewModel.hasFocusOnKeyboard.value = false
+                    setViewVisibility(View.GONE, View.GONE)
                     closeKeyBoard()
-                    //imm.hideSoftInputFromWindow(this.windowToken, 0)
                     lifecycleScope.launch {
                         searchViewModel.getRepoPaging(text.toString()).collectLatest {
-                            Log.e(TAG, "initEditText: Collect ${it}", )
                             searchViewModel.repoList.value = it
                         }
                     }
@@ -168,37 +150,25 @@ class SearchActivity : AppCompatActivity() {
             }
 
             if (!hasFocus()) {
-                Log.e(TAG, "!hasFocus(): 초기 포커스 없음", )
-                // api 21 이상인 경우 AppCompatResources.getDrawable
-                // api 21 미만인 경우 resources.getDrawable
                 setCompoundDrawables(left = searchBtnDrawable, right = null)
-                binding.layoutSearchEmptyListDescription.visibility = View.VISIBLE
-                binding.rvSearchRepository.visibility = View.GONE
-                Log.e(TAG, " if (!hasFocus()) {: ${binding.rvSearchRepository.visibility}", )
             }else{
-                Log.e(TAG, "hasFocus(): 초기 포커스 있음", )
-                //binding.layoutSearchEmptyListDescription.visibility = View.GONE
-                //binding.rvSearchRepository.visibility = View.VISIBLE
                 setCompoundDrawables(left = null, right = deleteBtnDrawable)
             }
-            setOnFocusChangeListener { view, focus ->
-                if (!focus) {
-                    Log.e(TAG, "setOnFocusChangeListener: 포커스 없는걸로 바뀜", )
-                    setCompoundDrawables(left = searchBtnDrawable)
-                    if (text.isEmpty()) {
-                        binding.layoutSearchEmptyListDescription.visibility = View.VISIBLE
-                        binding.rvSearchRepository.visibility = View.GONE
-                        Log.e(TAG, " setOnFocusChangeListener { view, focus ->\n" +
-                                "                (text.isEmpty()) {: ${binding.rvSearchRepository.visibility}", )
-                    }
 
+            setOnFocusChangeListener { _, focus ->
+                if (!focus) {
+                    setCompoundDrawables(left = searchBtnDrawable)
                 } else {
-                    Log.e(TAG, "setOnFocusChangeListener: 포커스 있는걸로 바뀜", )
-                    //binding.layoutSearchEmptyListDescription.visibility = View.VISIBLE
-                    //binding.rvSearchRepository.visibility = View.GONE
                     setCompoundDrawables(left = null, right = deleteBtnDrawable)
                 }
             }
+        }
+    }
+
+    private fun setViewVisibility(rvVisibility: Int, layoutVisibility: Int){
+        with(binding){
+            layoutSearchEmptyListDescription.visibility = layoutVisibility
+            rvSearchRepository.visibility = rvVisibility
         }
     }
 
@@ -228,16 +198,15 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun closeKeyBoard(){
-        Log.e(TAG, "closeKeyBoard: ${this.currentFocus?.hasFocus()}", )
         this.currentFocus?.let {
             imm.hideSoftInputFromWindow(it.windowToken, 0)
+            binding.etSearchRepository.clearFocus()
         }
     }
 
     private fun initAppBar() {
         this.title = ""
         with(binding.appBarSearch) {
-            setSupportActionBar(searchProfileToolBar)
             appBarTitleTv.text = resources.getString(R.string.app_bar_search)
             appBarBackBtn.setOnClickListener {
                 finish()

@@ -23,30 +23,15 @@ class SearchViewModel(
     val preQuery: LiveData<String> get() = _preQuery
 
     val endOfListFlag = MutableLiveData<Boolean>(false)
-    val hasFocusOnKeyboard = MutableLiveData<Boolean>(true)
 
     var repoList = MutableLiveData<PagingData<Repo.Item>>()
 
     fun getRepoPaging(query: String): Flow<PagingData<Repo.Item>> {
         Log.e(TAG, "getRepoPaging: $query", )
-        _preQuery.value = query
-        val ret = repoFlowRepository
+        //_preQuery.value = query
+        return repoFlowRepository
             .getRepoPaging(query = query)
-            .cachedIn(viewModelScope) 
-        return ret
+            .cachedIn(viewModelScope)
     }
-
-//    fun getRepoPaging(query: String): Flow<PagingData<Repo.Item>> {
-//        _preQuery.value = query
-//        return repoFlowRepository
-//            .getRepoPaging(query = query)
-//            .cachedIn(viewModelScope).
-//            stateIn(
-//                viewModelScope,
-//                SharingStarted.WhileSubscribed(5000),
-//                Repo.Item()
-//            )
-//    }
-
 
 }

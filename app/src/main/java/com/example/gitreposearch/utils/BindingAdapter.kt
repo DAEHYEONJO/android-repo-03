@@ -1,5 +1,6 @@
 package com.example.gitreposearch.utils
 
+import android.graphics.Color
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,4 +18,9 @@ fun ImageView.setImageUrl(stringUrl: String) {
 @BindingAdapter("app:setPaintFlag")
 fun TextView.setPaintFlag(paintFlag: Int){
     this.paintFlags = paintFlag
+}
+
+@BindingAdapter("app:setBackgroundColorByString")
+fun ImageView.setBackgroundColorByString(stringColor: String){
+    this.setBackgroundColor(Color.parseColor(stringColor))
 }

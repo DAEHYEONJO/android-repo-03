@@ -34,14 +34,13 @@ class RepoFlowPagingSource(
             page = currentPage
         )
 
-        if (repoResponse.body()?.items!!.isEmpty() ){
-            return if (currentPage==1) LoadResult.Error(Throwable("Empty Result"))
-            else LoadResult.Error(Throwable("End of List"))
-        }
-        else if (!repoResponse.isSuccessful) {
+        if (!repoResponse.isSuccessful) {
             Log.e(TAG, "load: EEEEEEEEEEEEERRRRRRRRR", )
             val errorMsg = ConvertUtils.getErrorResponseMsg(repoResponse.errorBody()!!)
             return LoadResult.Error(Throwable(errorMsg))
+        }else if (repoResponse.body()?.items!!.isEmpty() ){
+            return if (currentPage==1) LoadResult.Error(Throwable("Empty Result"))
+            else LoadResult.Error(Throwable("End of List"))
         }
 
         val responseBody = repoResponse.body()?.items?.asSequence()
