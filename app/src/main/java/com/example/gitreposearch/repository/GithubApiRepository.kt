@@ -55,8 +55,7 @@ class GithubApiRepository {
         )
 
         return if (response.isSuccessful) {
-            val responseNotificationsBody = response.body() // notification List body
-            
+            val responseNotificationsBody = response.body() // notification List body   
             responseNotificationsBody?.forEach { notification -> // notification 개수만큼 반복
                 val url = notification.subject.url.split("/")
                 val type = getNotificationType(url)

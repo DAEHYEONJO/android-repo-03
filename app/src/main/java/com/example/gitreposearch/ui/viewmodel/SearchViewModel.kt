@@ -1,20 +1,37 @@
 package com.example.gitreposearch.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.gitreposearch.data.Repo
 import com.example.gitreposearch.repository.RepoFlowPagingRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
 class SearchViewModel(
     private val repoFlowRepository: RepoFlowPagingRepository
 ) : ViewModel() {
 
-    fun getRepoPaging(query: String): Flow<PagingData<Repo.Item>> =
-        repoFlowRepository.getRepoPaging(query = query).cachedIn(viewModelScope)
+    companion object{
+        const val TAG = "SearchViewModel"
+    }
+
+    private val _preQuery = MutableLiveData<String>()
+    val preQuery: LiveData<String> get() = _preQuery
+
+    val endOfListFlag = MutableLiveData<Boolean>(false)
+
+    var repoList = MutableLiveData<PagingData<Repo.Item>>()
+
+    fun getRepoPaging(query: String): Flow<PagingData<Repo.Item>> {
+        Log.e(TAG, "getRepoPaging: $query", )
+        //_preQuery.value = query
+        return repoFlowRepository
+            .getRepoPaging(query = query)
+            .cachedIn(viewModelScope)
+    }
+
 }
