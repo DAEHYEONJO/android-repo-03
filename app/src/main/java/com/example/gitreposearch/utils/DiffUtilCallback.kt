@@ -4,14 +4,14 @@ import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 import com.example.gitreposearch.data.notifications.Notifications
 
-class NotificationDiffCallBack()
+class NotificationDiffCallBack
     : DiffUtil.ItemCallback<Notifications>() {
     override fun areItemsTheSame(oldItem: Notifications, newItem: Notifications): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: Notifications, newItem: Notifications): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem == newItem
     }
 
 

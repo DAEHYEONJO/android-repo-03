@@ -60,25 +60,20 @@ class NotificationAdapter(private val mainViewModel : MainViewModel) :
 
                 }
             }
-            else{
-                Log.d("time 이상", "setUpdatedTime: $updated_at")
-            }
         }
     }
 
     fun removeAll(){
-        val tempList = currentList.toMutableList()
-        tempList.clear()
+        val tempList = mutableListOf<Notifications>()
         submitList(tempList)
+        //Log.d("onSwiped", "onSwiped: ${currentList.size}       ${mainViewModel.userNotificationList.value!!.size}")
     }
 
     fun removeData(position: Int) {
-        val tempList = currentList.toMutableList()
-        if (position < currentList.size) {
-            tempList.removeAt(position)
-        }
-        Log.d("jiwoo", "curList : ${currentList.size}   main : ${mainViewModel.userNotificationList.value!!.size}")
-        submitList(tempList)
+        mainViewModel.userNotificationList.value!!.removeAt(position)
+        submitList(mainViewModel.userNotificationList.value!!)
+        notifyDataSetChanged()
+        Log.d("jiwoo", "curList : ${currentList.size}   main : ${mainViewModel.userNotificationList.value!!.size}  ")
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

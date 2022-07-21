@@ -52,16 +52,14 @@ class NotificationFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        initNotificationRecyclerView()
+        //initNotificationRecyclerView()
+        notificationAdapter = NotificationAdapter(mainViewModel)
         initRefreshListener()
         initSwipeListener()
         initObserver()
     }
 
     private fun initObserver() {
-        mainViewModel.userNotificationList.observe(viewLifecycleOwner){
-            notificationAdapter.submitList(mainViewModel.userNotificationList.value)
-        }
         mainViewModel.commentInfo.observe(viewLifecycleOwner){ commentInfo ->
             initNotificationRecyclerView()
             if(binding.layoutRefresh.isRefreshing){
@@ -90,8 +88,8 @@ class NotificationFragment : Fragment() {
     }
 
     private fun initNotificationRecyclerView() {
-        notificationAdapter = NotificationAdapter(mainViewModel)
         with(binding) {
+            Log.d(TAG, "initNotifi size : ${mainViewModel.userNotificationList.value?.size} ")
             rcvNotificationList.layoutManager = LinearLayoutManager(activity)
             notificationAdapter.submitList(mainViewModel.userNotificationList.value)
             rcvNotificationList.adapter = notificationAdapter
