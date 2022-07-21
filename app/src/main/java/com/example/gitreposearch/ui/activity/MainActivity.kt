@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.lifecycle.lifecycleScope
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
 import com.example.gitreposearch.data.Token
@@ -16,13 +17,11 @@ import com.example.gitreposearch.ui.fragments.IssueFragment
 import com.example.gitreposearch.ui.fragments.NotificationFragment
 import com.example.gitreposearch.utils.CustomViewModelFactory
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-
-
     private val mainViewModel: MainViewModel by viewModels {
         CustomViewModelFactory(GlobalApplication.githubApiRepository)
     }
@@ -32,13 +31,19 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainViewModel.getUserInfo(GlobalApplication.getInstance().getTypedAccessToken()!!)
-        mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken()!!)
         initAppBarButton()
         initObserver()
         initToggleTabButton()
-
+        //startFlow()
     }
+
+//    private fun startFlow() {
+//        lifecycleScope.launch {
+//            mainViewModel.userNotificationFlow.collect { // flow 데이터 받아오기
+//                Log.e("kim", "${it}", )
+//            }
+//        }
+//    }
 
     private fun initAppBarButton() {
         with(binding) {
@@ -78,6 +83,9 @@ class MainActivity : AppCompatActivity() {
                     setFrag(newState)
                 }
             }
+//            userNotificationList.observe(this@MainActivity){
+//                getNotifiCommentList(GlobalApplication.getInstance().getTypedAccessToken().toString())
+//            }
         }
     }
 

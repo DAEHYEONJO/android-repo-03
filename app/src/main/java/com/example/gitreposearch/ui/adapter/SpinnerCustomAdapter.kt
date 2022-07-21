@@ -1,18 +1,12 @@
 package com.example.gitreposearch.ui.adapter
 
 import android.content.Context
-import android.text.Layout
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.view.marginBottom
-import com.example.gitreposearch.R
 import com.example.gitreposearch.databinding.SpinnerIssueRowBinding
 import com.example.gitreposearch.databinding.TvSpinnerIssueOptionBinding
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
@@ -32,8 +26,6 @@ class SpinnerCustomAdapter(private val context: Context, private val mainViewMod
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
-
-
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val inflater: LayoutInflater =
