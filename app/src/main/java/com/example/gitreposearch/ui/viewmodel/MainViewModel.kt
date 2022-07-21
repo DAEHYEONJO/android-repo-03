@@ -40,21 +40,12 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     private val _issueState = MutableLiveData<String>()
     val issueState: LiveData<String> get() = _issueState
 
-    val userNotificationList = mutableListOf<Notifications>() // flow로 받아온 데이터 저장해놓을 리스트
+    private val _userNotificationList =
+        MutableLiveData<MutableList<Notifications>>() // flow로 받아온 데이터 저장해놓을 리스트
+    val userNotificationList: LiveData<MutableList<Notifications>> get() = _userNotificationList
 
-    private val _userNotificationFlow = MutableStateFlow<Notifications>(
-        value = Notifications(
-            subject = Subject("", "", ""),
-            repository = Repository(
-                owner = Owner("", ""),
-                "", ""
-            ), updated_at = "", url = ""
-        )
-    )
-    val userNotificationFlow : StateFlow<Notifications> = _userNotificationFlow
-
-    private val initState = "init"
-
+    private val _commentInfo = MutableLiveData<Pair<Int,String>>()
+    val commentInfo : LiveData<Pair<Int,String>> get() = _commentInfo
 
     init {
         getUserInfo(token!!)
@@ -94,11 +85,11 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     }
 
     fun getNotificationList(token: String) {
-        userNotificationList.clear()
         viewModelScope.launch {
             repository.getUserNotificationList(token, false).apply {
                 if (this is GithubApiResponse.Success) {
                     getNotifiCommentList(token, data!!)
+                    _userNotificationList.value = data!!.toMutableList()
                 } else if (this is GithubApiResponse.Error) {
                     throw Exception("github getUserNotifcationList exception code: $exceptionCode")
                 }
@@ -107,23 +98,22 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     }
 
     fun getNotifiCommentList(token: String, notificationList: List<Notifications>) {
-        viewModelScope.launch {
-            notificationList.forEach{ notification ->
+        notificationList.forEachIndexed {idx, notification ->
+            viewModelScope.launch {
                 repository.getNotifiCommentCount(token, notification).apply {
                     if (this is GithubApiResponse.Success) {
                         notification.commentsCounts = data!!.size.toString()
-                        _userNotificationFlow.emit(notification)
-                        userNotificationList.add(notification)
+                        _commentInfo.value = Pair<Int,String>(idx, data!!.size.toString())
+                        //_userNotificationList.value = notificationList.toMutableList()
                     } else if (this is GithubApiResponse.Error) {
                         throw Exception("github getUserNotifcationList exception code: $exceptionCode")
                     }
                 }
             }
         }
-
     }
 
-    fun changeNotificationAsRead( threadID: String) {
+    fun changeNotificationAsRead(threadID: String) {
         viewModelScope.launch {
             repository.changeNotificationAsRead(token!!, threadID).apply {
                 if (this is GithubApiResponse.Success) {

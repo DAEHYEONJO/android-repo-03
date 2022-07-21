@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.databinding.RvIssueRowBinding
 import com.example.gitreposearch.databinding.RvNotificationRowBinding
@@ -21,6 +22,9 @@ import java.util.*
 
 class NotificationAdapter(private val mainViewModel : MainViewModel) :
     ListAdapter<Notifications, NotificationAdapter.ViewHolder>(NotificationDiffCallBack()) {
+
+
+
     class ViewHolder(private val binding: RvNotificationRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -72,15 +76,16 @@ class NotificationAdapter(private val mainViewModel : MainViewModel) :
         val tempList = currentList.toMutableList()
         if (position < currentList.size) {
             tempList.removeAt(position)
-            mainViewModel.userNotificationList.removeAt(position)
         }
+        Log.d("jiwoo", "curList : ${currentList.size}   main : ${mainViewModel.userNotificationList.value!!.size}")
         submitList(tempList)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = RvNotificationRowBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
+        val holder = ViewHolder(binding)
+        return holder
 
     }
 

@@ -1,10 +1,12 @@
 package com.example.gitreposearch.ui.fragments
 
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -53,29 +55,24 @@ class NotificationFragment : Fragment() {
         initNotificationRecyclerView()
         initRefreshListener()
         initSwipeListener()
-        startFlow()
-
+        initObserver()
     }
 
-    private fun startFlow() {
-        lifecycleScope.launch{
-            mainViewModel.userNotificationFlow.collectLatest{ // flow 데이터 받아오기
-                if(!mainViewModel.userNotificationList.contains(it)){
-                    val newList = notificationAdapter.currentList.toMutableList() // List<Notifications> 타입으로 mutable 로 Casting
-                    newList.add(it) // flow로 받아온 데이터를 기존에 있던 리스트에 추가
-                    notificationAdapter.submitList(newList ) // 데이터   보냄
-
-                }
-                if (binding.layoutRefresh.isRefreshing) { // 새로고침 로딩표시 없애주는 조건문
-                    binding.layoutRefresh.isRefreshing = false
-                }
+    private fun initObserver() {
+        mainViewModel.userNotificationList.observe(viewLifecycleOwner){
+            notificationAdapter.submitList(mainViewModel.userNotificationList.value)
+        }
+        mainViewModel.commentInfo.observe(viewLifecycleOwner){ commentInfo ->
+            initNotificationRecyclerView()
+            if(binding.layoutRefresh.isRefreshing){
+                binding.layoutRefresh.isRefreshing = false
             }
         }
     }
 
     private fun initSwipeListener() {
         val swipeHelperCallback =
-            SwipeHelperCallback(mainViewModel, notificationAdapter).apply {
+            SwipeHelperCallback(requireContext(), mainViewModel, notificationAdapter).apply {
             }
         val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.rcvNotificationList)
@@ -86,17 +83,17 @@ class NotificationFragment : Fragment() {
             binding.layoutRefresh.isRefreshing = true // 새로고침 로딩 보여주기
             notificationAdapter.removeAll() // 어댑터 목록 지우기
 
-            with(mainViewModel){ //userNotificationList.clear() // mainViewModel 에 보관중이던 데이터 지우기
-               getNotificationList(GlobalApplication.getInstance().getTypedAccessToken().toString()) // NotificationList 받아오는 함수 실행
-            }
+            // 데이터 요청
+            mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken().toString())
+
         }
     }
 
     private fun initNotificationRecyclerView() {
         notificationAdapter = NotificationAdapter(mainViewModel)
         with(binding) {
-            rcvNotificationList.layoutManager = WrapContentLinearLayoutManager(context)
-            notificationAdapter.submitList(mainViewModel.userNotificationList)
+            rcvNotificationList.layoutManager = LinearLayoutManager(activity)
+            notificationAdapter.submitList(mainViewModel.userNotificationList.value)
             rcvNotificationList.adapter = notificationAdapter
         }
     }
