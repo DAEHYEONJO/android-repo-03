@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:state_window_focused="true">
+        <layer-list>
+            <item android:height="24dp">
+                <shape android:shape="rectangle">
+                    <padding android:right="16dp" />
+                </shape>
+            </item>
+            <item android:drawable="@drawable/ic_spinner_down_arrow"
+                android:gravity="center|end"></item>
+
+
+        </layer-list>
+    </item>
+
+    <item
+        android:state_window_focused="false">
+        <layer-list>
+            <item android:height="24dp">
+                <shape android:shape="rectangle">
+                    <padding android:right="16dp" />
+                </shape>
+            </item>
+            <item android:drawable="@drawable/ic_spinner_up_arrow"
+                android:gravity="center|end"></item>
+
+
+        </layer-list>
+    </item>
+</selector>

@@ -69,5 +69,11 @@ interface GithubApi {
         @Query("page") page: Int
     ): Response<Repo>
 
+    @PATCH("/notifications/threads/{thread_id}")
+    suspend fun changeNotificationAsRead(
+        @Header("Authorization") typedAccessToken : String,
+        @Path("thread_id") threadID: String
+    ): Response<String>
+
 
 }
