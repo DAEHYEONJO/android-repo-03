@@ -40,6 +40,8 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     private val _issueState = MutableLiveData<String>()
     val issueState: LiveData<String> get() = _issueState
 
+    val userNotificationList = mutableListOf<Notifications>() // flow로 받아온 데이터 저장해놓을 리스트
+
     private val _userNotificationFlow = MutableStateFlow<Notifications>(
         value = Notifications(
             subject = Subject("", "", ""),
@@ -92,6 +94,7 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
     }
 
     fun getNotificationList(token: String) {
+        userNotificationList.clear()
         viewModelScope.launch {
             repository.getUserNotificationList(token, false).apply {
                 if (this is GithubApiResponse.Success) {
@@ -110,6 +113,7 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
                     if (this is GithubApiResponse.Success) {
                         notification.commentsCounts = data!!.size.toString()
                         _userNotificationFlow.emit(notification)
+                        userNotificationList.add(notification)
                     } else if (this is GithubApiResponse.Error) {
                         throw Exception("github getUserNotifcationList exception code: $exceptionCode")
                     }

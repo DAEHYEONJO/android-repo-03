@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,12 +13,13 @@ import com.bumptech.glide.Glide
 import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.databinding.RvIssueRowBinding
 import com.example.gitreposearch.databinding.RvNotificationRowBinding
+import com.example.gitreposearch.ui.viewmodel.MainViewModel
 import com.example.gitreposearch.utils.NotificationDiffCallBack
 
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NotificationAdapter :
+class NotificationAdapter(private val mainViewModel : MainViewModel) :
     ListAdapter<Notifications, NotificationAdapter.ViewHolder>(NotificationDiffCallBack()) {
     class ViewHolder(private val binding: RvNotificationRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -59,6 +61,7 @@ class NotificationAdapter :
             }
         }
     }
+
     fun removeAll(){
         val tempList = currentList.toMutableList()
         tempList.clear()
@@ -69,6 +72,7 @@ class NotificationAdapter :
         val tempList = currentList.toMutableList()
         if (position < currentList.size) {
             tempList.removeAt(position)
+            mainViewModel.userNotificationList.removeAt(position)
         }
         submitList(tempList)
     }
@@ -81,7 +85,7 @@ class NotificationAdapter :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
+        val item = getItem(holder.adapterPosition)
         holder.bind(item)
     }
 

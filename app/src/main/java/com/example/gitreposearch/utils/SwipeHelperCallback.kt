@@ -34,7 +34,7 @@ class SwipeHelperCallback(
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
         val item = adapter.currentList[position]
-        mainViewModel.changeNotificationAsRead(item.threadID)
+        mainViewModel.changeNotificationAsRead(item.threadID) // 읽음처리 api 전송
         adapter.removeData(position)
     }
 }
