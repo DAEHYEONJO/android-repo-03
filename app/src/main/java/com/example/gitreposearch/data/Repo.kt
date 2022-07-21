@@ -1,10 +1,6 @@
 package com.example.gitreposearch.data
 
-
-import android.graphics.Color
-import com.example.gitreposearch.utils.ConvertUtils
 import com.google.gson.annotations.SerializedName
-
 
 data class Repo(
     @SerializedName("incomplete_results")

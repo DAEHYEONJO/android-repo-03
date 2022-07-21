@@ -1,34 +1,22 @@
 package com.example.gitreposearch.ui.viewmodel
 
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide.init
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.data.notifications.Notifications
-import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.data.UserInfo
-import com.example.gitreposearch.data.notifications.Owner
-import com.example.gitreposearch.data.notifications.Repository
-import com.example.gitreposearch.data.notifications.Subject
 import com.example.gitreposearch.network.GithubApiResponse
 import com.example.gitreposearch.repository.GithubApiRepository
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import java.text.FieldPosition
-import kotlin.system.measureTimeMillis
 
 class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
 
     private val token = GlobalApplication.getInstance().getTypedAccessToken()
 
-    private var _currentTabState = MutableLiveData<String>("Issue")
+    private var _currentTabState = MutableLiveData("Issue")
     val currentTabState: LiveData<String> get() = _currentTabState
 
     private val _userInfo = MutableLiveData<UserInfo>()
@@ -103,8 +91,7 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
                 repository.getNotifiCommentCount(token, notification).apply {
                     if (this is GithubApiResponse.Success) {
                         notification.commentsCounts = data!!.size.toString()
-                        _commentInfo.value = Pair<Int,String>(idx, data!!.size.toString())
-                        //_userNotificationList.value = notificationList.toMutableList()
+                        _commentInfo.value = Pair(idx, data!!.size.toString())
                     } else if (this is GithubApiResponse.Error) {
                         if(exceptionCode == 404){
                             notification.commentsCounts = "0"
@@ -121,10 +108,8 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
         viewModelScope.launch {
             repository.changeNotificationAsRead(token!!, threadID).apply {
                 if (this is GithubApiResponse.Success) {
-                    // TODO 응답별 처리
+
                 }
-
-
             }
         }
     }

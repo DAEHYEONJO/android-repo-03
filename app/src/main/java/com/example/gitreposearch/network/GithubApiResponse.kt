@@ -1,7 +1,5 @@
 package com.example.gitreposearch.network
 
-import kotlin.Exception
-
 sealed class GithubApiResponse<T>(
     data: T? = null,
     exception: Int = -1

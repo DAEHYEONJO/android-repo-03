@@ -19,16 +19,11 @@ class SearchViewModel(
         const val TAG = "SearchViewModel"
     }
 
-    private val _preQuery = MutableLiveData<String>()
-    val preQuery: LiveData<String> get() = _preQuery
-
     val endOfListFlag = MutableLiveData<Boolean>(false)
 
     var repoList = MutableLiveData<PagingData<Repo.Item>>()
 
     fun getRepoPaging(query: String): Flow<PagingData<Repo.Item>> {
-        Log.e(TAG, "getRepoPaging: $query", )
-        //_preQuery.value = query
         return repoFlowRepository
             .getRepoPaging(query = query)
             .cachedIn(viewModelScope)

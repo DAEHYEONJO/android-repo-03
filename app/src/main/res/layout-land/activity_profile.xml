@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.graphics.Paint"/>
+        <variable
+            name="loginViewModel"
+            type="com.example.gitreposearch.ui.viewmodel.ProfileViewModel" />
+    </data>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_app"
+            tools:context=".ui.activity.ProfileActivity">
+
+            <include
+                android:id="@+id/app_bar_profile"
+                layout="@layout/appbar_search_profile"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_profile"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="@dimen/base_app_space_24"
+                android:layout_marginTop="6dp"
+                app:setImageUrl="@{loginViewModel.userInfo.avatarUrl}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/app_bar_profile" />
+
+            <TextView
+                android:id="@+id/tv_profile_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/iv_profile_end_space_16"
+                android:layout_marginTop="@dimen/tv_profile_top_space_8"
+                android:fontFamily="@font/kopubworld_dotum_pro_bold"
+                android:gravity="top"
+                android:includeFontPadding="false"
+                android:text="@{loginViewModel.userInfo.login}"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/iv_profile"
+                app:layout_constraintTop_toBottomOf="@+id/app_bar_profile" />
+
+            <TextView
+                android:id="@+id/tv_profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{loginViewModel.userInfo.name}"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                android:includeFontPadding="false"
+                app:layout_constraintStart_toStartOf="@+id/tv_profile_login"
+                app:layout_constraintTop_toBottomOf="@+id/tv_profile_login" />
+
+            <TextView
+                android:id="@+id/tv_profile_bio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/tv_profile_top_space_8"
+                android:background="@drawable/bg_profile_field"
+                android:fontFamily="@font/kopubworld_dotum_pro_medium"
+                android:gravity="center"
+                android:text="@{loginViewModel.userInfo.bio}"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/tv_profile_name"
+                app:layout_constraintTop_toBottomOf="@+id/tv_profile_name" />
+
+            <View
+                android:id="@+id/view_profile"
+                android:layout_width="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_profile_bio"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/view_profile_top_space_18"
+                android:background="@color/navy"
+                android:layout_height="1dp" />
+
+            <ImageView
+                android:id="@+id/iv_profile_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/view_profile"
+                app:layout_constraintStart_toStartOf="@+id/iv_profile"
+                android:layout_marginTop="@dimen/iv_profile_end_space_16"
+                android:src="@drawable/ic_profile_location" />
+
+            <TextView
+                android:id="@+id/tv_profile_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/iv_profile_location"
+                app:layout_constraintTop_toTopOf="@+id/iv_profile_location"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_profile_location"
+                android:text="@{loginViewModel.userInfo.location}"
+                style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
+                android:layout_marginStart="@dimen/tv_profile_top_space_8" />
+
+            <ImageView
+                android:id="@+id/iv_profile_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/iv_profile_location"
+                app:layout_constraintStart_toStartOf="@+id/iv_profile_location"
+                android:layout_marginTop="@dimen/iv_profile_end_space_16"
+                android:src="@drawable/ic_profile_blog" />
+
+            <TextView
+                android:id="@+id/tv_profile_blog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/iv_profile_link"
+                app:layout_constraintTop_toTopOf="@+id/iv_profile_link"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_profile_link"
+                android:text="@{loginViewModel.userInfo.blog}"
+                app:setPaintFlag="@{Paint.UNDERLINE_TEXT_FLAG}"
+                style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
+                android:layout_marginStart="@dimen/tv_profile_top_space_8" />
+
+            <ImageView
+                android:id="@+id/iv_profile_mail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/iv_profile_link"
+                app:layout_constraintStart_toStartOf="@+id/iv_profile_link"
+                android:layout_marginTop="@dimen/iv_profile_end_space_16"
+                android:src="@drawable/ic_profile_email" />
+
+            <TextView
+                android:id="@+id/tv_profile_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/iv_profile_mail"
+                app:layout_constraintTop_toTopOf="@+id/iv_profile_mail"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_profile_mail"
+                android:text="@{loginViewModel.userInfo.email}"
+                app:setPaintFlag="@{Paint.UNDERLINE_TEXT_FLAG}"
+                style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
+                android:layout_marginStart="@dimen/tv_profile_top_space_8" />
+
+            <ImageView
+                android:id="@+id/iv_profile_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/iv_profile_mail"
+                app:layout_constraintStart_toStartOf="@+id/iv_profile_mail"
+                android:layout_marginTop="@dimen/iv_profile_end_space_16"
+                android:src="@drawable/ic_profile_user" />
+
+            <TextView
+                android:id="@+id/tv_profile_followers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/iv_profile_user"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_profile_user"
+                app:layout_constraintStart_toEndOf="@+id/iv_profile_user"
+                android:layout_marginStart="@dimen/tv_profile_top_space_8"
+                style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"
+                android:text="@{Integer.toString(loginViewModel.userInfo.followers)}" />
+
+            <TextView
+                android:id="@+id/tv_profile_followers_hardcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/iv_profile_user"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_profile_user"
+                app:layout_constraintStart_toEndOf="@+id/tv_profile_followers"
+                android:layout_marginStart="@dimen/tv_profile_space_4"
+                style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+                android:text="@string/profile_followers" />
+
+            <TextView
+                android:id="@+id/tv_profile_dot_hardcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/iv_profile_user"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_profile_user"
+                app:layout_constraintStart_toEndOf="@+id/tv_profile_followers_hardcode"
+                android:layout_marginStart="@dimen/tv_profile_space_4"
+                style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+                android:text="@string/profile_dot" />
+
+            <TextView
+                android:id="@+id/tv_profile_following"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/iv_profile_user"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_profile_user"
+                app:layout_constraintStart_toEndOf="@+id/tv_profile_dot_hardcode"
+                android:layout_marginStart="@dimen/tv_profile_space_4"
+                style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"
+                android:text="@{Integer.toString(loginViewModel.userInfo.following)}" />
+
+            <TextView
+                android:id="@+id/tv_profile_following_hardcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/iv_profile_user"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_profile_user"
+                app:layout_constraintStart_toEndOf="@+id/tv_profile_following"
+                android:layout_marginStart="@dimen/tv_profile_space_4"
+                style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+                android:text="@string/profile_following" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                app:layout_constraintTop_toBottomOf="@+id/iv_profile_user"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/base_app_space_24"
+                android:layout_marginStart="@dimen/base_app_space_24"
+                android:layout_marginEnd="@dimen/base_app_space_24"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_profile_rep_star_radius_14">
+
+                <ImageView
+                    android:id="@+id/iv_profile_repository"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="@dimen/iv_profile_end_space_16"
+                    android:layout_marginStart="@dimen/iv_profile_end_space_16"
+                    android:src="@drawable/ic_profile_repository" />
+
+                <TextView
+                    android:id="@+id/tv_profile_repository_hardcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/iv_profile_repository"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_profile_repository"
+                    app:layout_constraintStart_toEndOf="@+id/iv_profile_repository"
+                    android:text="@string/profile_repositories"
+                    style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+                    android:layout_marginStart="@dimen/iv_profile_end_space_16" />
+
+                <TextView
+                    android:id="@+id/tv_profile_repository_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/iv_profile_repository"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_profile_repository"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="@dimen/iv_profile_end_space_16"
+                    android:text="@{Integer.toString(loginViewModel.userInfo.publicRepos+loginViewModel.userInfo.totalPrivateRepos)}"
+                    style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style" />
+
+
+                <ImageView
+                    android:id="@+id/iv_profile_starred"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_profile_repository"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="@dimen/iv_profile_end_space_16"
+                    android:layout_marginTop="@dimen/iv_profile_end_space_16"
+                    android:layout_marginStart="@dimen/iv_profile_end_space_16"
+                    android:src="@drawable/ic_profile_starred" />
+
+                <TextView
+                    android:id="@+id/tv_profile_starred_hardcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/iv_profile_starred"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_profile_starred"
+                    app:layout_constraintStart_toEndOf="@+id/iv_profile_starred"
+                    android:text="@string/profile_starred"
+                    style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
+                    android:layout_marginStart="@dimen/iv_profile_end_space_16" />
+
+                <TextView
+                    android:id="@+id/tv_profile_starred_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/iv_profile_starred"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_profile_starred"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="@dimen/iv_profile_end_space_16"
+                    android:text="@{Integer.toString(loginViewModel.userInfo.starredCount)}"
+                    style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</layout>

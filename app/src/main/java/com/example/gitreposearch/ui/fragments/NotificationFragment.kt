@@ -2,36 +2,23 @@ package com.example.gitreposearch.ui.fragments
 
 import android.graphics.Canvas
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
-import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
-import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.databinding.FragmentNotificationBinding
 import com.example.gitreposearch.ui.adapter.ItemTouchCallBack
 import com.example.gitreposearch.ui.adapter.NotificationRecyclerViewAdapter
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
 import com.example.gitreposearch.utils.SwipeHelperCallback
-import com.example.gitreposearch.utils.WrapContentLinearLayoutManager
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class NotificationFragment : Fragment() {
@@ -58,7 +45,6 @@ class NotificationFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        //initNotificationRecyclerView()
         initRefreshListener()
         initSwipeListener()
         initObserver()
@@ -120,7 +106,6 @@ class NotificationFragment : Fragment() {
 
     private fun initNotificationRecyclerView() {
         with(binding) {
-            Log.d(TAG, "initNotifi size : ${mainViewModel.userNotificationList.value?.size} ")
             rcvNotificationList.adapter = notificationAdapter
         }
     }

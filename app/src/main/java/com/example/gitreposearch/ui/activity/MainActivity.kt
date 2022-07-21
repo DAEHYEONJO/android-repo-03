@@ -8,16 +8,13 @@ import com.bumptech.glide.Glide
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
-import androidx.lifecycle.lifecycleScope
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
-import com.example.gitreposearch.data.Token
 import com.example.gitreposearch.databinding.ActivityMainBinding
 import com.example.gitreposearch.ui.fragments.IssueFragment
 import com.example.gitreposearch.ui.fragments.NotificationFragment
 import com.example.gitreposearch.utils.CustomViewModelFactory
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,7 +41,6 @@ class MainActivity : AppCompatActivity() {
                 })
             }
             btnMainSearch.setOnClickListener {
-                Log.d("search btn", "clicked")
                 startActivity(Intent(this@MainActivity, SearchActivity::class.java))
             }
         }

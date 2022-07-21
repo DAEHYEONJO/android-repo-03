@@ -1,6 +1,5 @@
 package com.example.gitreposearch.ui.activity
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +37,6 @@ class LoginActivity : AppCompatActivity() {
     private fun initObserver() {
         with(loginViewModel){
             token.observe(this@LoginActivity) { token ->
-                Log.e(TAG, "initObserver: token: $token", )
                 val observedTypedToken = "${token.tokenType} ${token.accessToken}"
                 with(GlobalApplication.getInstance()){
                     val typedToken = getTypedAccessToken()

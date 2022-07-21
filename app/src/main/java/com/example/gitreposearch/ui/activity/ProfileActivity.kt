@@ -1,13 +1,9 @@
 package com.example.gitreposearch.ui.activity
 
-import android.graphics.Paint
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
 import com.example.gitreposearch.R
 import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.databinding.ActivityProfileBinding
