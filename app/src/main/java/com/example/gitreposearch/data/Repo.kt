@@ -1,6 +1,8 @@
 package com.example.gitreposearch.data
 
 
+import android.graphics.Color
+import com.example.gitreposearch.utils.ConvertUtils
 import com.google.gson.annotations.SerializedName
 
 
@@ -26,7 +28,8 @@ data class Repo(
         @SerializedName("stargazers_count")
         val stargazersCount: Int
     ) {
-
+        lateinit var colorString: String
+        lateinit var stargazersCountString: String
         data class Owner(
             @SerializedName("avatar_url")
             val avatarUrl: String,

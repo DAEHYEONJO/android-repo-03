@@ -19,12 +19,16 @@ class RepoFlowPagingRepository(
     }
 
     private fun defaultPagingConfig(): PagingConfig {
+//        return PagingConfig(
+//            pageSize = 30,
+//            prefetchDistance = 30,
+//            enablePlaceholders = false,
+//            initialLoadSize = 90,
+//            maxSize = 150
+//        )
         return PagingConfig(
             pageSize = 30,
-            prefetchDistance = 30,
-            enablePlaceholders = false,
-            initialLoadSize = 90,
-            maxSize = 150
+            enablePlaceholders = false
         )
     }
 }
