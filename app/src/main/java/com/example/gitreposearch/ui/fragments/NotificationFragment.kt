@@ -1,5 +1,6 @@
 package com.example.gitreposearch.ui.fragments
 
+import android.graphics.Canvas
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,13 +17,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.gitreposearch.GlobalApplication
+import com.example.gitreposearch.R
 import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.databinding.FragmentNotificationBinding
-import com.example.gitreposearch.ui.adapter.NotificationAdapter
+import com.example.gitreposearch.ui.adapter.ItemTouchCallBack
+import com.example.gitreposearch.ui.adapter.NotificationRecyclerViewAdapter
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
 import com.example.gitreposearch.utils.SwipeHelperCallback
 import com.example.gitreposearch.utils.WrapContentLinearLayoutManager
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -35,7 +41,7 @@ class NotificationFragment : Fragment() {
     private var _binding: FragmentNotificationBinding? = null
     private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
-    private lateinit var notificationAdapter: NotificationAdapter
+    private val notificationAdapter: NotificationRecyclerViewAdapter by lazy { NotificationRecyclerViewAdapter(mainViewModel.userNotificationList.value!!) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +59,6 @@ class NotificationFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         //initNotificationRecyclerView()
-        notificationAdapter = NotificationAdapter(mainViewModel)
         initRefreshListener()
         initSwipeListener()
         initObserver()
@@ -62,6 +67,7 @@ class NotificationFragment : Fragment() {
     private fun initObserver() {
         mainViewModel.commentInfo.observe(viewLifecycleOwner){ commentInfo ->
             initNotificationRecyclerView()
+            notificationAdapter.setData(mainViewModel.userNotificationList.value!!)
             if(binding.layoutRefresh.isRefreshing){
                 binding.layoutRefresh.isRefreshing = false
             }
@@ -69,9 +75,36 @@ class NotificationFragment : Fragment() {
     }
 
     private fun initSwipeListener() {
-        val swipeHelperCallback =
-            SwipeHelperCallback(requireContext(), mainViewModel, notificationAdapter).apply {
+        val swipeHelperCallback = SwipeHelperCallback(itemTouchCallBack = object : ItemTouchCallBack{
+            override fun onSwiped(position: Int) {
+                mainViewModel.changeNotificationAsRead(position)
+                notificationAdapter.removeData(position)
             }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                RecyclerViewSwipeDecorator.Builder(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+                    .addBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary))
+                    .addActionIcon(R.drawable.bg_notification_check)
+                    .create()
+                    .decorate()
+            }
+        })
         val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.rcvNotificationList)
     }
@@ -79,8 +112,6 @@ class NotificationFragment : Fragment() {
     private fun initRefreshListener() {
         binding.layoutRefresh.setOnRefreshListener { // 새로고침 이벤트 리스너
             binding.layoutRefresh.isRefreshing = true // 새로고침 로딩 보여주기
-            notificationAdapter.removeAll() // 어댑터 목록 지우기
-
             // 데이터 요청
             mainViewModel.getNotificationList(GlobalApplication.getInstance().getTypedAccessToken().toString())
 
@@ -90,8 +121,6 @@ class NotificationFragment : Fragment() {
     private fun initNotificationRecyclerView() {
         with(binding) {
             Log.d(TAG, "initNotifi size : ${mainViewModel.userNotificationList.value?.size} ")
-            rcvNotificationList.layoutManager = LinearLayoutManager(activity)
-            notificationAdapter.submitList(mainViewModel.userNotificationList.value)
             rcvNotificationList.adapter = notificationAdapter
         }
     }

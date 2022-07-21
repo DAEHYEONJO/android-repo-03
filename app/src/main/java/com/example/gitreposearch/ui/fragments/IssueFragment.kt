@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
+import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.ui.adapter.IssueListRecyclerViewAdapter
 import com.example.gitreposearch.databinding.FragmentIssueBinding
 import com.example.gitreposearch.ui.adapter.SpinnerCustomAdapter
@@ -85,7 +86,7 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 if (binding!!.layoutRefresh.isRefreshing) {
                     binding!!.layoutRefresh.isRefreshing = false
                 }
-                issueRecyclerViewAdapter.setData(issueList)
+                issueRecyclerViewAdapter.setData(issueList as MutableList<Issue>)
             }
         }
     }
@@ -96,15 +97,15 @@ class IssueFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun showLoading() {
         with(binding!!) {
-            progressBarLoading.isGone = false
-            tvLoading.isGone = false
+            progressBar.layoutProgressBarRoot.setBackgroundResource(0)
+            progressBar.layoutProgressBarRoot.isGone = false
+            progressBar.layoutProgressBarRoot.bringToFront()
         }
     }
 
     private fun hideLoading() {
         with(binding!!) {
-            progressBarLoading.isGone = true
-            tvLoading.isGone = true
+            progressBar.layoutProgressBarRoot.isGone = true
         }
     }
 

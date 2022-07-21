@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.icu.lang.UCharacter.IndicPositionalCategory.LEFT
 import android.util.Log
 import android.util.Log.v
+import android.util.LogPrinter
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.getTag
@@ -17,22 +18,23 @@ import androidx.recyclerview.widget.ItemTouchHelper.Callback.makeMovementFlags
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
-import com.example.gitreposearch.ui.adapter.NotificationAdapter
+import com.example.gitreposearch.ui.activity.MainActivity
+import com.example.gitreposearch.ui.adapter.ItemTouchCallBack
+import com.example.gitreposearch.ui.adapter.NotificationRecyclerViewAdapter
 import com.example.gitreposearch.ui.viewmodel.MainViewModel
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class SwipeHelperCallback(
-    val context : Context,
-    private val mainViewModel: MainViewModel,
-    private val adapter: NotificationAdapter
+    private val itemTouchCallBack: ItemTouchCallBack
 ) : ItemTouchHelper.Callback() {
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        return makeMovementFlags(0, LEFT)
+        return makeMovementFlags(0, ItemTouchHelper.LEFT)
     }
 
     override fun onMove(
@@ -42,10 +44,7 @@ class SwipeHelperCallback(
     ) = false
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
-        val item = adapter.currentList[position]
-        mainViewModel.changeNotificationAsRead(item.threadID) // 읽음처리 api 전송
-        adapter.removeData(position)
+        itemTouchCallBack.onSwiped(viewHolder.adapterPosition)
     }
 
     override fun onChildDraw(
@@ -57,9 +56,10 @@ class SwipeHelperCallback(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            val view = (viewHolder as NotificationAdapter.ViewHolder).itemView.findViewById<ConstraintLayout>(R.id.swipe_view)
-            getDefaultUIUtil().onDraw(c, recyclerView, view, dX, dY, actionState, isCurrentlyActive)
+        if (actionState == ACTION_STATE_SWIPE) {
+            itemTouchCallBack.onChildDraw(c,recyclerView,viewHolder, dX, dY, actionState, isCurrentlyActive)
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+
         }
     }
 }

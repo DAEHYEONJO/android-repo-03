@@ -16,4 +16,5 @@
     <color name="background_100">#122340</color>
     <color name="background_0">#00122340</color>
     <color name="navy">#1B2840</color>
+    <color name="transparent">#00000000</color>
 </resources>

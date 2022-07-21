@@ -106,14 +106,18 @@ class MainViewModel(private val repository: GithubApiRepository) : ViewModel() {
                         _commentInfo.value = Pair<Int,String>(idx, data!!.size.toString())
                         //_userNotificationList.value = notificationList.toMutableList()
                     } else if (this is GithubApiResponse.Error) {
-                        throw Exception("github getUserNotifcationList exception code: $exceptionCode")
+                        if(exceptionCode == 404){
+                            notification.commentsCounts = "0"
+                        }
+                        //throw Exception("github getUserNotifcationList exception code: $exceptionCode")
                     }
                 }
             }
         }
     }
 
-    fun changeNotificationAsRead(threadID: String) {
+    fun changeNotificationAsRead(position : Int) {
+        val threadID = userNotificationList.value!![position].threadID
         viewModelScope.launch {
             repository.changeNotificationAsRead(token!!, threadID).apply {
                 if (this is GithubApiResponse.Success) {

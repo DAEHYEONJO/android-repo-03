@@ -10,6 +10,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 android {
     compileSdk 32
 
+
     defaultConfig {
         applicationId "com.example.gitreposearch"
         minSdk 21
@@ -89,5 +90,7 @@ dependencies {
     testImplementation "androidx.paging:paging-common:3.2.0-alpha01"
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
 
 }
