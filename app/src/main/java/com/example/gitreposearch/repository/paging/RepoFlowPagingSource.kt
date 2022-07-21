@@ -7,8 +7,6 @@ import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.data.Repo
 import com.example.gitreposearch.network.GithubApi
 import com.example.gitreposearch.utils.ConvertUtils
-import retrofit2.HttpException
-import retrofit2.http.HTTP
 
 class RepoFlowPagingSource(
     private val githubApi: GithubApi
@@ -35,7 +33,6 @@ class RepoFlowPagingSource(
         )
 
         if (!repoResponse.isSuccessful) {
-            Log.e(TAG, "load: EEEEEEEEEEEEERRRRRRRRR", )
             val errorMsg = ConvertUtils.getErrorResponseMsg(repoResponse.errorBody()!!)
             return LoadResult.Error(Throwable(errorMsg))
         }else if (repoResponse.body()?.items!!.isEmpty() ){

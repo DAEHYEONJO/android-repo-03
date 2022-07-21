@@ -50,7 +50,10 @@ class GithubApiRepository {
         }
     }
 
-    suspend fun getNotifiCommentCount(token: String, notification: Notifications) : GithubApiResponse<List<Comment>?>{
+    suspend fun getNotifiCommentCount(
+        token: String,
+        notification: Notifications
+    ): GithubApiResponse<List<Comment>?> {
         val url = notification.subject.url.split("/")
         val type = getNotificationType(url)
         notification.number = getNumber(url)
@@ -77,16 +80,14 @@ class GithubApiRepository {
     ): GithubApiResponse<String?> {
         val response = GithubApiImpl.githubApi.changeNotificationAsRead(token, threadID)
         return if (response.isSuccessful) {
-            Log.d("Text", "changeNotificationAsRead: ${response.code()}")
             GithubApiResponse.Success(data = response.body())
-
         } else {
             GithubApiResponse.Error(exceptionCode = response.code())
         }
     }
 
 
-    private fun getNotificationType(url : List<String>) : String {
+    private fun getNotificationType(url: List<String>): String {
         return url[url.size - 2]
     }
 

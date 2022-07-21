@@ -3,12 +3,8 @@ package com.example.gitreposearch.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gitreposearch.R
 import com.example.gitreposearch.data.Issue
 import com.example.gitreposearch.databinding.RvIssueRowBinding
-import com.example.gitreposearch.utils.Constants
-import java.text.SimpleDateFormat
-import java.util.*
 
 class IssueListRecyclerViewAdapter(private var dataSet: MutableList<Issue> = mutableListOf<Issue>()) : RecyclerView.Adapter<IssueListRecyclerViewAdapter.ViewHolder>() {
 

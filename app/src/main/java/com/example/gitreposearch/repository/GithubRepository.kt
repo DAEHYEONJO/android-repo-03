@@ -1,8 +1,6 @@
 package com.example.gitreposearch.repository
 
-import com.example.gitreposearch.BuildConfig
 import com.example.gitreposearch.data.Token
-import com.example.gitreposearch.data.UserInfo
 import com.example.gitreposearch.network.GithubApiImpl
 import com.example.gitreposearch.network.GithubApiResponse
 

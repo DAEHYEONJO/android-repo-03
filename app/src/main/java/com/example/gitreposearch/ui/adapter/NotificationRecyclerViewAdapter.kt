@@ -3,11 +3,8 @@ package com.example.gitreposearch.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.gitreposearch.data.notifications.Notifications
 import com.example.gitreposearch.databinding.RvNotificationRowBinding
-import java.text.SimpleDateFormat
-import java.util.*
 
 class NotificationRecyclerViewAdapter(private var dataSet: MutableList<Notifications> = mutableListOf())
     : RecyclerView.Adapter<NotificationRecyclerViewAdapter.ViewHolder>(){
