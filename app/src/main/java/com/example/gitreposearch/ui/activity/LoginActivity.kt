@@ -9,11 +9,11 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.gitreposearch.BuildConfig
 import com.example.gitreposearch.GlobalApplication
+import com.example.gitreposearch.R
 import com.example.gitreposearch.databinding.ActivityLoginBinding
 import com.example.gitreposearch.utils.Constants
-import com.example.gitreposearch.viewmodel.CustomViewModelFactory
-import com.example.gitreposearch.viewmodel.LoginViewModel
-import kotlinx.coroutines.launch
+import com.example.gitreposearch.utils.CustomViewModelFactory
+import com.example.gitreposearch.ui.viewmodel.LoginViewModel
 
 class LoginActivity : AppCompatActivity() {
 
@@ -35,18 +35,33 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        loginViewModel.token.observe(this@LoginActivity) {
-            Log.e(TAG, "initObserver: token: $it", )
-            startActivity(Intent(this@LoginActivity, MainActivity::class.java).apply {
-                putExtra("token", it)
-            })
-            finish()
+        with(loginViewModel){
+            token.observe(this@LoginActivity) { token ->
+                val observedTypedToken = "${token.tokenType} ${token.accessToken}"
+                with(GlobalApplication.getInstance()){
+                    val typedToken = getTypedAccessToken()
+                    if (typedToken==null || observedTypedToken!=typedToken){
+                        putTypedAccessToken(observedTypedToken)
+                    }
+                }
+                startActivity(Intent(this@LoginActivity, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                })
+                finish()
+            }
+            error.observe(this@LoginActivity) { e ->
+                Log.e(TAG, "initObserver: e: $e", )
+                if (e) {
+                    Toast.makeText(this@LoginActivity, resources.getString(R.string.login_fail_msg), Toast.LENGTH_SHORT).show()
+                }
+            }
         }
+
     }
 
     private fun initLayout() {
         binding.run {
-            loginBtn.setOnClickListener {
+            btnLogin.setOnClickListener {
                 login()
             }
         }
@@ -54,13 +69,14 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val uri = intent?.data
+        val uri = intent.data
         uri?.let {
             val code = uri.getQueryParameter("code")
             code?.let {
                 loginViewModel.getToken(it)
-                Toast.makeText(this@LoginActivity, "success! $code", Toast.LENGTH_SHORT).show()
-            } ?: Toast.makeText(this@LoginActivity, "로그인 실패", Toast.LENGTH_LONG).show()
+            }
+        } ?: if (loginViewModel.startedLogin.value == true) {
+            Toast.makeText(this@LoginActivity, resources.getString(R.string.login_fail_msg), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -70,6 +86,7 @@ class LoginActivity : AppCompatActivity() {
                 "${Constants.oauthLoginUrl}?client_id=${BuildConfig.CLIENT_ID}&scope=user+repo"
             )
         )
+        loginViewModel.startedLogin.value = true
         startActivity(intent)
     }
 

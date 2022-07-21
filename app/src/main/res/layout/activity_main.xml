@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/app_base_background"
+    android:background="@drawable/bg_app"
     android:backgroundTintMode="src_over"
     tools:context=".ui.activity.MainActivity">
 
@@ -24,7 +24,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/mainAppbar_title_tv"
+                android:id="@+id/tv_main_appBarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
@@ -36,28 +36,28 @@
                 android:textSize="16sp" />
 
             <ImageButton
-                android:id="@+id/mainAppbar_profile_btn"
+                android:id="@+id/btn_main_profile"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="right"
                 android:layout_marginRight="24dp"
-                android:background="#00000000" />
+                android:background="@color/transparent" />
 
             <ImageButton
-                android:id="@+id/mainAppbar_search_btn"
+                android:id="@+id/btn_main_search"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="right"
                 android:layout_marginRight="24dp"
-                android:background="#00000000"
-                android:src="@drawable/appbar_search_ic" />
+                android:background="@color/transparent"
+                android:src="@drawable/ic_appbar_search" />
         </androidx.appcompat.widget.Toolbar>
 
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <ToggleButton
-        android:id="@+id/main_issueTab_btn"
+        android:id="@+id/btn_main_issueTab"
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_alignParentLeft="true"
@@ -65,7 +65,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="72dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/main_toggletab_selector"
+        android:background="@drawable/selector_main_toggle_tab"
         android:letterSpacing="0.06"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
@@ -75,19 +75,19 @@
         android:textOff="Issue"
         android:textOn="Issue"
         android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/main_notificationTab_btn"
+        app:layout_constraintEnd_toStartOf="@+id/btn_main_NotifiTab"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ToggleButton
-        android:id="@+id/main_notificationTab_btn"
+        android:id="@+id/btn_main_NotifiTab"
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="72dp"
         android:layout_marginEnd="24dp"
-        android:background="@drawable/main_toggletab_selector"
+        android:background="@drawable/selector_main_toggle_tab"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
@@ -97,11 +97,11 @@
         android:textOn="Notifications"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/main_issueTab_btn"
+        app:layout_constraintStart_toEndOf="@+id/btn_main_issueTab"
         app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
-        android:id="@+id/main_hostFrag"
+        android:id="@+id/layout_hostFrag"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="142dp"
