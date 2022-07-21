@@ -1,19 +1,12 @@
 package com.example.gitreposearch.ui.adapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.gitreposearch.R
 import com.example.gitreposearch.data.Repo
 import com.example.gitreposearch.databinding.RvSearchRowBinding
-import com.example.gitreposearch.utils.ConvertUtils
-import java.util.*
 
 class SearchRecyclerViewAdapter :
     PagingDataAdapter<Repo.Item, SearchRecyclerViewAdapter.ViewHolder>(diffUtil) {

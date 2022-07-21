@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="notification"
             type="com.example.gitreposearch.data.notifications.Notifications" />
@@ -14,19 +13,12 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="85dp">
-        <View
-            android:layout_width="110dp"
-            android:layout_height="85dp"
-            android:layout_gravity="end"
-            android:background="@drawable/bg_notification_check"
-            />
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/swipe_view"
             android:layout_width="match_parent"
             android:layout_height="85dp"
-            android:background="@drawable/bg_app"
+            android:background="@color/transparent"
             tools:ignore="ExtraText">
 
             <ImageView
@@ -35,7 +27,8 @@
                 android:layout_height="24dp"
                 android:layout_marginLeft="27dp"
                 android:layout_marginTop="19dp"
-                android:background="#00000000"
+                android:background="@color/transparent"
+                app:setImageUrl="@{notification.repository.owner.avatarUrl}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,9 +38,9 @@
                 android:layout_height="16dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="20dp"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:gravity="top"
-                android:text="@{notification.repository.full_name}"
+                android:text="@{notification.repository.fullName}"
                 android:textColor="@color/gray"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/iv_notification_organizationImage"
@@ -59,7 +52,7 @@
                 android:layout_height="16dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="20dp"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:text="@{'#'+notification.number}"
                 android:textColor="@color/gray"
                 app:layout_constraintStart_toEndOf="@id/tv_notification_repo"
@@ -72,7 +65,7 @@
                 android:layout_marginLeft="56dp"
                 android:layout_marginTop="44dp"
                 android:layout_marginRight="24dp"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{notification.subject.title}"
@@ -99,8 +92,8 @@
                 android:layout_height="16dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="24dp"
-                android:background="#00000000"
-                android:text="날짜"
+                android:background="@color/transparent"
+                app:setUpdatedTime="@{notification.updatedAt}"
                 android:textColor="@color/gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

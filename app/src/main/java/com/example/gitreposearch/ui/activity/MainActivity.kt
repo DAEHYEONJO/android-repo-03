@@ -34,16 +34,7 @@ class MainActivity : AppCompatActivity() {
         initAppBarButton()
         initObserver()
         initToggleTabButton()
-        //startFlow()
     }
-
-//    private fun startFlow() {
-//        lifecycleScope.launch {
-//            mainViewModel.userNotificationFlow.collect { // flow 데이터 받아오기
-//                Log.e("kim", "${it}", )
-//            }
-//        }
-//    }
 
     private fun initAppBarButton() {
         with(binding) {
@@ -83,9 +74,6 @@ class MainActivity : AppCompatActivity() {
                     setFrag(newState)
                 }
             }
-//            userNotificationList.observe(this@MainActivity){
-//                getNotifiCommentList(GlobalApplication.getInstance().getTypedAccessToken().toString())
-//            }
         }
     }
 
