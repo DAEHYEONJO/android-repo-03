@@ -16,7 +16,7 @@ data class Repo(
         @SerializedName("description")
         val description: String,
         @SerializedName("language")
-        val language: String,
+        val language: String = "Empty",
         @SerializedName("name")
         val name: String,
         @SerializedName("owner")

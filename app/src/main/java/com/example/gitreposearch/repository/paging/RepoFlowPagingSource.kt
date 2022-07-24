@@ -62,6 +62,7 @@ class RepoFlowPagingSource(
 
         val preKey = if (currentPage == 1) null else currentPage - 1
         val nextKey = if (repoResponse.code()==200) currentPage + 1 else null
+        Log.e(TAG, "load: $preKey $currentPage $nextKey", )
 
         return LoadResult.Page(
             data = responseBody!!,
