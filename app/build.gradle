@@ -90,7 +90,16 @@ dependencies {
     testImplementation "androidx.paging:paging-common:3.2.0-alpha01"
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-
     implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
+
+    //rx java
+    implementation "io.reactivex.rxjava3:rxjava:3.1.5"
+    //rx kotlin
+    implementation "io.reactivex.rxjava3:rxkotlin:3.0.1"
+    //rx android
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    //rx binding
+    implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
+
 
 }
