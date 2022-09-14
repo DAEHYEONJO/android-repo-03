@@ -6,10 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.gitreposearch.data.Repo
 import com.example.gitreposearch.repository.RepoFlowPagingRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 
 class SearchViewModel(
     private val repoFlowRepository: RepoFlowPagingRepository

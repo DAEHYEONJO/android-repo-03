@@ -2,15 +2,14 @@ package com.example.gitreposearch.ui.activity
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.util.toRange
 import androidx.core.view.isVisible
@@ -21,12 +20,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gitreposearch.GlobalApplication
 import com.example.gitreposearch.R
-import com.example.gitreposearch.ui.adapter.SearchRecyclerViewAdapter
 import com.example.gitreposearch.databinding.ActivitySearchBinding
-import com.example.gitreposearch.utils.CustomViewModelFactory
+import com.example.gitreposearch.ui.adapter.SearchRecyclerViewAdapter
 import com.example.gitreposearch.ui.viewmodel.SearchViewModel
+import com.example.gitreposearch.utils.CustomViewModelFactory
+import com.jakewharton.rxbinding4.widget.textChanges
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class SearchActivity : AppCompatActivity() {
 
@@ -55,24 +59,31 @@ class SearchActivity : AppCompatActivity() {
 
     private val searchRecyclerViewAdapter: SearchRecyclerViewAdapter by lazy {
         SearchRecyclerViewAdapter().apply {
-            lifecycleScope.launch{
+            lifecycleScope.launch {
                 loadStateFlow.collectLatest { loadState ->
                     setProgressBarVisible(loadState.source.refresh is LoadState.Loading)
-                    binding.rvSearchRepository.isVisible = loadState.source.refresh is LoadState.NotLoading
+                    binding.rvSearchRepository.isVisible =
+                        loadState.source.refresh is LoadState.NotLoading
 
                     val errorState = loadState.source.refresh as? LoadState.Error
-                        ?:loadState.source.append as? LoadState.Error
-                        ?:loadState.source.prepend as? LoadState.Error
+                        ?: loadState.source.append as? LoadState.Error
+                        ?: loadState.source.prepend as? LoadState.Error
                     errorState?.let {
-                        if (it.error.message == "End of List"){
+                        if (it.error.message == "End of List") {
                             searchViewModel.endOfListFlag.value = true
                         }
-                        Toast.makeText(this@SearchActivity, "${it.error.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@SearchActivity,
+                            "${it.error.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
         }
     }
+
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,9 +96,16 @@ class SearchActivity : AppCompatActivity() {
         initEditText()
     }
 
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        super.onDestroy()
+    }
+
     private fun initObserver() {
         searchViewModel.repoList.observe(this@SearchActivity) { data ->
-            lifecycleScope.launch{
+            lifecycleScope.launch {
+                setViewVisibility(View.GONE, View.GONE)
+                closeKeyBoard()
                 searchRecyclerViewAdapter.submitData(data)
             }
         }
@@ -100,10 +118,11 @@ class SearchActivity : AppCompatActivity() {
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                         super.onScrolled(recyclerView, dx, dy)
-                        if (searchViewModel.endOfListFlag.value==true) return
-                        val lastVisibleItemPosition = ((recyclerView.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
+                        if (searchViewModel.endOfListFlag.value == true) return
+                        val lastVisibleItemPosition =
+                            ((recyclerView.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
                         val itemTotalCount = recyclerView.adapter!!.itemCount - 1
-                        if (itemTotalCount!=-1 && lastVisibleItemPosition!=-1 && lastVisibleItemPosition == itemTotalCount){
+                        if (itemTotalCount != -1 && lastVisibleItemPosition != -1 && lastVisibleItemPosition == itemTotalCount) {
                             setProgressBarVisible(true)
                         }
                     }
@@ -117,10 +136,11 @@ class SearchActivity : AppCompatActivity() {
             setOnTouchListener { v, motionEvent ->
                 if (motionEvent.action == MotionEvent.ACTION_UP) {
                     compoundDrawables[2]?.let { drawable ->
-                        val rangeX = (right - drawable.bounds.width() - paddingEnd..right - paddingEnd).toRange()
+                        val rangeX =
+                            (right - drawable.bounds.width() - paddingEnd..right - paddingEnd).toRange()
                         if (motionEvent.rawX.toInt() in rangeX && text.isNotEmpty()) {
                             setViewVisibility(View.GONE, View.VISIBLE)
-                            lifecycleScope.launch{
+                            lifecycleScope.launch {
                                 searchRecyclerViewAdapter.submitData(PagingData.empty())
                             }
                             setText("")
@@ -130,24 +150,30 @@ class SearchActivity : AppCompatActivity() {
                 v.performClick()
             }
 
-            setOnKeyListener { _, keyCode, event ->
-                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER && text.isNotEmpty()) {
-                    setViewVisibility(View.GONE, View.GONE)
-                    closeKeyBoard()
-                    lifecycleScope.launch {
-                        searchViewModel.getRepoPaging(text.toString()).collectLatest {
-                            searchViewModel.repoList.value = it
+            val editTextDisposable = textChanges().debounce(500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onError = {
+                        Toast.makeText(this@SearchActivity, "error caused by: ${it.message.toString()}", Toast.LENGTH_SHORT).show()
+                    },
+                    onNext = {
+                        if (it.isNotEmpty()) {
+                            lifecycleScope.launch {
+                                searchViewModel.getRepoPaging(text.toString()).collectLatest {
+                                    searchViewModel.repoList.value = it
+                                }
+                            }
                         }
+                    },
+                    onComplete = {
+                        Log.e(TAG, "initEditText: Complete")
                     }
-                    true
-                }else{
-                    false
-                }
-            }
+                )
+            compositeDisposable.add(editTextDisposable)
 
             if (!hasFocus()) {
                 setCompoundDrawables(left = searchBtnDrawable, right = null)
-            }else{
+            } else {
                 setCompoundDrawables(left = null, right = deleteBtnDrawable)
             }
 
@@ -161,15 +187,15 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun setViewVisibility(rvVisibility: Int, layoutVisibility: Int){
-        with(binding){
+    private fun setViewVisibility(rvVisibility: Int, layoutVisibility: Int) {
+        with(binding) {
             layoutSearchEmptyListDescription.visibility = layoutVisibility
             rvSearchRepository.visibility = rvVisibility
         }
     }
 
-    private fun setProgressBarVisible(isVisible: Boolean){
-        with(binding.progressBar.layoutProgressBarRoot){
+    private fun setProgressBarVisible(isVisible: Boolean) {
+        with(binding.progressBar.layoutProgressBarRoot) {
             this.isVisible = isVisible
             bringToFront()
         }
@@ -186,14 +212,14 @@ class SearchActivity : AppCompatActivity() {
         )
     }
 
-    private fun showKeyBoard(){
-        with(binding.etSearchRepository){
+    private fun showKeyBoard() {
+        with(binding.etSearchRepository) {
             imm.showSoftInput(this, InputMethodManager.SHOW_FORCED)
             requestFocus()
         }
     }
 
-    private fun closeKeyBoard(){
+    private fun closeKeyBoard() {
         this.currentFocus?.let {
             imm.hideSoftInputFromWindow(it.windowToken, 0)
             binding.etSearchRepository.clearFocus()
