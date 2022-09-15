@@ -5,7 +5,7 @@
     <data>
         <variable
             name="item"
-            type="com.example.gitreposearch.data.Repo.Item" />
+            type="com.example.gitreposearch.domain.model.Repo.Item" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -3,11 +3,15 @@ package com.example.gitreposearch.utils
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.net.Uri
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.example.gitreposearch.R
+import com.example.gitreposearch.domain.model.ProfileInfo
+import com.example.gitreposearch.presentation.UiState
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -61,4 +65,102 @@ fun TextView.setUpdatedTime(updatedAt: String) {
         timeDiff.toString() + "일 전"
     }
 
+}
+
+@BindingAdapter("app:setUiStateImageUrl")
+fun ImageView.setUiStateImageUrl(uiState: UiState){
+    if (uiState is UiState.Success<*>){
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        setImageUrl(userInfo.avatarUrl!!)
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileLogin")
+fun TextView.setUiStateProfileLogin(uiState: UiState){
+    if (uiState is UiState.Success<*>) {
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        text = userInfo.login
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileName")
+fun TextView.setUiStateProfileName(uiState: UiState){
+    if (uiState is UiState.Success<*>) {
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        text = userInfo.name
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileBio")
+fun TextView.setUiStateProfileBio(uiState: UiState){
+    if (uiState is UiState.Success<*>) {
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        text = userInfo.bio
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileLocation")
+fun TextView.setUiStateProfileLocation(uiState: UiState){
+    if (uiState is UiState.Success<*>) {
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        text = userInfo.location
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileBlog")
+fun TextView.setUiStateProfileBlog(uiState: UiState){
+    if (uiState is UiState.Success<*>) {
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        text = userInfo.blog
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileEmail")
+fun TextView.setUiStateProfileEmail(uiState: UiState){
+    if (uiState is UiState.Success<*>) {
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        text = userInfo.email
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileFollowers")
+fun TextView.setUiStateProfileFollowers(uiState: UiState){
+    if (uiState is UiState.Success<*>) {
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        text = userInfo.followers
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileFollowing")
+fun TextView.setUiStateProfileFollowing(uiState: UiState){
+    if (uiState is UiState.Success<*>) {
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        text = userInfo.following
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileRepositoryCount")
+fun TextView.setUiStateProfileRepositoryCount(uiState: UiState){
+    if (uiState is UiState.Success<*>) {
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        text = userInfo.repositoryCount
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileStarredCount")
+fun TextView.setUiStateProfileStarredCount(uiState: UiState){
+    if (uiState is UiState.Success<*>) {
+        val userInfo = (uiState as UiState.Success<ProfileInfo>).data
+        text = userInfo.starredCount
+    }
+}
+
+@BindingAdapter("app:setUiStateProfileVisibility")
+fun View.setUiStateProfileVisibility(uiState: UiState){
+    isVisible = uiState is UiState.Success<*>
+}
+
+@BindingAdapter("app:setUiStateProfileProgressVisibility")
+fun View.setUiStateProfileProgressVisibility(uiState: UiState){
+    isVisible = uiState is UiState.Loading
 }

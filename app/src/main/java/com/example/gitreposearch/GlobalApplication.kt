@@ -3,11 +3,16 @@ package com.example.gitreposearch
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.gitreposearch.network.GithubApiImpl
-import com.example.gitreposearch.repository.GithubApiRepository
-import com.example.gitreposearch.repository.GithubRepository
-import com.example.gitreposearch.repository.RepoFlowPagingRepository
-import com.example.gitreposearch.repository.paging.RepoFlowPagingSource
+import com.example.gitreposearch.data.remote.network.GithubApiImpl
+import com.example.gitreposearch.data.remote.repository.GithubApiRepositoryImpl
+import com.example.gitreposearch.data.remote.repository.GithubApiRxRepositoryImpl
+import com.example.gitreposearch.data.remote.repository.GithubRepositoryImpl
+import com.example.gitreposearch.data.remote.repository.RepoFlowPagingRepositoryImpl
+import com.example.gitreposearch.data.remote.repository.paging.RepoFlowPagingSource
+import com.example.gitreposearch.domain.repository.GithubApiRepository
+import com.example.gitreposearch.domain.repository.GithubApiRxRepository
+import com.example.gitreposearch.domain.repository.GithubRepository
+import com.example.gitreposearch.domain.repository.RepoFlowPagingRepository
 
 class GlobalApplication: Application(){
 
@@ -25,7 +30,7 @@ class GlobalApplication: Application(){
         private lateinit var editor: SharedPreferences.Editor
         lateinit var githubRepository: GithubRepository
         lateinit var githubApiRepository: GithubApiRepository
-
+        lateinit var githubApiRxRepository: GithubApiRxRepository
         private lateinit var pagingSource: RepoFlowPagingSource
         lateinit var repoFlowRepository: RepoFlowPagingRepository
     }
@@ -36,10 +41,11 @@ class GlobalApplication: Application(){
     }
 
     private fun initProperties() {
+        githubApiRxRepository = GithubApiRxRepositoryImpl()
         pagingSource = RepoFlowPagingSource(GithubApiImpl.githubApi)
-        repoFlowRepository = RepoFlowPagingRepository(pagingSource)
-        githubRepository = GithubRepository()
-        githubApiRepository = GithubApiRepository()
+        repoFlowRepository = RepoFlowPagingRepositoryImpl(pagingSource)
+        githubRepository = GithubRepositoryImpl()
+        githubApiRepository = GithubApiRepositoryImpl()
         sharedPreferences = getSharedPreferences(resources.getString(R.string.app_name), Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
     }

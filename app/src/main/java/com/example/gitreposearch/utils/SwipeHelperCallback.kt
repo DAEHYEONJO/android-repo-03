@@ -4,7 +4,7 @@ import android.graphics.Canvas
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gitreposearch.ui.adapter.ItemTouchCallBack
+import com.example.gitreposearch.presentation.adapter.ItemTouchCallBack
 
 class SwipeHelperCallback(
     private val itemTouchCallBack: ItemTouchCallBack
