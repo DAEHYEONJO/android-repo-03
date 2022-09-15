@@ -6,15 +6,42 @@
     <data>
         <import type="android.graphics.Paint"/>
         <variable
-            name="loginViewModel"
-            type="com.example.gitreposearch.ui.viewmodel.ProfileViewModel" />
+            name="vm"
+            type="com.example.gitreposearch.presentation.viewmodel.ProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_app"
-        tools:context=".ui.activity.ProfileActivity">
+        tools:context=".presentation.activity.ProfileActivity">
+
+        <ProgressBar
+            android:id="@+id/progressBar_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:elevation="1dp"
+            app:setUiStateProfileProgressVisibility="@{vm.userInfo}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/progress_bar_loading"
+            android:textColor="@color/white"
+            android:elevation="1dp"
+            android:textSize="16sp"
+            app:setUiStateProfileProgressVisibility="@{vm.userInfo}"
+            app:layout_constraintEnd_toEndOf="@id/progressBar_loading"
+            app:layout_constraintStart_toStartOf="@id/progressBar_loading"
+            app:layout_constraintTop_toBottomOf="@id/progressBar_loading"
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/app_bar_profile"
@@ -29,7 +56,7 @@
             android:layout_height="80dp"
             android:layout_marginStart="@dimen/base_app_space_24"
             android:layout_marginTop="6dp"
-            app:setImageUrl="@{loginViewModel.userInfo.avatarUrl}"
+            app:setUiStateImageUrl="@{vm.userInfo}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/app_bar_profile" />
 
@@ -42,9 +69,9 @@
             android:fontFamily="@font/kopubworld_dotum_pro_bold"
             android:gravity="top"
             android:includeFontPadding="false"
-            android:text="@{loginViewModel.userInfo.login}"
             android:textColor="@color/white"
             android:textSize="18sp"
+            app:setUiStateProfileLogin="@{vm.userInfo}"
             app:layout_constraintStart_toEndOf="@+id/iv_profile"
             app:layout_constraintTop_toBottomOf="@+id/app_bar_profile" />
 
@@ -52,10 +79,10 @@
             android:id="@+id/tv_profile_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{loginViewModel.userInfo.name}"
             android:textColor="@color/gray"
             android:textSize="16sp"
             android:includeFontPadding="false"
+            app:setUiStateProfileName="@{vm.userInfo}"
             app:layout_constraintStart_toStartOf="@+id/tv_profile_login"
             app:layout_constraintTop_toBottomOf="@+id/tv_profile_login" />
 
@@ -67,9 +94,10 @@
             android:background="@drawable/bg_profile_field"
             android:fontFamily="@font/kopubworld_dotum_pro_medium"
             android:gravity="center"
-            android:text="@{loginViewModel.userInfo.bio}"
             android:textColor="@color/gray"
             android:textSize="14sp"
+            app:setUiStateProfileVisibility="@{vm.userInfo}"
+            app:setUiStateProfileBio="@{vm.userInfo}"
             app:layout_constraintStart_toStartOf="@+id/tv_profile_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_profile_name" />
 
@@ -80,6 +108,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_profile_bio"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="@dimen/view_profile_top_space_18"
+            app:setUiStateProfileVisibility="@{vm.userInfo}"
             android:background="@color/navy"
             android:layout_height="1dp" />
 
@@ -89,6 +118,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/view_profile"
             app:layout_constraintStart_toStartOf="@+id/iv_profile"
+            app:setUiStateProfileVisibility="@{vm.userInfo}"
             android:layout_marginTop="@dimen/iv_profile_end_space_16"
             android:src="@drawable/ic_profile_location" />
 
@@ -99,7 +129,7 @@
             app:layout_constraintStart_toEndOf="@+id/iv_profile_location"
             app:layout_constraintTop_toTopOf="@+id/iv_profile_location"
             app:layout_constraintBottom_toBottomOf="@+id/iv_profile_location"
-            android:text="@{loginViewModel.userInfo.location}"
+            app:setUiStateProfileLocation="@{vm.userInfo}"
             style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
             android:layout_marginStart="@dimen/tv_profile_top_space_8" />
 
@@ -109,6 +139,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/iv_profile_location"
             app:layout_constraintStart_toStartOf="@+id/iv_profile_location"
+            app:setUiStateProfileVisibility="@{vm.userInfo}"
             android:layout_marginTop="@dimen/iv_profile_end_space_16"
             android:src="@drawable/ic_profile_blog" />
 
@@ -119,7 +150,7 @@
             app:layout_constraintStart_toEndOf="@+id/iv_profile_link"
             app:layout_constraintTop_toTopOf="@+id/iv_profile_link"
             app:layout_constraintBottom_toBottomOf="@+id/iv_profile_link"
-            android:text="@{loginViewModel.userInfo.blog}"
+            app:setUiStateProfileBlog="@{vm.userInfo}"
             app:setPaintFlag="@{Paint.UNDERLINE_TEXT_FLAG}"
             style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
             android:layout_marginStart="@dimen/tv_profile_top_space_8" />
@@ -130,6 +161,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/iv_profile_link"
             app:layout_constraintStart_toStartOf="@+id/iv_profile_link"
+            app:setUiStateProfileVisibility="@{vm.userInfo}"
             android:layout_marginTop="@dimen/iv_profile_end_space_16"
             android:src="@drawable/ic_profile_email" />
 
@@ -140,7 +172,7 @@
             app:layout_constraintStart_toEndOf="@+id/iv_profile_mail"
             app:layout_constraintTop_toTopOf="@+id/iv_profile_mail"
             app:layout_constraintBottom_toBottomOf="@+id/iv_profile_mail"
-            android:text="@{loginViewModel.userInfo.email}"
+            app:setUiStateProfileEmail="@{vm.userInfo}"
             app:setPaintFlag="@{Paint.UNDERLINE_TEXT_FLAG}"
             style="@style/Widget.TextView.KopubWorldDotumPro14_White_Light.Style"
             android:layout_marginStart="@dimen/tv_profile_top_space_8" />
@@ -151,6 +183,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/iv_profile_mail"
             app:layout_constraintStart_toStartOf="@+id/iv_profile_mail"
+            app:setUiStateProfileVisibility="@{vm.userInfo}"
             android:layout_marginTop="@dimen/iv_profile_end_space_16"
             android:src="@drawable/ic_profile_user" />
 
@@ -163,7 +196,7 @@
             app:layout_constraintStart_toEndOf="@+id/iv_profile_user"
             android:layout_marginStart="@dimen/tv_profile_top_space_8"
             style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"
-            android:text="@{Integer.toString(loginViewModel.userInfo.followers)}" />
+            app:setUiStateProfileFollowers="@{vm.userInfo}" />
 
         <TextView
             android:id="@+id/tv_profile_followers_hardcode"
@@ -173,6 +206,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/iv_profile_user"
             app:layout_constraintStart_toEndOf="@+id/tv_profile_followers"
             android:layout_marginStart="@dimen/tv_profile_space_4"
+            app:setUiStateProfileVisibility="@{vm.userInfo}"
             style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
             android:text="@string/profile_followers" />
 
@@ -184,6 +218,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/iv_profile_user"
             app:layout_constraintStart_toEndOf="@+id/tv_profile_followers_hardcode"
             android:layout_marginStart="@dimen/tv_profile_space_4"
+            app:setUiStateProfileVisibility="@{vm.userInfo}"
             style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
             android:text="@string/profile_dot" />
 
@@ -196,7 +231,7 @@
             app:layout_constraintStart_toEndOf="@+id/tv_profile_dot_hardcode"
             android:layout_marginStart="@dimen/tv_profile_space_4"
             style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style"
-            android:text="@{Integer.toString(loginViewModel.userInfo.following)}" />
+            app:setUiStateProfileFollowing="@{vm.userInfo}"  />
 
         <TextView
             android:id="@+id/tv_profile_following_hardcode"
@@ -205,6 +240,7 @@
             app:layout_constraintTop_toTopOf="@+id/iv_profile_user"
             app:layout_constraintBottom_toBottomOf="@+id/iv_profile_user"
             app:layout_constraintStart_toEndOf="@+id/tv_profile_following"
+            app:setUiStateProfileVisibility="@{vm.userInfo}"
             android:layout_marginStart="@dimen/tv_profile_space_4"
             style="@style/Widget.TextView.KopubWorldDotumPro14_White_Medium.Style"
             android:text="@string/profile_following" />
@@ -216,6 +252,7 @@
             android:layout_marginTop="@dimen/base_app_space_24"
             android:layout_marginStart="@dimen/base_app_space_24"
             android:layout_marginEnd="@dimen/base_app_space_24"
+            app:setUiStateProfileVisibility="@{vm.userInfo}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_profile_rep_star_radius_14">
@@ -249,7 +286,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/iv_profile_repository"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="@dimen/iv_profile_end_space_16"
-                android:text="@{Integer.toString(loginViewModel.userInfo.publicRepos+loginViewModel.userInfo.totalPrivateRepos)}"
+                app:setUiStateProfileRepositoryCount="@{vm.userInfo}"
                 style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style" />
 
 
@@ -284,7 +321,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/iv_profile_starred"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="@dimen/iv_profile_end_space_16"
-                android:text="@{Integer.toString(loginViewModel.userInfo.starredCount)}"
+                app:setUiStateProfileStarredCount="@{vm.userInfo}"
                 style="@style/Widget.TextView.KopubWorldDotumPro14_White_Bold.Style" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

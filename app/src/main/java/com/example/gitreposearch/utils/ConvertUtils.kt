@@ -1,11 +1,8 @@
 package com.example.gitreposearch.utils
 
-import com.example.gitreposearch.data.RepoError
-import com.example.gitreposearch.network.GithubApiImpl
+import com.example.gitreposearch.domain.model.RepoError
 import com.google.gson.Gson
 import okhttp3.ResponseBody
-import retrofit2.Converter
-import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.floor
 import kotlin.math.log10

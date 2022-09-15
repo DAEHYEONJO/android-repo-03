@@ -3,12 +3,12 @@ package com.example.gitreposearch.utils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.gitreposearch.GlobalApplication
-import com.example.gitreposearch.repository.GithubApiRepository
-import com.example.gitreposearch.repository.GithubRepository
-import com.example.gitreposearch.repository.RepoFlowPagingRepository
-import com.example.gitreposearch.ui.viewmodel.LoginViewModel
-import com.example.gitreposearch.ui.viewmodel.MainViewModel
-import com.example.gitreposearch.ui.viewmodel.SearchViewModel
+import com.example.gitreposearch.domain.repository.GithubApiRepository
+import com.example.gitreposearch.domain.repository.GithubRepository
+import com.example.gitreposearch.domain.repository.RepoFlowPagingRepository
+import com.example.gitreposearch.presentation.viewmodel.LoginViewModel
+import com.example.gitreposearch.presentation.viewmodel.MainViewModel
+import com.example.gitreposearch.presentation.viewmodel.SearchViewModel
 
 class CustomViewModelFactory<X> (private val repository: X): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_app"
     android:backgroundTintMode="src_over"
-    tools:context=".ui.activity.MainActivity">
+    tools:context=".presentation.activity.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/main_appBar_layout"

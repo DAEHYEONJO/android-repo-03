@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent"
-        tools:context=".ui.fragments.IssueFragment">
+        tools:context=".presentation.fragments.IssueFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_issue_spinnerContainer"
@@ -73,7 +73,7 @@
             app:layout_constraintEnd_toEndOf="@id/progress_bar"
             app:layout_constraintTop_toBottomOf="@id/progress_bar"
             android:textColor="@color/white"
-            android:text="로딩중.."
+            android:text="@string/progress_bar_loading"
             android:textSize="16sp"
             android:visibility="gone"
             tools:visibility="visible"
